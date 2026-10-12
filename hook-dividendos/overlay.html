@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hook Dividendos</title>
+<style>
+  /* ===== Paleta oficial Freenanzas ===== */
+  :root {
+    --morado: #5723f4;
+    --verde: #1a6f66;
+    --lima: #c6fd34;
+    --blanco: #fdfdfc;
+  }
+  @font-face { font-family: 'Montserrat'; font-weight: 700; src: url(fonts/montserrat-latin-700-normal.woff2) format('woff2'); }
+  @font-face { font-family: 'Montserrat'; font-weight: 800; src: url(fonts/montserrat-latin-800-normal.woff2) format('woff2'); }
+  @font-face { font-family: 'Montserrat'; font-weight: 900; src: url(fonts/montserrat-latin-900-normal.woff2) format('woff2'); }
+  @font-face { font-family: 'Free Serif'; font-style: normal; src: url(fonts/FreeSerif.ttf); }
+  @font-face { font-family: 'Free Serif'; font-style: italic; src: url(fonts/FreeSerifItalic.ttf); }
+  @font-face { font-family: 'Free Serif'; font-weight: 700; src: url(fonts/FreeSerifBold.ttf); }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: transparent; overflow: hidden; }
+  body { font-family: 'Montserrat', sans-serif; font-weight: 900; color: var(--blanco); }
+  /* En el navegador (vista previa) se ve sobre un gris; al renderizar el fondo es transparente */
+  body:not(.render) { background: #2a2a2a; }
+  #stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; }
+  .layer { position: absolute; inset: 0; }
+  .abs { position: absolute; will-change: transform, opacity; }
+  svg { display: block; overflow: visible; }
+
+  /* ---------- Capa trasera (detrás de la persona) ---------- */
+  .card {
+    left: 90px; top: 235px; width: 900px; height: 470px; border-radius: 52px;
+    display: flex; flex-direction: column; align-items: center; padding-top: 46px;
+    box-shadow: 0 30px 60px rgba(20, 8, 70, .35);
+    backface-visibility: hidden;
+  }
+  #cardA { background: var(--morado); }
+  #cardB { background: var(--verde); }
+  .pill {
+    background: var(--lima); color: var(--morado); font-weight: 800; font-size: 36px;
+    letter-spacing: .08em; padding: 12px 30px 10px; border-radius: 999px; line-height: 1;
+  }
+  #cardB .pill { color: var(--verde); }
+  .headline { font-weight: 900; line-height: .9; letter-spacing: -0.02em; margin-top: 26px; }
+  #octubre { font-size: 168px; }
+  #dividendos { font-size: 122px; margin-top: 34px; }
+  .serif { font-family: 'Free Serif', serif; font-style: italic; font-weight: 400; font-size: 50px; color: var(--lima); margin-top: 14px; }
+  .spark { color: var(--lima); }
+
+  .coin {
+    width: 130px; height: 130px; border-radius: 50%; background: var(--lima); color: var(--verde);
+    display: flex; align-items: center; justify-content: center; font-size: 78px; font-weight: 900;
+    box-shadow: inset 0 -10px 0 rgba(26,111,102,.25), 0 14px 30px rgba(0,0,0,.25);
+  }
+
+  #topWrap { left: 0; right: 0; top: 170px; display: flex; justify-content: center; }
+  .bigword { font-size: 236px; line-height: .86; letter-spacing: -0.03em; font-weight: 900;
+    -webkit-text-stroke: 14px var(--morado); paint-order: stroke fill;
+    text-shadow: 0 18px 0 var(--morado); }
+  .bigword .l { color: var(--lima); }
+  #lista { font-size: 200px; }
+  #ring { left: 540px; top: 760px; }
+  .row {
+    left: 40px; width: 1000px; height: 104px; border-radius: 30px; background: var(--blanco);
+    display: flex; align-items: center; justify-content: space-between; padding: 0 22px;
+    box-shadow: 0 12px 26px rgba(0,0,0,.22);
+  }
+  .row .n { width: 78px; height: 78px; border-radius: 50%; background: var(--morado); color: var(--lima);
+    display: flex; align-items: center; justify-content: center; font-size: 44px; }
+  .row .chip { background: var(--verde); color: var(--lima); font-size: 34px; font-weight: 800; padding: 14px 20px 12px; border-radius: 18px; line-height: 1; }
+
+  /* ---------- Capa delantera (subtítulos) ---------- */
+  #caps { left: 60px; right: 60px; top: 1235px; text-align: center; line-height: 1.08; }
+  .w {
+    display: inline-block; font-size: 98px; font-weight: 900; text-transform: uppercase; letter-spacing: -0.01em;
+    margin: 0 18px; color: var(--blanco);
+    -webkit-text-stroke: 16px var(--morado); paint-order: stroke fill;
+    filter: drop-shadow(0 8px 0 rgba(30, 10, 110, .55));
+    transform-origin: 50% 70%; will-change: transform, opacity;
+  }
+  .w.key { color: var(--lima); margin: 0 44px; }
+  #flash { inset: 0; background: var(--blanco); opacity: 0; }
+
+  #controls { position: fixed; left: 10px; bottom: 10px; right: 10px; font: 600 14px sans-serif; color: #fff; }
+  body.render #controls { display: none; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <!-- CAPA TRASERA: se compone DETRÁS de la persona -->
+  <div class="layer" id="back">
+    <!-- Escena A/B: tarjeta flotante con giro -->
+    <div class="abs card" id="cardA">
+      <div class="pill">RANKING DEL MES</div>
+      <div class="headline" id="octubre">OCTUBRE</div>
+    </div>
+    <div class="abs card" id="cardB">
+      <div class="pill">LAS MEJORES ACCIONES</div>
+      <div class="headline" id="dividendos">DIVIDENDOS</div>
+      <svg class="abs" id="chart" width="900" height="470" style="left:0;top:0">
+        <polyline id="chartLine" points="70,430 220,380 340,400 480,330 600,350 740,270 840,215"
+          fill="none" stroke="#c6fd34" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+        <polygon id="chartHead" points="0,-26 26,8 -26,8" fill="#c6fd34" transform="translate(840,215) rotate(58)"/>
+      </svg>
+    </div>
+    <svg class="abs spark" id="spark1" width="80" height="80" style="left:40px;top:190px"><path d="M40 0 C44 30 50 36 80 40 C50 44 44 50 40 80 C36 50 30 44 0 40 C30 36 36 30 40 0Z" fill="#c6fd34"/></svg>
+    <svg class="abs spark" id="spark2" width="56" height="56" style="left:960px;top:630px"><path d="M28 0 C31 21 35 25 56 28 C35 31 31 35 28 56 C25 35 21 31 0 28 C21 25 25 21 28 0Z" fill="#fdfdfc"/></svg>
+
+    <div class="abs coin" id="coin1" style="left:40px;top:760px">$</div>
+    <div class="abs coin" id="coin2" style="left:900px;top:700px">$</div>
+    <div class="abs coin" id="coin3" style="left:110px;top:1060px;width:100px;height:100px;font-size:60px">$</div>
+    <div class="abs coin" id="coin4" style="left:930px;top:1010px;width:96px;height:96px;font-size:56px">$</div>
+
+    <!-- Escena C: la lista / TOP 5 -->
+    <svg class="abs" id="ring" width="0" height="0">
+      <circle id="disc" cx="0" cy="0" r="470" fill="#5723f4"/>
+      <circle id="dash" cx="0" cy="0" r="530" fill="none" stroke="#c6fd34" stroke-width="12" stroke-dasharray="4 38" stroke-linecap="round"/>
+    </svg>
+    <div class="abs row" id="r1" style="top:610px"><div class="n">1</div><div class="chip">DIVIDENDO</div></div>
+    <div class="abs row" id="r2" style="top:730px"><div class="n">2</div><div class="chip">DIVIDENDO</div></div>
+    <div class="abs row" id="r3" style="top:850px"><div class="n">3</div><div class="chip">DIVIDENDO</div></div>
+    <div class="abs row" id="r4" style="top:970px"><div class="n">4</div><div class="chip">DIVIDENDO</div></div>
+    <div class="abs row" id="r5" style="top:1090px"><div class="n">5</div><div class="chip">DIVIDENDO</div></div>
+    <div class="abs" id="topWrap">
+      <div class="abs bigword" id="lista" style="position:relative">LA LISTA</div>
+      <div class="abs bigword" id="top5" style="position:absolute">TOP <span class="l">5</span></div>
+    </div>
+  </div>
+
+  <!-- CAPA DELANTERA: subtítulos cinéticos por encima de todo -->
+  <div class="layer" id="front">
+    <div class="abs" id="caps"></div>
+    <div class="abs" id="flash"></div>
+  </div>
+</div>
+<div id="controls"><input id="scrub" type="range" min="0" max="8.333" step="0.0333" value="0" style="width:100%"><span id="tc"></span></div>
+
+<script>
+// ===== Tiempos de cada palabra (segundos). Alineados a la voz del clip original. =====
+const WORDS = [
+  ['Es', 0.00], ['octubre', 0.18, 'key'],
+  ['y', 0.86], ['ya', 1.12], ['salió', 1.28], ['la', 1.62], ['lista', 1.79],
+  ['de', 2.12], ['las', 2.28], ['mejores', 2.57, 'key'], ['acciones', 3.20, 'key'],
+  ['que', 3.73], ['repartieron', 3.97], ['dividendos', 4.94, 'key'],
+  ['Aquí', 5.86], ['te', 6.12], ['dejo', 6.20], ['la', 6.40], ['lista', 6.48],
+  ['al', 7.12], ['menos', 7.20], ['del', 7.38], ['top', 7.48, 'key'], ['cinco', 7.62, 'key'],
+];
+// Frases en pantalla (índices de palabra [desde, hasta)) y su ventana de tiempo
+const GROUPS = [[0, 2, 0.00, 0.84], [2, 7, 0.84, 2.10], [7, 11, 2.10, 3.71], [11, 14, 3.71, 5.83],
+                [14, 19, 5.83, 7.10], [19, 24, 7.10, 8.40]];
+const LEAD = 0.05;                 // la palabra aparece 1-2 frames antes de oírse
+const DURATION = 8.3333;
+window.__DURATION = DURATION;
+
+const $ = (id) => document.getElementById(id);
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const prog = (t, a, b) => clamp((t - a) / (b - a));
+const easeOut = (p) => 1 - Math.pow(1 - p, 3);
+const easeIn = (p) => p * p * p;
+const easeInOut = (p) => p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
+const back = (p, s = 1.9) => 1 + (s + 1) * Math.pow(p - 1, 3) + s * Math.pow(p - 1, 2);
+const lerp = (a, b, p) => a + (b - a) * p;
+const set = (el, tf, op = 1) => { el.style.transform = tf; el.style.opacity = op; };
+
+// --- Construye los subtítulos
+const caps = $('caps');
+const wordEls = WORDS.map(([w, , k]) => {
+  const s = document.createElement('span');
+  s.className = 'w' + (k ? ' key' : '');
+  s.textContent = w;
+  caps.appendChild(s);
+  return s;
+});
+
+function renderFront(t) {
+  const g = GROUPS.find(([, , a, b]) => t >= a && t < b) || GROUPS[GROUPS.length - 1];
+  WORDS.forEach(([, ws, key], i) => {
+    const el = wordEls[i];
+    if (i < g[0] || i >= g[1]) { el.style.display = 'none'; return; }
+    el.style.display = 'inline-block';
+    const p = prog(t, ws - LEAD, ws - LEAD + 0.16);
+    if (p <= 0) { el.style.opacity = 0; return; }
+    const next = WORDS[i + 1] ? WORDS[i + 1][1] - LEAD : 99;
+    const active = t < next;
+    let sc = lerp(0.35, 1, back(p, 2.2));
+    if (key) sc *= active ? 1.16 : 1.08;           // palabras clave más grandes
+    else if (active) sc *= 1.04;
+    const rot = key ? -3 : 0;
+    const y = (1 - easeOut(p)) * 40;
+    set(el, `translateY(${y}px) scale(${sc}) rotate(${rot}deg)`, clamp(p * 3));
+  });
+  // destello al corte de cámara (5,83 s)
+  $('flash').style.opacity = 0.55 * (1 - prog(t, 5.83, 5.97)) * (t >= 5.83 ? 1 : 0);
+}
+
+function renderBack(t) {
+  const bob = (ph, amp = 10) => Math.sin(t * 2.4 + ph) * amp;
+
+  // --- Tarjeta A (octubre) entra al primer frame con pop
+  const inA = back(prog(t, 0.0, 0.42), 1.6);
+  const flip = easeInOut(prog(t, 2.10, 2.50));     // giro A → B
+  const outB = easeIn(prog(t, 5.55, 5.83));         // sale antes del corte
+  const cardBase = (s, ry, extra = '') => `translate(0, ${bob(0)}px) rotate(${-3 + flip * 3}deg) perspective(1600px) rotateY(${ry}deg) scale(${s}) ${extra}`;
+  const sA = lerp(0.5, 1, inA);
+  $('cardA').style.display = flip < 0.5 ? 'flex' : 'none';
+  set($('cardA'), cardBase(sA, flip * 180, `translateY(${(1 - inA) * 120}px)`), clamp(inA * 2));
+  $('cardB').style.display = flip >= 0.5 && t < 5.83 ? 'flex' : 'none';
+  set($('cardB'), cardBase(1 - outB * 0.4, flip * 180 - 180, `translateY(${-outB * 700}px)`), 1 - outB);
+  // gráfico de dividendos se dibuja en la tarjeta B
+  const line = $('chartLine'), L = 900;   // longitud aprox. de la polilínea
+  const dp = easeOut(prog(t, 2.55, 3.6));
+  line.style.strokeDasharray = L; line.style.strokeDashoffset = L * (1 - dp);
+  $('chartHead').style.opacity = dp > 0.97 ? 1 : 0;
+
+  // destellos decorativos
+  const sp = back(prog(t, 0.25, 0.6));
+  set($('spark1'), `rotate(${t * 60}deg) scale(${sp * (1 - outB)})`, t < 5.83 ? 1 : 0);
+  set($('spark2'), `rotate(${-t * 80}deg) scale(${back(prog(t, 0.45, 0.8)) * (1 - outB)})`, t < 5.83 ? 1 : 0);
+
+  // --- Monedas de dividendos (salen detrás del cuerpo en "dividendos")
+  [['coin1', 4.70, -1], ['coin2', 4.82, 1], ['coin3', 4.94, -1], ['coin4', 5.04, 1]].forEach(([id, ts, side], k) => {
+    const p = back(prog(t, ts, ts + 0.35), 1.8);
+    const gone = easeIn(prog(t, 5.6, 5.83));
+    const x = (1 - p) * 220 * -side;                // salen desde detrás de la persona
+    set($(id), `translate(${-x}px, ${bob(k * 1.7, 14) - gone * 300}px) rotate(${side * (1 - p) * 90 + Math.sin(t * 3 + k) * 8}deg) scale(${p})`,
+        t < 5.83 ? clamp(p * 2) * (1 - gone) : 0);
+  });
+
+  // --- Escena C (tras el corte): disco + lista + TOP 5
+  const c = t >= 5.83;
+  const dp2 = back(prog(t, 5.83, 6.25), 1.3);
+  const ring = $('ring');
+  set(ring, `scale(${c ? dp2 : 0})`, c ? 1 : 0);
+  $('dash').style.transform = `rotate(${t * 25}deg)`;
+  ['r1', 'r2', 'r3', 'r4', 'r5'].forEach((id, i) => {
+    const ts = 6.10 + i * 0.12;
+    const p = back(prog(t, ts, ts + 0.32), 1.4);
+    const side = i % 2 ? 1 : -1;
+    set($(id), `translateX(${(1 - p) * 1100 * side}px) rotate(${(1 - p) * 6 * side}deg)`, c ? clamp(p * 3) : 0);
+  });
+  const lp = back(prog(t, 5.86, 6.2), 1.7);
+  const swap = prog(t, 7.40, 7.50);
+  set($('lista'), `scale(${lp * (1 - swap)}) rotate(${(1 - lp) * -8}deg)`, c ? 1 - swap : 0);
+  const tp = back(prog(t, 7.46, 7.70), 2.6);
+  const shake = t > 7.6 && t < 7.9 ? Math.sin(t * 90) * 8 * (1 - prog(t, 7.6, 7.9)) : 0;
+  set($('top5'), `translate(${shake}px, 0) scale(${lerp(1.8, 1, tp) * (t >= 7.46 ? 1 : 0)}) rotate(${(1 - tp) * 10}deg)`, clamp(tp * 3));
+}
+
+window.__render = (t, layer) => {
+  $('back').style.display = layer === 'front' ? 'none' : 'block';
+  $('front').style.display = layer === 'back' ? 'none' : 'block';
+  renderBack(t); renderFront(t);
+  $('tc').textContent = t.toFixed(2) + ' s';
+};
+
+if (location.search.includes('render')) document.body.classList.add('render');
+else {
+  const sc = $('scrub');
+  sc.oninput = () => __render(+sc.value);
+  let t0 = performance.now();
+  const loop = () => { if (document.activeElement !== sc) { const t = ((performance.now() - t0) / 1000) % DURATION; sc.value = t; __render(t); } requestAnimationFrame(loop); };
+  document.fonts.ready.then(loop);
+}
+</script>
+</body>
+</html>
