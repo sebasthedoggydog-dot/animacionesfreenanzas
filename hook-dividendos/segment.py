@@ -1,6 +1,10 @@
+# Uso: python3 segment.py <carpeta_trabajo> [frames_de_corte separados por coma, base 0]
+#   lee <carpeta>/src/*.png y <carpeta>/selfie_multiclass.tflite, escribe <carpeta>/masks/*.png
 import sys,glob,os,numpy as np,cv2,mediapipe as mp
 from mediapipe.tasks.python import vision, BaseOptions
 S=sys.argv[1]
+CUTS={int(c) for c in sys.argv[2].split(',')} if len(sys.argv)>2 else set()
+os.makedirs(S+'/masks',exist_ok=True)
 seg=vision.ImageSegmenter.create_from_options(vision.ImageSegmenterOptions(base_options=BaseOptions(model_asset_path=S+'/selfie_multiclass.tflite'),running_mode=vision.RunningMode.VIDEO,output_confidence_masks=True))
 prev=None
 files=sorted(glob.glob(S+'/src/*.png'))
@@ -17,7 +21,7 @@ for i,f in enumerate(files):
         keep=(lab==big).astype(np.uint8)
         keep=cv2.dilate(keep,np.ones((25,25),np.uint8))
         m=m*keep
-    if prev is not None and i not in (175,): m=0.6*m+0.4*prev
+    if prev is not None and i not in CUTS: m=0.6*m+0.4*prev
     prev=m
     m2=cv2.GaussianBlur(m,(0,0),1.5)
     cv2.imwrite(S+'/masks/'+os.path.basename(f),(m2*255).astype(np.uint8))
