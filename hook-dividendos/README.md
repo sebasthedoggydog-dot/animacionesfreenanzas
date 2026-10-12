@@ -40,3 +40,7 @@ Orden de pistas para el efecto "detrás de la persona":
 4. V4: `2_subtitulos`
 
 Si haces zoom al video, aplica el mismo zoom a V1, V3 y al mate (anídalos juntos) para que el recorte calce.
+
+### Versiones en MP4 (H.264 no guarda transparencia, por eso hay dos formas)
+- **`*_CROMA-ROJO.mp4`**: gráficos sobre rojo puro `#FF0000`. Quita el rojo con el croma de tu editor (CapCut: *Croma* → gotero sobre el rojo; Premiere: *Ultra Key*). Se usó rojo porque ningún color de la marca (morado, verdes, lima, blanco) está cerca.
+- **`*_relleno.mp4` + `*_mate.mp4`**: recorte exacto, sin bordes. Pon el relleno y usa el mate como *mate de luminancia* (blanco = visible).
