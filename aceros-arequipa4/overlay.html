@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aceros Arequipa 4</title>
+<style>
+  /* ===== Paleta oficial Freenanzas ===== */
+  :root {
+    --morado: #5723f4;
+    --verde: #1a6f66;
+    --lima: #c6fd34;
+    --blanco: #fdfdfc;
+    --aa: #003ca6;            /* azul del logo Aceros Arequipa */
+    --bcp: #001c66;           /* azul del logo BCP */
+  }
+  @font-face { font-family: 'Montserrat'; font-weight: 800; src: url(../hook-dividendos/fonts/montserrat-latin-800-normal.woff2) format('woff2'); }
+  @font-face { font-family: 'Montserrat'; font-weight: 900; src: url(../hook-dividendos/fonts/montserrat-latin-900-normal.woff2) format('woff2'); }
+  @font-face { font-family: 'Free Serif'; font-style: italic; src: url(../hook-dividendos/fonts/FreeSerifItalic.ttf); }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: transparent; overflow: hidden; }
+  body { font-family: 'Montserrat', sans-serif; font-weight: 900; color: var(--blanco); }
+  body:not(.render) { background: #2a2a2a; }
+  #stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; }
+  .abs { position: absolute; will-change: transform, opacity; }
+  img { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .pill {
+    background: var(--lima); color: var(--morado); font-weight: 800; font-size: 32px;
+    letter-spacing: .06em; padding: 12px 26px 10px; border-radius: 999px; line-height: 1; white-space: nowrap;
+  }
+
+  /* --- Parte 1: logo + puesto --- */
+  #logoCard { left: 300px; top: 150px; width: 480px; height: 459px; border-radius: 48px; overflow: hidden;
+    border: 8px solid var(--blanco); box-shadow: 0 30px 60px rgba(0, 20, 70, .35); }
+  #tickerPill { left: 200px; top: 120px; }
+  #rank { left: 50px; top: 470px; width: 250px; height: 250px; border-radius: 50%;
+    background: var(--lima); border: 8px solid var(--morado); color: var(--morado);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: .85;
+    box-shadow: 0 18px 40px rgba(30, 10, 110, .35); }
+  #rank small { font-size: 28px; font-weight: 800; letter-spacing: .08em; }
+  #rank b { font-size: 150px; }
+
+  /* --- Parte 2: tarjeta del retorno (arriba, sobre la cabeza) --- */
+  #statCard { left: 50px; top: 95px; width: 980px; height: 250px; border-radius: 44px; background: var(--verde);
+    box-shadow: 0 26px 50px rgba(0, 30, 25, .35); }
+  #statLogo { left: 22px; top: 22px; width: 216px; height: 206px; border-radius: 30px; overflow: hidden; border: 5px solid var(--blanco); }
+  #statCard .pill { position: absolute; left: 270px; top: 30px; color: var(--verde); }
+  #pct { position: absolute; left: 262px; top: 84px; font-size: 156px; line-height: 1; letter-spacing: -0.03em; color: var(--lima); }
+  #pct span { font-size: 110px; }
+  #src { position: absolute; right: 34px; bottom: 26px; font-family: 'Free Serif', serif; font-style: italic; font-weight: 400; font-size: 28px; color: rgba(253,253,252,.85); }
+
+  /* --- Comparación: barras a los lados de la cabeza --- */
+  .col { width: 240px; }
+  .bar { position: absolute; left: 0; bottom: 0; width: 240px; border-radius: 30px 30px 0 0; transform-origin: bottom center; }
+  .lbl { position: absolute; left: 0; width: 240px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .lbl .logo { width: 170px; height: 97px; border-radius: 18px; overflow: hidden; border: 5px solid var(--blanco); box-shadow: 0 10px 22px rgba(0,0,0,.3); }
+  .lbl .val { font-size: 58px; line-height: 1; padding: 8px 16px 6px; border-radius: 16px; }
+  #colAA { left: 60px; top: 0; height: 1250px; }
+  #colAA .bar { background: linear-gradient(var(--lima) 65%, rgba(198,253,52,0)); }
+  #colAA .val { background: var(--morado); color: var(--lima); }
+  #colBCP { left: 780px; top: 0; height: 1250px; }
+  #colBCP .bar { background: linear-gradient(var(--blanco) 65%, rgba(253,253,252,0)); }
+  #colBCP .val { background: var(--bcp); color: var(--blanco); }
+  #crown { left: 50px; width: 260px; display: flex; justify-content: center; }
+  #beat { background: var(--morado); color: var(--lima); font-size: 36px; padding: 12px 22px 10px; border-radius: 999px; border: 5px solid var(--lima); white-space: nowrap; }
+  #lvl { left: 60px; width: 960px; height: 0; border-top: 6px dashed rgba(253,253,252,.9); }
+
+  #controls { position: fixed; left: 10px; bottom: 10px; right: 10px; font: 600 14px sans-serif; color: #fff; }
+  body.render #controls { display: none; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <!-- Comparación (detrás de todo) -->
+  <div class="abs" id="lvl"></div>
+  <div class="abs col" id="colAA"><div class="bar" id="barAA"></div>
+    <div class="lbl" id="lblAA"><div class="logo"><img src="assets/aceros-logo.jpg" style="object-fit:contain;background:#003ca6" alt="Aceros Arequipa"></div><div class="val" id="valAA">6,46%</div></div></div>
+  <div class="abs col" id="colBCP"><div class="bar" id="barBCP"></div>
+    <div class="lbl" id="lblBCP"><div class="logo"><img src="../bcp-ranking5/assets/bcp-logo.jpg" alt="BCP"></div><div class="val">5,96%</div></div></div>
+  <div class="abs" id="crown"><div id="beat">▲ +0,50 pp</div></div>
+
+  <!-- Parte 1 -->
+  <div class="abs" id="logoCard"><img src="assets/aceros-logo.jpg" alt="Aceros Arequipa"></div>
+  <div class="abs pill" id="tickerPill">CORAREI1 · SIDERURGIA</div>
+  <div class="abs" id="rank"><small>PUESTO</small><b>#4</b></div>
+
+  <!-- Parte 2 -->
+  <div class="abs" id="statCard">
+    <div class="abs" id="statLogo"><img src="assets/aceros-logo.jpg" alt="Aceros Arequipa"></div>
+    <div class="pill">RETORNO POR DIVIDENDO</div>
+    <div id="src">Fuente: BVL · TTM</div>
+    <div id="pct"><b id="num">0,00</b><span>%</span></div>
+  </div>
+</div>
+<div id="controls"><input id="scrub" type="range" min="0" max="7.5" step="0.0333" value="0" style="width:100%"><span id="tc"></span></div>
+
+<script>
+// Tiempos en segundos desde el inicio del clip (00:01:08:12 de la línea de tiempo)
+const T = {
+  logo: 0.85,    // "Aceros Arequipa"      → 00:01:09:08
+  shot2: 2.40,   // corte · "quedó en el…" → 00:01:10:24
+  rank: 3.10,    // "4.º puesto"           → 00:01:11:15
+  shot3: 4.00,   // corte · "Con un…"      → 00:01:12:12
+  count: 4.80,   // "seis punto…"          → 00:01:12:36 (≈ 00:01:13:06)
+  land: 5.85,    // "…veintiséis por ciento"
+  beat: 6.40,    // "le ganó al BCP"       → 00:01:14:24
+  out: 7.23,     // fin de la frase        → 00:01:15:19
+};
+const BCP = 5.96;
+const q = new URLSearchParams(location.search);
+const VALUE = parseFloat(q.get('pct') || '6.46');     // tabla oficial: 6,46 %
+const fmt = (v) => v.toFixed(2).replace('.', ',');
+const DURATION = 7.5;
+window.__DURATION = DURATION;
+
+document.getElementById('valAA').textContent = `${fmt(VALUE)}%`;
+document.getElementById('beat').textContent = `▲ +${fmt(VALUE - BCP)} pp`;
+
+const $ = (id) => document.getElementById(id);
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const prog = (t, a, b) => clamp((t - a) / (b - a));
+const easeOut = (p) => 1 - Math.pow(1 - p, 3);
+const easeIn = (p) => p * p * p;
+const back = (p, s = 1.7) => 1 + (s + 1) * Math.pow(p - 1, 3) + s * Math.pow(p - 1, 2);
+const lerp = (a, b, p) => a + (b - a) * p;
+const set = (el, tf, op = 1) => { el.style.transform = tf; el.style.opacity = op; };
+
+// Barras: base escondida detrás del cuerpo (y = 1000), altura proporcional al retorno
+const BASE = 1250, HMAX = 600;
+const hAA = HMAX, hBCP = HMAX * BCP / VALUE;
+
+function render(t) {
+  const bob = (ph, amp = 10) => Math.sin(t * 2.2 + ph) * amp;
+  const fin = easeIn(prog(t, T.out, T.out + 0.25));        // salida general
+  const p1 = t < T.shot3;
+
+  // ---- Parte 1: logo (sube al corte de la toma 2 porque la cabeza queda más alta)
+  const lp = back(prog(t, T.logo, T.logo + 0.45), 1.5);
+  const up = t >= T.shot2 ? -40 : 0;
+  const out1 = easeIn(prog(t, T.shot3 - 0.25, T.shot3));
+  const sc2 = t >= T.shot2 ? 0.86 : 1;
+  set($('logoCard'), `translate(0, ${(1 - lp) * 160 + up + bob(0) - out1 * 700}px) rotate(${lerp(-12, -3, lp)}deg) scale(${lerp(0.5, 1, lp) * sc2})`,
+      p1 ? clamp(lp * 2) : 0);
+  const tp = back(prog(t, T.logo + 0.25, T.logo + 0.6), 2);
+  set($('tickerPill'), `translate(0, ${up + bob(1.3, 8) - out1 * 700}px) rotate(-5deg) scale(${tp})`, p1 ? clamp(tp * 2) : 0);
+  const rp = back(prog(t, T.rank, T.rank + 0.4), 2.6);
+  set($('rank'), `translate(${-out1 * 500}px, ${bob(2.2, 12)}px) rotate(${lerp(-45, -8, rp)}deg) scale(${rp})`, p1 ? clamp(rp * 2) : 0);
+
+  // ---- Parte 2: tarjeta con el número
+  const cp = back(prog(t, T.shot3, T.shot3 + 0.4), 1.3);
+  set($('statCard'), `translate(0, ${(1 - cp) * -260 + bob(0.5, 6) - fin * 500}px) scale(${lerp(0.7, 1, cp)})`, t >= T.shot3 ? clamp(cp * 2) * (1 - fin) : 0);
+  const np = easeOut(prog(t, T.count, T.land));
+  $('num').textContent = fmt(VALUE * np);
+  const hit = t >= T.land ? Math.exp(-(t - T.land) * 7) : 0;
+  $('pct').style.transform = `scale(${1 + 0.12 * hit})`;
+  $('pct').style.transformOrigin = 'left center';
+
+  // ---- Comparación: "le ganó al BCP"
+  const show = t >= T.beat;
+  const bp = easeOut(prog(t, T.beat, T.beat + 0.45));
+  const bb = easeOut(prog(t, T.beat + 0.08, T.beat + 0.5));
+  $('barAA').style.height = `${hAA * bp}px`;
+  $('barBCP').style.height = `${hBCP * bb}px`;
+  const lblA = BASE - hAA * bp - 200, lblB = BASE - hBCP * bb - 200;
+  $('lblAA').style.top = `${lblA}px`;
+  $('lblBCP').style.top = `${lblB}px`;
+  const colOp = show ? 1 - fin : 0;
+  set($('colAA'), `translateY(${fin * 400}px)`, colOp);
+  set($('colBCP'), `translateY(${fin * 400}px)`, colOp);
+  // línea punteada al nivel del BCP: muestra cuánto lo supera
+  const lv = easeOut(prog(t, T.beat + 0.45, T.beat + 0.7));
+  $('lvl').style.top = `${BASE - hBCP}px`;
+  set($('lvl'), `scaleX(${lv})`, show ? 1 - fin : 0);
+  $('lvl').style.transformOrigin = 'right center';
+  const cw = back(prog(t, T.beat + 0.55, T.beat + 0.85), 2.6);
+  $('crown').style.top = `${BASE - hAA * bp + 30}px`;   // dentro de la barra lima, arriba
+  set($('crown'), `translateY(${fin * 400}px) rotate(${lerp(-25, -6, cw)}deg) scale(${cw})`, show ? clamp(cw * 2) * (1 - fin) : 0);
+}
+
+window.__render = (t) => { render(t); $('tc').textContent = t.toFixed(2) + ' s'; };
+
+if (q.has('render')) document.body.classList.add('render');
+else {
+  const sc = $('scrub');
+  sc.oninput = () => __render(+sc.value);
+  const t0 = performance.now();
+  const loop = () => { if (document.activeElement !== sc) { const t = ((performance.now() - t0) / 1000) % DURATION; sc.value = t; __render(t); } requestAnimationFrame(loop); };
+  document.fonts.ready.then(loop);
+}
+</script>
+</body>
+</html>
