@@ -21,3 +21,22 @@ node render-layers.mjs work/layers                       # capas back/front tran
 python3 compose.py inicio.mp4 work/src work/masks work/layers output/hook-dividendos.mp4
 ```
 Los tiempos de cada palabra están en `WORDS` dentro de `overlay.html` (estimados con la energía del audio). Si alguna palabra entra adelantada o tarde, se corrige ahí y se vuelve a renderizar. `overlay.html` también se puede abrir en el navegador para previsualizar la animación con un scrubber.
+
+## Solo gráficos para tu editor (`output/graficos/`)
+Todo dura 8,33 s, 1080×1920, 30 fps, y empieza en 00:00:00:00 del clip original.
+
+| Archivo | Qué es | Pista |
+|---|---|---|
+| `1_graficos-detras-de-la-persona.mov` / `.webm` / `_png.zip` | Tarjetas, monedas, ranking y TOP 5 con fondo transparente | Encima del video |
+| `3_mate-persona.mp4` | Máscara blanco = persona, negro = fondo | Para recortar a la persona |
+| `2_subtitulos.mov` / `.webm` / `_png.zip` | Subtítulos cinéticos + destello del corte, con transparencia | Arriba de todo |
+
+`.mov` = ProRes 4444 con alfa (Premiere, Final Cut, DaVinci, After Effects). `.webm` = VP9 con alfa (más liviano). `_png.zip` = secuencia PNG por si tu editor no lee alfa en video.
+
+Orden de pistas para el efecto "detrás de la persona":
+1. V1: video original
+2. V2: `1_graficos-detras-de-la-persona`
+3. V3: otra copia del video original con `3_mate-persona.mp4` como **mate de luminancia** (Track Matte Key en Premiere, Luma Keyer/Alpha en DaVinci)
+4. V4: `2_subtitulos`
+
+Si haces zoom al video, aplica el mismo zoom a V1, V3 y al mate (anídalos juntos) para que el recorte calce.
