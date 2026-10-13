@@ -9,7 +9,7 @@ Dato: ORYGENC1 · Energía · 6,92 % (coincide con la tabla oficial, `../TOP5-DI
 | 00:01:15:27 | "Orygen…" | Tarjeta blanca con el logo, pop · píldora "ORYGENC1 · ENERGÍA" (00:01:16:06) | — |
 | **00:01:17:09** | "…acciones **que yo tengo**" | Chip morado "★ EN MI PORTAFOLIO" | **ZOOM SUTIL 100 → 108 %** en 1 s (hasta 00:01:18:09), curva *ease in-out* (suave al entrar y al salir), ancla en la cara. Mantener hasta el corte de 00:01:20:14 |
 | 00:01:18:17 → 00:01:18:20 | "…están en **OPA**" | La tarjeta gira a morado: "ACCIONES EN **OPA**" + *Oferta Pública de Adquisición* | — |
-| 00:01:20:14 | corte · "6,92 %" | Tarjeta vertical verde a la derecha de tu cabeza (tu pelo la tapa = profundidad) + chip "EN OPA" | Vuelve a 100 % |
+| 00:01:20:14 | corte · "6,92 %" | Tarjeta verde ancha a la derecha (número y % en la misma línea) + chip "EN OPA". En esta toma la cara está muy cerca: muévela en Premiere donde prefieras | Vuelve a 100 % |
 | 00:01:20:16 → 00:01:22:03 | "seis punto noventa y dos" | Contador 0,00 → **6,92 %** + barrita (escala vs. 10,14 % del puesto 1) con golpe al llegar | — |
 | 00:01:22:25 | corte · "Quedando…" | Mini logo Orygen a la izquierda | — |
 | 00:01:24:00 | "puesto **tres**" | Badge lima "PUESTO #3" a la izquierda (tu mano marca el 3 a la derecha) | — |
