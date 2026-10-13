@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rendimientos y riesgos</title>
+<style>
+  /* ===== Paleta oficial Freenanzas ===== */
+  :root {
+    --morado: #5723f4;
+    --verde: #1a6f66;
+    --lima: #c6fd34;
+    --blanco: #fdfdfc;
+  }
+  @font-face { font-family: 'Montserrat'; font-weight: 800; src: url(../hook-dividendos/fonts/montserrat-latin-800-normal.woff2) format('woff2'); }
+  @font-face { font-family: 'Montserrat'; font-weight: 900; src: url(../hook-dividendos/fonts/montserrat-latin-900-normal.woff2) format('woff2'); }
+  @font-face { font-family: 'Free Serif'; font-style: italic; src: url(../hook-dividendos/fonts/FreeSerifItalic.ttf); }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: transparent; overflow: hidden; }
+  body { font-family: 'Montserrat', sans-serif; font-weight: 900; color: var(--blanco); }
+  body:not(.render) { background: #2a2a2a; }
+  #stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; }
+  .abs { position: absolute; will-change: transform, opacity; }
+  svg { display: block; overflow: visible; }
+  .serif { font-family: 'Free Serif', serif; font-style: italic; font-weight: 400; }
+  .pill {
+    background: var(--lima); color: var(--morado); font-weight: 800; font-size: 30px;
+    letter-spacing: .06em; padding: 11px 24px 9px; border-radius: 999px; line-height: 1; white-space: nowrap;
+  }
+
+  /* La cabeza está en y ≈ 400–550: las tarjetas viven en y 130–520 y la cabeza tapa su borde inferior */
+  #cmpCard { left: 70px; top: 135px; width: 940px; height: 390px; border-radius: 48px; background: var(--morado);
+    box-shadow: 0 30px 60px rgba(20, 8, 70, .35); backface-visibility: hidden; }
+  #cmpCard .pill { position: absolute; left: 40px; top: 32px; }
+  .lbl { position: absolute; left: 44px; font-size: 30px; font-weight: 800; letter-spacing: .03em; }
+  .track { position: absolute; left: 44px; width: 852px; height: 52px; border-radius: 26px; background: rgba(253,253,252,.14); overflow: hidden; }
+  .fill { height: 100%; border-radius: 26px; transform-origin: left center; }
+  #lblA { top: 102px; color: var(--lima); }
+  #trackA { top: 148px; }
+  #fillA { width: 100%; background: var(--lima); }
+  #valA { left: 68px; top: 156px; color: var(--morado); font-size: 34px; white-space: nowrap; }
+  #lblB { top: 222px; }
+  #trackB { top: 268px; }
+  #fillB { width: 100%; background: var(--blanco); }
+  #better { left: 322px; top: 34px; background: var(--blanco); color: var(--morado); font-size: 28px; padding: 9px 18px 7px; border-radius: 999px; white-space: nowrap; }
+  #yes { left: 850px; top: 60px; width: 200px; height: 200px; border-radius: 50%; background: var(--lima); border: 8px solid var(--morado);
+    color: var(--morado); display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: .9;
+    box-shadow: 0 18px 40px rgba(30, 10, 110, .4); }
+  #yes b { font-size: 84px; }
+
+  #riskCard { left: 70px; top: 135px; width: 940px; height: 390px; border-radius: 48px; background: var(--blanco);
+    box-shadow: 0 30px 60px rgba(20, 8, 70, .3); }
+  #riskTitle { left: 190px; top: 40px; color: var(--morado); font-size: 76px; letter-spacing: -0.01em; }
+  #warn { left: 44px; top: 30px; }
+  #riskNote { left: 194px; top: 128px; color: var(--verde); font-size: 36px; }
+  #zig { left: 44px; top: 190px; }
+
+  #controls { position: fixed; left: 10px; bottom: 10px; right: 10px; font: 600 14px sans-serif; color: #fff; }
+  body.render #controls { display: none; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <!-- Parte 1: rendimientos vs. cuenta de ahorro -->
+  <div class="abs" id="cmpCard">
+    <div class="pill">RENDIMIENTO</div>
+    <div class="abs" id="better">▲ MEJORES</div>
+    <div class="lbl" id="lblA">ACCIONES QUE PAGAN DIVIDENDOS</div>
+    <div class="track" id="trackA"><div class="fill" id="fillA"></div></div>
+    <div class="abs" id="valA">TOP 5: 5,96 % – 10,14 %</div>
+    <div class="lbl" id="lblB">CUENTA DE AHORRO</div>
+    <div class="track" id="trackB"><div class="fill" id="fillB"></div></div>
+  </div>
+  <div class="abs" id="yes"><b>¡SÍ!</b></div>
+
+  <!-- Parte 2: riesgos -->
+  <div class="abs" id="riskCard">
+    <svg class="abs" id="warn" width="130" height="116" viewBox="0 0 130 116">
+      <path d="M65 8 L124 108 L6 108 Z" fill="#c6fd34" stroke="#5723f4" stroke-width="10" stroke-linejoin="round"/>
+      <rect x="58" y="40" width="14" height="38" rx="7" fill="#5723f4"/><circle cx="65" cy="91" r="8" fill="#5723f4"/>
+    </svg>
+    <div class="abs" id="riskTitle">RIESGOS</div>
+    <div class="abs serif" id="riskNote">El precio puede subir o bajar</div>
+    <svg class="abs" id="zig" width="852" height="170" viewBox="0 0 852 170">
+      <line x1="0" y1="85" x2="852" y2="85" stroke="rgba(87,35,244,.18)" stroke-width="4" stroke-dasharray="10 12"/>
+      <polyline id="zigLine" points="0,90 80,60 150,110 230,40 310,120 390,70 470,140 550,50 630,100 710,30 790,130 852,155"
+        fill="none" stroke="#5723f4" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+</div>
+<div id="controls"><input id="scrub" type="range" min="0" max="5.63" step="0.0333" value="0" style="width:100%"><span id="tc"></span></div>
+
+<script>
+// Tiempos en segundos desde el inicio del clip (00:00:53:25). Estimados con la energía del audio.
+const T = {
+  buenos: 0.75,    // "dan buenos…"           → 00:00:54:17
+  rend: 1.05,      // "…rendimientos"         → 00:00:54:26
+  mejores: 2.00,   // "y mejores…"            → 00:00:55:25
+  ahorro: 3.00,    // "…cuentas de ahorro"    → 00:00:56:25
+  si: 3.65,        // "Sí."                   → 00:00:57:15
+  shot2: 4.07,     // corte · "Y de que hay…" → 00:00:57:27
+  riesgos: 4.30,   // "riesgos"               → 00:00:58:04
+  shot3: 4.83,     // corte · "también los hay" → 00:00:58:20
+};
+const DURATION = 5.6333;
+window.__DURATION = DURATION;
+
+const $ = (id) => document.getElementById(id);
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const prog = (t, a, b) => clamp((t - a) / (b - a));
+const easeOut = (p) => 1 - Math.pow(1 - p, 3);
+const easeIn = (p) => p * p * p;
+const easeInOut = (p) => p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
+const back = (p, s = 1.7) => 1 + (s + 1) * Math.pow(p - 1, 3) + s * Math.pow(p - 1, 2);
+const lerp = (a, b, p) => a + (b - a) * p;
+const set = (el, tf, op = 1) => { el.style.transform = tf; el.style.opacity = op; };
+
+function render(t) {
+  const bob = (ph, amp = 8) => Math.sin(t * 2.2 + ph) * amp;
+  const p1 = t < T.shot2;
+
+  // ---- Parte 1
+  const cp = back(prog(t, T.buenos - 0.1, T.buenos + 0.35), 1.5);
+  const out1 = easeIn(prog(t, T.shot2 - 0.22, T.shot2));
+  set($('cmpCard'), `translate(0, ${(1 - cp) * -200 + bob(0) - out1 * 600}px) rotate(${lerp(-6, -1.5, cp)}deg) scale(${lerp(0.7, 1, cp)})`, p1 ? clamp(cp * 2) : 0);
+  // barra de acciones crece en "rendimientos"
+  const a = easeOut(prog(t, T.rend, T.rend + 0.7));
+  $('fillA').style.transform = `scaleX(${0.92 * a})`;
+  $('valA').style.opacity = prog(t, T.rend + 0.5, T.rend + 0.8);
+  // "mejores"
+  const bp = back(prog(t, T.mejores, T.mejores + 0.3), 2.4);
+  set($('better'), `rotate(${lerp(20, 4, bp)}deg) scale(${bp})`, clamp(bp * 2));
+  // cuenta de ahorro: barra corta (comparación cualitativa, sin cifra)
+  $('lblB').style.opacity = prog(t, T.ahorro - 0.1, T.ahorro + 0.1);
+  $('trackB').style.opacity = prog(t, T.ahorro - 0.1, T.ahorro + 0.1);
+  $('fillB').style.transform = `scaleX(${0.22 * easeOut(prog(t, T.ahorro, T.ahorro + 0.5))})`;
+  // "¡SÍ!"
+  const yp = back(prog(t, T.si, T.si + 0.3), 2.8);
+  set($('yes'), `translate(0, ${bob(1.5, 6) - out1 * 600}px) rotate(${lerp(-40, 10, yp)}deg) scale(${yp})`, p1 ? clamp(yp * 2) : 0);
+
+  // ---- Parte 2: riesgos
+  const rp = back(prog(t, T.shot2, T.shot2 + 0.4), 1.4);
+  set($('riskCard'), `translate(0, ${(1 - rp) * 240 + bob(0.4)}px) rotate(${lerp(5, -1.5, rp)}deg) scale(${lerp(0.7, 1, rp)})`, p1 ? 0 : clamp(rp * 2));
+  // el triángulo tiembla en "riesgos" y otra vez en "también los hay"
+  const sh = (at) => t > at && t < at + 0.4 ? Math.sin((t - at) * 60) * 10 * (1 - (t - at) / 0.4) : 0;
+  $('warn').style.transform = `rotate(${sh(T.riesgos) + sh(T.shot3)}deg) scale(${1 + 0.15 * (t >= T.riesgos ? Math.exp(-(t - T.riesgos) * 6) : 0)})`;
+  const zp = easeInOut(prog(t, T.riesgos, T.shot3 + 0.6));
+  $('zigLine').style.strokeDasharray = 1400; $('zigLine').style.strokeDashoffset = 1400 * (1 - zp);
+}
+
+window.__render = (t) => { render(t); $('tc').textContent = t.toFixed(2) + ' s'; };
+
+if (new URLSearchParams(location.search).has('render')) document.body.classList.add('render');
+else {
+  const sc = $('scrub');
+  sc.oninput = () => __render(+sc.value);
+  const t0 = performance.now();
+  const loop = () => { if (document.activeElement !== sc) { const t = ((performance.now() - t0) / 1000) % DURATION; sc.value = t; __render(t); } requestAnimationFrame(loop); };
+  document.fonts.ready.then(loop);
+}
+</script>
+</body>
+</html>
