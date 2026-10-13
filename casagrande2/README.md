@@ -7,7 +7,6 @@ Dato: CASAGRC1 · Agroindustrial · 8,83 % (coincide con `../TOP5-DIVIDENDOS.md`
 | Timecode | Voz | Gráfico (detrás de la persona) | Cámara |
 |---|---|---|---|
 | 00:01:26:12 | "**Casa Grande**" | Tarjeta blanca con el logo + píldora "CASAGRC1 · AGROINDUSTRIAL" | Empujón rápido **100 → 106 %** en 6 frames (hasta 00:01:26:18) |
-| 00:01:26:20 | — | Chip "✓ ME PAGÓ DIVIDENDOS" arriba a la izquierda (referencia personal, se queda todo el segmento) | — |
 | 00:01:27:05 | corte · "Con un…" | La tarjeta gira a verde "RETORNO POR DIVIDENDO" | — |
 | 00:01:27:18 → 00:01:28:00 | "ocho punto ochenta y tres" | Contador 0,00 → **8,83 %** + barra (escala vs. 10,14 % del puesto 1) | — |
 | **00:01:28:00** | llega al "…tres" | Golpe del número + rayos lima/blancos de "sorpresa" | **PUNCH-IN 106 → 120 % en 5 frames** (hasta 00:01:28:05) con **rotación −2° que vuelve a 0°** en 10 frames (hasta 00:01:28:10). Mantener hasta el corte |

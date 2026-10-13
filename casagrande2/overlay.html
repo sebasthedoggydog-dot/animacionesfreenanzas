@@ -29,12 +29,6 @@
   .serif { font-family: 'Free Serif', serif; font-style: italic; font-weight: 400; }
   .check { width: 96px; height: 96px; border-radius: 50%; background: var(--lima); display: flex; align-items: center; justify-content: center; flex: none; }
 
-  /* --- Referencia personal: chip "me pagó dividendos" --- */
-  #paidChip { left: 60px; top: 190px; background: var(--morado); color: var(--blanco); font-size: 32px; font-weight: 800;
-    padding: 12px 24px 10px 14px; border-radius: 999px; border: 5px solid var(--lima); white-space: nowrap;
-    display: flex; align-items: center; gap: 12px; box-shadow: 0 12px 26px rgba(30, 10, 110, .35); }
-  #paidChip .check { width: 44px; height: 44px; }
-
   /* --- Logo y tarjeta del retorno (arriba de la cabeza, que está en y ≈ 730) --- */
   #logoCard { left: 110px; top: 330px; width: 860px; height: 230px; border-radius: 44px; background: var(--blanco);
     display: flex; align-items: center; justify-content: center; box-shadow: 0 30px 60px rgba(20, 8, 70, .3); backface-visibility: hidden; }
@@ -76,7 +70,6 @@
     <div class="abs" id="bar"><div id="barFill"></div></div>
   </div>
   <div class="abs pill" id="tickerPill">CASAGRC1 · AGROINDUSTRIAL</div>
-  <div class="abs" id="paidChip"><div class="check"><svg width="26" height="26" viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5" fill="none" stroke="#5723f4" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>ME PAGÓ DIVIDENDOS</div>
   <div class="abs" id="rank"><small>PUESTO</small><b>#2</b></div>
 </div>
 <div id="controls"><input id="scrub" type="range" min="0" max="4.73" step="0.0333" value="0" style="width:100%"><span id="tc"></span></div>
@@ -85,7 +78,6 @@
 // Tiempos en segundos desde el inicio del clip (00:01:26:10 de la línea de tiempo)
 const T = {
   logo: 0.05,    // "Casa Grande"          → 00:01:26:12
-  chip: 0.35,    // chip "me pagó dividendos" → 00:01:26:20
   flip: 0.83,    // corte · "Con un…"      → 00:01:27:05
   count: 1.25,   // "ocho punto…"          → 00:01:27:18
   land: 2.65,    // "…ochenta y tres"      → 00:01:28:00
@@ -120,10 +112,6 @@ for (let k = 0; k < 14; k++) {
 
 function render(t) {
   const bob = (ph, amp = 10) => Math.sin(t * 2.2 + ph) * amp;
-
-  // referencia personal: queda arriba a la izquierda todo el segmento
-  const cp0 = back(prog(t, T.chip, T.chip + 0.35), 2.2);
-  set($('paidChip'), `translate(0, ${bob(1.5, 6)}px) rotate(${lerp(-20, -4, cp0)}deg) scale(${cp0})`, t >= T.chip ? clamp(cp0 * 2) : 0);
 
   // ---- Logo Casa Grande → gira a la tarjeta del retorno
   const lp = back(prog(t, T.logo, T.logo + 0.45), 1.5);
