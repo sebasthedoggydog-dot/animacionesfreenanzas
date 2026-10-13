@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Orygen 3</title>
+<style>
+  /* ===== Paleta oficial Freenanzas ===== */
+  :root {
+    --morado: #5723f4;
+    --verde: #1a6f66;
+    --lima: #c6fd34;
+    --blanco: #fdfdfc;
+    --naranja: #f85a05;       /* naranja del logo Orygen (solo en el logo) */
+  }
+  @font-face { font-family: 'Montserrat'; font-weight: 800; src: url(../hook-dividendos/fonts/montserrat-latin-800-normal.woff2) format('woff2'); }
+  @font-face { font-family: 'Montserrat'; font-weight: 900; src: url(../hook-dividendos/fonts/montserrat-latin-900-normal.woff2) format('woff2'); }
+  @font-face { font-family: 'Free Serif'; font-style: italic; src: url(../hook-dividendos/fonts/FreeSerifItalic.ttf); }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: transparent; overflow: hidden; }
+  body { font-family: 'Montserrat', sans-serif; font-weight: 900; color: var(--blanco); }
+  body:not(.render) { background: #2a2a2a; }
+  #stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; }
+  .abs { position: absolute; will-change: transform, opacity; }
+  .pill {
+    background: var(--lima); color: var(--morado); font-weight: 800; font-size: 32px;
+    letter-spacing: .06em; padding: 12px 26px 10px; border-radius: 999px; line-height: 1; white-space: nowrap;
+  }
+  .serif { font-family: 'Free Serif', serif; font-style: italic; font-weight: 400; }
+
+  /* --- Toma 1: logo → "Acciones en OPA" (arriba de la cabeza, y 150–540) --- */
+  #logoCard { left: 140px; top: 175px; width: 800px; height: 330px; border-radius: 48px; background: var(--blanco);
+    display: flex; align-items: center; justify-content: center; box-shadow: 0 30px 60px rgba(20, 8, 70, .3); backface-visibility: hidden; }
+  #logoCard img { width: 640px; }
+  #tickerPill { left: 110px; top: 140px; }
+  #mine { left: 560px; top: 478px; background: var(--morado); color: var(--blanco); font-size: 34px; font-weight: 800;
+    padding: 14px 26px 12px; border-radius: 999px; border: 5px solid var(--lima); white-space: nowrap; letter-spacing: .03em;
+    box-shadow: 0 14px 30px rgba(30, 10, 110, .35); }
+  #mine b { color: var(--lima); }
+  #opaCard { left: 110px; top: 150px; width: 860px; height: 380px; border-radius: 52px; background: var(--morado);
+    display: flex; flex-direction: column; align-items: center; padding-top: 34px; box-shadow: 0 30px 60px rgba(20, 8, 70, .35); backface-visibility: hidden; }
+  #opaCard .pill { font-size: 34px; }
+  #opa { font-size: 168px; line-height: .9; color: var(--lima); letter-spacing: -0.02em; margin-top: 16px; }
+  #opaDef { font-size: 42px; color: var(--blanco); margin-top: 8px; }
+  #opaSym { left: 26px; top: 26px; width: 120px; height: 120px; border-radius: 50%; background: var(--blanco);
+    display: flex; align-items: center; justify-content: center; }
+  #opaSym img { width: 82px; }
+
+  /* --- Toma 2: tarjeta vertical del retorno a la derecha de la cabeza --- */
+  #statCard { left: 712px; top: 380px; width: 340px; height: 600px; border-radius: 44px; background: var(--verde);
+    display: flex; flex-direction: column; align-items: center; padding-top: 28px; box-shadow: 0 26px 50px rgba(0, 30, 25, .35); }
+  #statLogo { width: 280px; height: 92px; border-radius: 22px; background: var(--blanco); display: flex; align-items: center; justify-content: center; }
+  #statLogo img { width: 240px; }
+  #statCard .lbl { font-size: 28px; font-weight: 800; letter-spacing: .06em; text-align: center; line-height: 1.15; margin-top: 26px; color: var(--lima); }
+  #num { font-size: 118px; line-height: .95; letter-spacing: -0.03em; color: var(--lima); margin-top: 18px; }
+  #pctSign { font-size: 86px; line-height: .9; color: var(--lima); }
+  #ring { margin-top: 18px; }
+  #src { font-size: 26px; color: rgba(253,253,252,.85); margin-top: 6px; }
+  #opaTag { left: 760px; top: 330px; background: var(--morado); color: var(--lima); font-size: 30px; font-weight: 900;
+    padding: 12px 22px 10px; border-radius: 999px; border: 4px solid var(--lima); white-space: nowrap; }
+
+  /* --- Toma 3: puesto 3 (izquierda; la mano marca el 3 a la derecha) --- */
+  #rank { left: 50px; top: 250px; width: 270px; height: 270px; border-radius: 50%;
+    background: var(--lima); border: 8px solid var(--morado); color: var(--morado);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: .85;
+    box-shadow: 0 18px 40px rgba(30, 10, 110, .35); }
+  #rank small { font-size: 30px; font-weight: 800; letter-spacing: .08em; }
+  #rank b { font-size: 160px; }
+  #rankLogo { left: 70px; top: 560px; width: 230px; height: 76px; border-radius: 20px; background: var(--blanco);
+    display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 24px rgba(0,0,0,.25); }
+  #rankLogo img { width: 196px; }
+
+  #controls { position: fixed; left: 10px; bottom: 10px; right: 10px; font: 600 14px sans-serif; color: #fff; }
+  body.render #controls { display: none; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <!-- Toma 1 -->
+  <div class="abs" id="logoCard"><img src="assets/orygen-logo.png" alt="Orygen"></div>
+  <div class="abs" id="opaCard">
+    <div class="abs" id="opaSym"><img src="assets/orygen-simbolo.png" alt=""></div>
+    <div class="pill">ACCIONES EN</div>
+    <div id="opa">OPA</div>
+    <div id="opaDef" class="serif">Oferta Pública de Adquisición</div>
+  </div>
+  <div class="abs pill" id="tickerPill">ORYGENC1 · ENERGÍA</div>
+  <div class="abs" id="mine"><b>★</b> EN MI PORTAFOLIO</div>
+
+  <!-- Toma 2 -->
+  <div class="abs" id="statCard">
+    <div id="statLogo"><img src="assets/orygen-logo.png" alt="Orygen"></div>
+    <div class="lbl">RETORNO POR<br>DIVIDENDO</div>
+    <div id="num">0,00</div>
+    <div id="pctSign">%</div>
+    <svg id="ring" width="120" height="16" viewBox="0 0 120 16"><rect width="120" height="16" rx="8" fill="rgba(253,253,252,.2)"/><rect id="barFill" width="120" height="16" rx="8" fill="#c6fd34"/></svg>
+    <div id="src" class="serif">Fuente: BVL · TTM</div>
+  </div>
+  <div class="abs" id="opaTag">EN OPA</div>
+
+  <!-- Toma 3 -->
+  <div class="abs" id="rank"><small>PUESTO</small><b>#3</b></div>
+  <div class="abs" id="rankLogo"><img src="assets/orygen-logo.png" alt="Orygen"></div>
+</div>
+<div id="controls"><input id="scrub" type="range" min="0" max="8.7" step="0.0333" value="0" style="width:100%"><span id="tc"></span></div>
+
+<script>
+// Tiempos en segundos desde el inicio del clip (00:01:15:24 de la línea de tiempo)
+const T = {
+  logo: 0.10,    // "Orygen"              → 00:01:15:27
+  mine: 1.50,    // "que yo tengo"        → 00:01:17:09
+  opa: 2.85,     // "están en OPA"        → 00:01:18:20
+  shot2: 4.67,   // corte · "6,92 %"      → 00:01:20:14
+  count: 4.75,
+  land: 6.30,    // "…noventa y dos por ciento"
+  shot3: 7.03,   // corte · "Quedando…"   → 00:01:22:25
+  rank: 8.20,    // "puesto tres"         → 00:01:24:00
+};
+const VALUE = 6.92, TOP = 10.14;
+const DURATION = 8.7;
+window.__DURATION = DURATION;
+const fmt = (v) => v.toFixed(2).replace('.', ',');
+
+const $ = (id) => document.getElementById(id);
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const prog = (t, a, b) => clamp((t - a) / (b - a));
+const easeOut = (p) => 1 - Math.pow(1 - p, 3);
+const easeIn = (p) => p * p * p;
+const easeInOut = (p) => p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
+const back = (p, s = 1.7) => 1 + (s + 1) * Math.pow(p - 1, 3) + s * Math.pow(p - 1, 2);
+const lerp = (a, b, p) => a + (b - a) * p;
+const set = (el, tf, op = 1) => { el.style.transform = tf; el.style.opacity = op; };
+
+function render(t) {
+  const bob = (ph, amp = 10) => Math.sin(t * 2.2 + ph) * amp;
+  const s1 = t < T.shot2, s2 = t >= T.shot2 && t < T.shot3, s3 = t >= T.shot3;
+  const out1 = easeIn(prog(t, T.shot2 - 0.22, T.shot2));
+
+  // ---- Toma 1: logo que gira a "ACCIONES EN OPA"
+  const lp = back(prog(t, T.logo, T.logo + 0.45), 1.5);
+  const flip = easeInOut(prog(t, T.opa - 0.1, T.opa + 0.3));
+  const card = (ry, s) => `translate(0, ${bob(0) - out1 * 700}px) rotate(${-2 + flip * 1}deg) perspective(1600px) rotateY(${ry}deg) scale(${s})`;
+  $('logoCard').style.display = flip < 0.5 ? 'flex' : 'none';
+  set($('logoCard'), card(flip * 180, lerp(0.5, 1, lp)) + ` translateY(${(1 - lp) * 140}px)`, s1 ? clamp(lp * 2) : 0);
+  $('opaCard').style.display = flip >= 0.5 ? 'flex' : 'none';
+  set($('opaCard'), card(flip * 180 - 180, 1), s1 ? 1 - out1 : 0);
+  const tp = back(prog(t, T.logo + 0.3, T.logo + 0.65), 2);
+  set($('tickerPill'), `translate(0, ${bob(1.3, 8) - out1 * 700}px) rotate(-5deg) scale(${tp})`, s1 ? clamp(tp * 2) : 0);
+  // toque personal: "en mi portafolio"
+  const mp = back(prog(t, T.mine, T.mine + 0.4), 2.4);
+  set($('mine'), `translate(0, ${bob(2.1, 9) - out1 * 700}px) rotate(${lerp(20, 4, mp)}deg) scale(${mp})`, s1 ? clamp(mp * 2) : 0);
+
+  // ---- Toma 2: tarjeta vertical con el 6,92 %
+  const cp = back(prog(t, T.shot2, T.shot2 + 0.4), 1.4);
+  const out2 = easeIn(prog(t, T.shot3 - 0.22, T.shot3));
+  set($('statCard'), `translate(${(1 - cp) * 400 + out2 * 500}px, ${bob(0.6, 8)}px) rotate(${lerp(10, 2, cp)}deg)`, s2 ? 1 : 0);
+  const np = easeOut(prog(t, T.count, T.land));
+  $('num').textContent = fmt(VALUE * np);
+  const hit = t >= T.land ? Math.exp(-(t - T.land) * 7) : 0;
+  $('num').style.transform = `scale(${1 + 0.14 * hit})`;
+  $('barFill').setAttribute('width', 120 * (VALUE / TOP) * np);
+  const op = back(prog(t, T.shot2 + 0.3, T.shot2 + 0.65), 2.4);
+  set($('opaTag'), `translate(${out2 * 500}px, ${bob(1.9, 7)}px) rotate(${lerp(-25, -8, op)}deg) scale(${op})`, s2 ? clamp(op * 2) : 0);
+
+  // ---- Toma 3: puesto #3
+  const rp = back(prog(t, T.rank, T.rank + 0.4), 2.6);
+  set($('rank'), `translate(0, ${bob(2.2, 12)}px) rotate(${lerp(-45, -8, rp)}deg) scale(${rp})`, s3 ? clamp(rp * 2) : 0);
+  const rl = back(prog(t, T.shot3 + 0.1, T.shot3 + 0.45), 1.8);
+  set($('rankLogo'), `translate(0, ${bob(3, 8)}px) rotate(${lerp(-15, -4, rl)}deg) scale(${rl})`, s3 ? clamp(rl * 2) : 0);
+}
+
+window.__render = (t) => { render(t); $('tc').textContent = t.toFixed(2) + ' s'; };
+
+if (new URLSearchParams(location.search).has('render')) document.body.classList.add('render');
+else {
+  const sc = $('scrub');
+  sc.oninput = () => __render(+sc.value);
+  const t0 = performance.now();
+  const loop = () => { if (document.activeElement !== sc) { const t = ((performance.now() - t0) / 1000) % DURATION; sc.value = t; __render(t); } requestAnimationFrame(loop); };
+  document.fonts.ready.then(loop);
+}
+</script>
+</body>
+</html>
