@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Minsur 1</title>
+<style>
+  /* ===== Paleta oficial Freenanzas ===== */
+  :root {
+    --morado: #5723f4;
+    --verde: #1a6f66;
+    --lima: #c6fd34;
+    --blanco: #fdfdfc;
+  }
+  @font-face { font-family: 'Montserrat'; font-weight: 800; src: url(../hook-dividendos/fonts/montserrat-latin-800-normal.woff2) format('woff2'); }
+  @font-face { font-family: 'Montserrat'; font-weight: 900; src: url(../hook-dividendos/fonts/montserrat-latin-900-normal.woff2) format('woff2'); }
+  @font-face { font-family: 'Free Serif'; font-style: italic; src: url(../hook-dividendos/fonts/FreeSerifItalic.ttf); }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: transparent; overflow: hidden; }
+  body { font-family: 'Montserrat', sans-serif; font-weight: 900; color: var(--blanco); }
+  body:not(.render) { background: #2a2a2a; }
+  #stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; }
+  .abs { position: absolute; will-change: transform, opacity; }
+  svg { display: block; overflow: visible; }
+  .pill {
+    background: var(--lima); color: var(--morado); font-weight: 800; font-size: 32px;
+    letter-spacing: .06em; padding: 12px 26px 10px; border-radius: 999px; line-height: 1; white-space: nowrap;
+  }
+  .serif { font-family: 'Free Serif', serif; font-style: italic; font-weight: 400; }
+
+  /* La cabeza está en y ≈ 700: todo vive en la franja y 120–760 */
+  #burst { left: -760px; top: -830px; }
+  #teaser { left: 0; right: 0; top: 380px; display: flex; justify-content: center; }
+  #teaser .pill { font-size: 54px; padding: 22px 44px 18px; background: var(--morado); color: var(--blanco); border: 6px solid var(--lima); }
+  #teaser b { color: var(--lima); }
+
+  #star { left: 280px; top: 190px; }
+  #starTxt { left: 390px; top: 330px; width: 300px; height: 240px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    color: var(--morado); line-height: .85; }
+  #starTxt small { font-size: 30px; font-weight: 800; letter-spacing: .08em; }
+  #starTxt b { font-size: 170px; }
+
+  #plaque { left: 110px; top: 250px; width: 860px; height: 300px; border-radius: 48px; background: var(--blanco);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 26px;
+    box-shadow: 0 30px 60px rgba(20, 8, 70, .3); backface-visibility: hidden; }
+  #plaque img { width: 620px; }
+  #plaque .pill { font-size: 30px; }
+
+  #crownCard { left: 80px; top: 230px; width: 920px; height: 480px; border-radius: 56px; background: var(--morado);
+    border: 8px solid var(--lima); box-shadow: 0 30px 70px rgba(30, 10, 110, .45); backface-visibility: hidden; }
+  #ccLogo { left: 40px; top: 40px; width: 330px; height: 92px; border-radius: 22px; background: var(--blanco);
+    display: flex; align-items: center; justify-content: center; }
+  #ccLogo img { width: 290px; }
+  #crownCard .pill { position: absolute; right: 40px; top: 58px; font-size: 28px; }
+  #pct { left: 0; right: 0; top: 150px; text-align: center; font-size: 220px; line-height: 1; letter-spacing: -0.03em; color: var(--lima); }
+  #pct span { font-size: 150px; }
+  #src { right: 50px; top: 410px; font-size: 26px; color: rgba(253,253,252,.85); }
+  #crown { left: 430px; top: 110px; }
+  #mini1 { left: 40px; top: 30px; }
+
+  #controls { position: fixed; left: 10px; bottom: 10px; right: 10px; font: 600 14px sans-serif; color: #fff; }
+  body.render #controls { display: none; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <!-- rayos de luz giratorios detrás de todo -->
+  <svg class="abs" id="burst" width="2600" height="2600" viewBox="-1300 -1300 2600 2600"><g id="burstG"></g></svg>
+  <!-- confeti -->
+  <svg class="abs" id="confetti" width="1080" height="1920" style="left:0;top:0"><g id="confG"></g></svg>
+
+  <div class="abs" id="teaser"><div class="pill">Y EL PUESTO <b>#1</b> ES…</div></div>
+
+  <!-- estrella del #1 -->
+  <svg class="abs" id="star" width="520" height="520" viewBox="-260 -260 520 520"><path id="starPath" fill="#c6fd34" stroke="#5723f4" stroke-width="10" stroke-linejoin="round"/></svg>
+  <div class="abs" id="starTxt"><small>PUESTO</small><b>#1</b></div>
+
+  <!-- placa con el logo -->
+  <div class="abs" id="plaque"><img src="assets/minsur-logo.png" alt="Minsur"><div class="pill">MINSURI1 · MINERÍA</div></div>
+
+  <!-- placa destacada con el porcentaje -->
+  <div class="abs" id="crownCard">
+    <div class="abs" id="ccLogo"><img src="assets/minsur-logo.png" alt="Minsur"></div>
+    <div class="pill">RETORNO POR DIVIDENDO</div>
+    <div class="abs" id="pct"><b id="num">0,00</b><span>%</span></div>
+    <div class="abs serif" id="src">Fuente: BVL · TTM</div>
+  </div>
+  <svg class="abs" id="crown" width="220" height="150" viewBox="0 0 220 150">
+    <path d="M14 46 L62 92 L110 18 L158 92 L206 46 L186 136 L34 136 Z" fill="#c6fd34" stroke="#5723f4" stroke-width="10" stroke-linejoin="round"/>
+    <circle cx="14" cy="42" r="14" fill="#fdfdfc" stroke="#5723f4" stroke-width="7"/><circle cx="110" cy="14" r="14" fill="#fdfdfc" stroke="#5723f4" stroke-width="7"/><circle cx="206" cy="42" r="14" fill="#fdfdfc" stroke="#5723f4" stroke-width="7"/>
+  </svg>
+  <svg class="abs" id="mini1" width="220" height="220" viewBox="-110 -110 220 220"><path id="miniPath" fill="#c6fd34" stroke="#5723f4" stroke-width="8" stroke-linejoin="round"/><text id="miniTxt" x="0" y="22" text-anchor="middle" font-family="Montserrat" font-weight="900" font-size="70" fill="#5723f4">#1</text></svg>
+</div>
+<div id="controls"><input id="scrub" type="range" min="0" max="7" step="0.0333" value="0" style="width:100%"><span id="tc"></span></div>
+
+<script>
+// Tiempos en segundos desde el inicio del clip (00:01:31:02 de la línea de tiempo)
+const T = {
+  teaser: 0.30,  // "Y quién sí en el puesto…" → 00:01:31:11
+  uno: 2.15,     // "…uno"                     → 00:01:33:07
+  logo: 2.70,    // "Minsur Minera"            → 00:01:33:23
+  flip: 4.20,    // "Con un…"                  → 00:01:35:08
+  count: 4.65,   // "diez punto…"
+  land: 5.90,    // "…catorce"                 → 00:01:36:29
+};
+const VALUE = 10.14;
+const DURATION = 7.0;
+window.__DURATION = DURATION;
+const fmt = (v) => v.toFixed(2).replace('.', ',');
+
+const $ = (id) => document.getElementById(id);
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const prog = (t, a, b) => clamp((t - a) / (b - a));
+const easeOut = (p) => 1 - Math.pow(1 - p, 3);
+const easeIn = (p) => p * p * p;
+const easeInOut = (p) => p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
+const back = (p, s = 1.7) => 1 + (s + 1) * Math.pow(p - 1, 3) + s * Math.pow(p - 1, 2);
+const lerp = (a, b, p) => a + (b - a) * p;
+const set = (el, tf, op = 1) => { el.style.transform = tf; el.style.opacity = op; };
+const NS = 'http://www.w3.org/2000/svg';
+
+// estrella de 16 puntas
+function starPath(R, r, n = 16) {
+  let d = '';
+  for (let k = 0; k < n * 2; k++) {
+    const a = (k / (n * 2)) * Math.PI * 2 - Math.PI / 2, rr = k % 2 ? r : R;
+    d += (k ? 'L' : 'M') + (Math.cos(a) * rr).toFixed(1) + ' ' + (Math.sin(a) * rr).toFixed(1);
+  }
+  return d + 'Z';
+}
+$('starPath').setAttribute('d', starPath(240, 190));
+$('miniPath').setAttribute('d', starPath(100, 78));
+
+// rayos de luz
+for (let k = 0; k < 18; k++) {
+  const p = document.createElementNS(NS, 'path');
+  const a0 = (k / 18) * Math.PI * 2, a1 = a0 + Math.PI / 30, R = 1300;
+  p.setAttribute('d', `M0 0 L${Math.cos(a0) * R} ${Math.sin(a0) * R} L${Math.cos(a1) * R} ${Math.sin(a1) * R}Z`);
+  p.setAttribute('fill', k % 2 ? 'rgba(253,253,252,.14)' : 'rgba(198,253,52,.22)');
+  $('burstG').appendChild(p);
+}
+
+// confeti determinista (mismo resultado en cada render)
+let seed = 7;
+const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+const COLORS = ['#c6fd34', '#5723f4', '#fdfdfc', '#1a6f66'];
+const conf = Array.from({ length: 70 }, () => {
+  const r = document.createElementNS(NS, 'rect');
+  const w = 14 + rnd() * 16, h = 22 + rnd() * 18;
+  r.setAttribute('width', w); r.setAttribute('height', h); r.setAttribute('x', -w / 2); r.setAttribute('y', -h / 2); r.setAttribute('rx', 4);
+  r.setAttribute('fill', COLORS[Math.floor(rnd() * 4)]);
+  $('confG').appendChild(r);
+  const a = -Math.PI / 2 + (rnd() - 0.5) * 3.0, v = 500 + rnd() * 650;
+  return { r, vx: Math.cos(a) * v, vy: Math.sin(a) * v, spin: (rnd() - 0.5) * 900, delay: rnd() * 0.12 };
+});
+
+function render(t) {
+  const bob = (ph, amp = 10) => Math.sin(t * 2.2 + ph) * amp;
+
+  // ---- Suspenso: "Y EL PUESTO #1 ES…"
+  const tp = back(prog(t, T.teaser, T.teaser + 0.4), 2);
+  const tOut = easeIn(prog(t, T.uno - 0.15, T.uno));
+  const shake = t > T.teaser + 0.4 && t < T.uno ? Math.sin(t * 40) * 3 * prog(t, T.teaser + 0.4, T.uno) : 0;  // tambores
+  set($('teaser'), `translate(${shake}px, ${bob(0, 6)}px) scale(${tp * (1 + tOut * 0.6)})`, clamp(tp * 2) * (1 - tOut));
+
+  // ---- Rayos: aparecen en "uno" y crecen en el 10,14 %
+  const bp = easeOut(prog(t, T.uno, T.uno + 0.5));
+  const bl = t >= T.land ? 1 + 0.25 * Math.exp(-(t - T.land) * 3) : 1;
+  set($('burst'), `rotate(${t * 18}deg) scale(${bp * bl})`, bp);
+
+  // ---- Estrella "#1" en "uno" → se va a la esquina cuando entra el logo
+  const sp = back(prog(t, T.uno, T.uno + 0.45), 2.4);
+  const sOut = easeInOut(prog(t, T.logo - 0.1, T.logo + 0.25));
+  const starTf = `translate(${-sOut * 300}px, ${-sOut * 200}px) rotate(${lerp(-90, 0, sp) + t * 10}deg) scale(${sp * (1 - sOut)})`;
+  set($('star'), starTf, t >= T.uno ? 1 : 0);
+  set($('starTxt'), `translate(${-sOut * 300}px, ${-sOut * 200}px) scale(${sp * (1 - sOut)}) rotate(${lerp(-30, -6, sp)}deg)`, t >= T.uno ? 1 : 0);
+  // mini estrella #1 que se queda en la esquina
+  const mp = back(prog(t, T.logo + 0.1, T.logo + 0.45), 2.4);
+  set($('mini1'), `translate(0, ${bob(2, 8)}px) rotate(${-10 + Math.sin(t * 2) * 4}deg) scale(${mp})`, t >= T.logo ? 1 : 0);
+
+  // ---- Placa con el logo → gira a la placa destacada del porcentaje
+  const lp = back(prog(t, T.logo, T.logo + 0.45), 1.5);
+  const flip = easeInOut(prog(t, T.flip - 0.12, T.flip + 0.2));
+  const card = (ry) => `translate(0, ${bob(0)}px) perspective(1800px) rotateY(${ry}deg)`;
+  $('plaque').style.display = flip < 0.5 ? 'flex' : 'none';
+  set($('plaque'), card(flip * 180) + ` scale(${lerp(0.5, 1, lp)}) rotate(${lerp(-8, -2, lp)}deg) translateY(${(1 - lp) * 160}px)`, t >= T.logo ? clamp(lp * 2) : 0);
+  $('crownCard').style.display = flip >= 0.5 ? 'block' : 'none';
+  set($('crownCard'), card(flip * 180 - 180));
+  const cr = back(prog(t, T.flip + 0.2, T.flip + 0.55), 2.2);
+  const crHit = t >= T.land ? Math.exp(-(t - T.land) * 6) : 0;
+  set($('crown'), `translate(0, ${bob(1, 6) - crHit * 40}px) rotate(${lerp(-25, -4, cr) + crHit * 8}deg) scale(${cr * (1 + 0.2 * crHit)})`, flip >= 0.5 ? clamp(cr * 2) : 0);
+
+  // contador
+  const cp = easeOut(prog(t, T.count, T.land));
+  $('num').textContent = fmt(VALUE * cp);
+  const hit = t >= T.land ? Math.exp(-(t - T.land) * 6) : 0;
+  $('pct').style.transform = `scale(${1 + 0.16 * hit}) rotate(${-3 * hit}deg)`;
+
+  // ---- Confeti al llegar al 10,14 %
+  const ct = t - T.land;
+  conf.forEach((c) => {
+    const tt = ct - c.delay;
+    if (tt < 0) { c.r.setAttribute('opacity', 0); return; }
+    const x = 540 + c.vx * tt * 1.3, y = 470 + c.vy * tt + 1500 * tt * tt;
+    c.r.setAttribute('transform', `translate(${x} ${y}) rotate(${c.spin * tt})`);
+    c.r.setAttribute('opacity', 1 - prog(tt, 0.9, 1.1));
+  });
+}
+
+window.__render = (t) => { render(t); $('tc').textContent = t.toFixed(2) + ' s'; };
+
+if (new URLSearchParams(location.search).has('render')) document.body.classList.add('render');
+else {
+  const sc = $('scrub');
+  sc.oninput = () => __render(+sc.value);
+  const t0 = performance.now();
+  const loop = () => { if (document.activeElement !== sc) { const t = ((performance.now() - t0) / 1000) % DURATION; sc.value = t; __render(t); } requestAnimationFrame(loop); };
+  document.fonts.ready.then(loop);
+}
+</script>
+</body>
+</html>
