@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Separa tu cupo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@500&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=block" rel="stylesheet">
+<style>
+  /* Imagen fija (Historia 9:16) para el CTA de las preventas.
+     El espacio bajo la flecha queda libre para el sticker de link de Instagram. */
+  :root { --morado: #5723f4; --verde: #1a6f66; --lima: #c6fd34; --blanco: #fdfdfc; --tinta: #14112a;
+          --serif: 'Instrument Serif', Georgia, serif; --sans: 'Plus Jakarta Sans', sans-serif; --mono: 'DM Mono', monospace; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #111; }
+  body { font-family: var(--sans); color: var(--blanco); }
+  #stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: var(--morado); margin: 0 auto; }
+  .grid { position: absolute; inset: 0; background-image: radial-gradient(rgba(253,253,252,.10) 3px, transparent 3.5px); background-size: 54px 54px; }
+  .spark { position: absolute; }
+  .col { position: absolute; left: 0; right: 0; top: 290px; display: flex; flex-direction: column; align-items: center; text-align: center; }
+  h1 { font-weight: 800; font-size: 116px; line-height: 1; letter-spacing: -0.02em; }
+  h2 { font-family: var(--serif); font-style: italic; font-weight: 400; font-size: 220px; line-height: .95; color: var(--lima); margin-top: 4px; }
+  .uline { width: 640px; height: 14px; border-radius: 7px; background: var(--lima); margin-top: 8px; }
+  .courses { display: flex; flex-direction: column; gap: 22px; margin-top: 70px; width: 900px; }
+  .course { display: flex; align-items: center; gap: 26px; background: var(--blanco); color: var(--tinta); border-radius: 36px; padding: 26px 34px; text-align: left; }
+  .lvl { flex: none; font-family: var(--mono); font-size: 26px; letter-spacing: .22em; color: var(--morado); background: #f1edfe; border-radius: 40px; padding: 12px 22px; text-transform: uppercase; }
+  .name { font-family: var(--serif); font-size: 54px; line-height: 1; white-space: nowrap; }
+  .name i { color: var(--morado); }
+  .tap { margin-top: 74px; font-family: var(--mono); font-size: 36px; letter-spacing: .26em; color: var(--lima); text-transform: uppercase; }
+  .arrow { margin-top: 18px; }
+  #logo { position: absolute; left: 50%; top: 1625px; width: 400px; margin-left: -200px; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="grid"></div>
+  <svg class="spark" style="left:110px;top:150px" width="70" height="70" viewBox="0 0 40 40"><path d="M20 0 C22 14 26 18 40 20 C26 22 22 26 20 40 C18 26 14 22 0 20 C14 18 18 14 20 0Z" fill="#c6fd34"/></svg>
+  <svg class="spark" style="left:950px;top:200px" width="48" height="48" viewBox="0 0 40 40"><path d="M20 0 C22 14 26 18 40 20 C26 22 22 26 20 40 C18 26 14 22 0 20 C14 18 18 14 20 0Z" fill="#fdfdfc"/></svg>
+  <svg class="spark" style="left:930px;top:1330px" width="66" height="66" viewBox="0 0 40 40"><path d="M20 0 C22 14 26 18 40 20 C26 22 22 26 20 40 C18 26 14 22 0 20 C14 18 18 14 20 0Z" fill="#c6fd34"/></svg>
+  <svg class="spark" style="left:90px;top:1420px" width="44" height="44" viewBox="0 0 40 40"><path d="M20 0 C22 14 26 18 40 20 C26 22 22 26 20 40 C18 26 14 22 0 20 C14 18 18 14 20 0Z" fill="#fdfdfc"/></svg>
+
+  <div class="col">
+    <h1>Separa tu cupo</h1>
+    <h2>en preventa</h2>
+    <div class="uline"></div>
+
+    <div class="courses">
+      <div class="course"><span class="lvl">Nivel 3</span><span class="name">Tu primer <i>depa de inversión.</i></span></div>
+      <div class="course"><span class="lvl">Nivel 4</span><span class="name">Declara tus inversiones <i>sin miedo.</i></span></div>
+    </div>
+
+    <div class="tap">Toca el link</div>
+    <svg class="arrow" width="70" height="96" viewBox="0 0 28 36" fill="none" stroke="#c6fd34" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3 V31 M4 21 L14 31 L24 21"/></svg>
+    <!-- Espacio libre (≈ y 1330–1560) para el sticker de link -->
+  </div>
+
+  <img id="logo" src="assets/logo-freenanzas-blanco.png" alt="Freenanzas">
+</div>
+<script>
+  // Compatible con render.mjs --stills
+  window.__render = () => {};
+  window.__DURATION = 0;
+  window.__STILLS = { 'separa-tu-cupo': 0 };
+</script>
+</body>
+</html>
