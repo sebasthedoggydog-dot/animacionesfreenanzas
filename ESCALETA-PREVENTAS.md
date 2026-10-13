@@ -92,8 +92,8 @@ La tarjeta se construye por capas, en el mismo orden en que se lee:
 | salida | N3: sale a X −1250 con rotación −8° (In Expo). N4: se queda fija hasta el final del video | |
 
 ### Imagen CTA: "Separa tu cupo en preventa" (estática)
-Historia 9:16 sobre morado con trama de puntos. Lleva "Separa tu cupo" (sans 84 px) y "*en preventa*" (serif cursiva lima 156 px) con subrayado lima. Debajo van dos tarjetas blancas: "NIVEL 3 · Tu primer *depa de inversión.*" y "NIVEL 4 · Declara tus inversiones *sin miedo.*".
-- **Márgenes:** el contenido queda dentro de x 120–960 px y empieza en y = 400 px, sin tocar los bordes ni la zona de la interfaz.
+Historia 9:16 sobre morado con trama de puntos, con todo el bloque centrado verticalmente (el logo se mantiene abajo). Lleva "Separa tu cupo" (sans 84 px) y "*en preventa*" (serif cursiva lima 156 px) con subrayado lima. Debajo van dos tarjetas lima más altas, con la etiqueta "NIVEL" en morado: "Tu primer *depa de inversión.*" y "Declara tus inversiones *sin miedo.*". Bajo las tarjetas queda un hueco reservado de 130 px para el sticker de link.
+- **Márgenes:** el contenido queda dentro de x 120–960 px.
 - El espacio entre las tarjetas y el logo queda libre para poner el sticker de link.
 - El logo blanco va en la misma posición que en el video: 400 px de ancho, centrado, y = 1625 px.
 
