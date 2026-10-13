@@ -5,7 +5,7 @@
 **Archivos:**
 - `output/preventas-freenanzas.mp4`: Reel con música y efectos
 - `output/preventas-freenanzas-solo-efectos.mp4`: el mismo Reel solo con efectos, para usar una canción de Instagram
-- `output/separa-tu-cupo-preventa.png`: **imagen fija** del llamado a la acción (Historia 9:16, con espacio libre para el sticker de link)
+- `output/separa-tu-cupo-preventa.png`: **imagen fija** del llamado a la acción (Historia 9:16, dentro de márgenes, con espacio libre para el sticker de link)
 - `preventas-freenanzas.html` / `cta-preventa.html`: fuentes · `audio/preventas_audio.py`: música y efectos
 - `assets/logo-freenanzas-blanco.png`: logo en blanco (provisional, ver nota)
 **Render:**
@@ -92,7 +92,10 @@ La tarjeta se construye por capas, en el mismo orden en que se lee:
 | salida | N3: sale a X −1250 con rotación −8° (In Expo). N4: se queda fija hasta el final del video | |
 
 ### Imagen CTA: "Separa tu cupo en preventa" (estática)
-Historia 9:16 sobre morado con trama de puntos: "Separa tu cupo" (sans 116 px) y "*en preventa*" (serif cursiva lima 220 px) con subrayado lima. Debajo, dos tarjetas blancas: "NIVEL 3 · Tu primer *depa de inversión.*" y "NIVEL 4 · Declara tus inversiones *sin miedo.*". Luego "TOCA EL LINK" con una flecha ↓ hacia la **zona libre (y ≈ 1330–1560 px) para el sticker de link**, y el logo blanco abajo.
+Historia 9:16 sobre morado con trama de puntos. Lleva "Separa tu cupo" (sans 84 px) y "*en preventa*" (serif cursiva lima 156 px) con subrayado lima. Debajo van dos tarjetas blancas: "NIVEL 3 · Tu primer *depa de inversión.*" y "NIVEL 4 · Declara tus inversiones *sin miedo.*".
+- **Márgenes:** el contenido queda dentro de x 120–960 px y empieza en y = 400 px, sin tocar los bordes ni la zona de la interfaz.
+- El espacio entre las tarjetas y el logo queda libre para poner el sticker de link.
+- El logo blanco va en la misma posición que en el video: 400 px de ancho, centrado, y = 1625 px.
 
 ## Audio (incluido)
 Sintetizado por código en `audio/preventas_audio.py`: sin samples ni pistas con derechos de autor.
