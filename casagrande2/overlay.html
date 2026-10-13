@@ -29,11 +29,7 @@
   .serif { font-family: 'Free Serif', serif; font-style: italic; font-weight: 400; }
   .check { width: 96px; height: 96px; border-radius: 50%; background: var(--lima); display: flex; align-items: center; justify-content: center; flex: none; }
 
-  /* --- "Incluso a mí me pagó mis dividendos": aviso tipo notificación --- */
-  #notif { left: 130px; top: 300px; width: 820px; height: 170px; border-radius: 40px; background: var(--blanco);
-    display: flex; align-items: center; gap: 28px; padding: 0 36px; box-shadow: 0 26px 50px rgba(20, 8, 70, .3); }
-  #notif .t { color: var(--morado); font-size: 46px; line-height: 1; letter-spacing: -0.01em; }
-  #notif .s { color: var(--verde); font-size: 38px; margin-top: 8px; }
+  /* --- Referencia personal: chip "me pagó dividendos" --- */
   #paidChip { left: 60px; top: 190px; background: var(--morado); color: var(--blanco); font-size: 32px; font-weight: 800;
     padding: 12px 24px 10px 14px; border-radius: 999px; border: 5px solid var(--lima); white-space: nowrap;
     display: flex; align-items: center; gap: 12px; box-shadow: 0 12px 26px rgba(30, 10, 110, .35); }
@@ -70,11 +66,6 @@
 </head>
 <body>
 <div id="stage">
-  <div class="abs" id="notif">
-    <div class="check"><svg width="54" height="54" viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5" fill="none" stroke="#5723f4" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-    <div><div class="t">DIVIDENDO RECIBIDO</div><div class="s serif">Incluso a mí me pagó</div></div>
-  </div>
-
   <div class="abs" id="logoCard"><img src="assets/casagrande-logo.png" alt="Casa Grande"></div>
   <div class="abs" id="statCard">
     <svg class="abs" id="rays" width="0" height="0" style="overflow:visible"><g id="raysG"></g></svg>
@@ -88,20 +79,20 @@
   <div class="abs" id="paidChip"><div class="check"><svg width="26" height="26" viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5" fill="none" stroke="#5723f4" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>ME PAGÓ DIVIDENDOS</div>
   <div class="abs" id="rank"><small>PUESTO</small><b>#2</b></div>
 </div>
-<div id="controls"><input id="scrub" type="range" min="0" max="6.7" step="0.0333" value="0" style="width:100%"><span id="tc"></span></div>
+<div id="controls"><input id="scrub" type="range" min="0" max="4.73" step="0.0333" value="0" style="width:100%"><span id="tc"></span></div>
 
 <script>
-// Tiempos en segundos desde el inicio del clip (00:01:24:15 de la línea de tiempo)
+// Tiempos en segundos desde el inicio del clip (00:01:26:10 de la línea de tiempo)
 const T = {
-  notif: 0.25,   // "Incluso a mí me pagó…" → 00:01:24:23
-  logo: 1.93,    // "Casa Grande"          → 00:01:26:13
-  flip: 2.62,    // "Con un…"              → 00:01:27:04
-  count: 3.00,   // "ocho punto…"
-  land: 4.15,    // "…ochenta y tres"      → 00:01:28:20
-  rank: 6.23,    // "dos"                  → 00:01:30:22
+  logo: 0.05,    // "Casa Grande"          → 00:01:26:12
+  chip: 0.35,    // chip "me pagó dividendos" → 00:01:26:20
+  flip: 0.83,    // corte · "Con un…"      → 00:01:27:05
+  count: 1.25,   // "ocho punto…"          → 00:01:27:18
+  land: 2.65,    // "…ochenta y tres"      → 00:01:28:00
+  rank: 4.40,    // "dos"                  → 00:01:30:22
 };
 const VALUE = 8.83, TOP = 10.14;
-const DURATION = 6.7;
+const DURATION = 4.7333;
 window.__DURATION = DURATION;
 const fmt = (v) => v.toFixed(2).replace('.', ',');
 
@@ -130,23 +121,19 @@ for (let k = 0; k < 14; k++) {
 function render(t) {
   const bob = (ph, amp = 10) => Math.sin(t * 2.2 + ph) * amp;
 
-  // ---- Aviso "dividendo recibido" (entra desde arriba como notificación)
-  const np0 = back(prog(t, T.notif, T.notif + 0.45), 1.4);
-  const nOut = easeIn(prog(t, T.logo - 0.2, T.logo + 0.05));
-  set($('notif'), `translate(0, ${(1 - np0) * -420 + bob(0, 6) - nOut * 200}px) scale(${1 - nOut * 0.4})`, clamp(np0 * 2) * (1 - nOut));
-  // queda como chip arriba a la izquierda durante todo el segmento
-  const cp0 = back(prog(t, T.logo - 0.05, T.logo + 0.3), 2.2);
-  set($('paidChip'), `translate(0, ${bob(1.5, 6)}px) rotate(${lerp(-20, -4, cp0)}deg) scale(${cp0})`, t >= T.logo - 0.05 ? clamp(cp0 * 2) : 0);
+  // referencia personal: queda arriba a la izquierda todo el segmento
+  const cp0 = back(prog(t, T.chip, T.chip + 0.35), 2.2);
+  set($('paidChip'), `translate(0, ${bob(1.5, 6)}px) rotate(${lerp(-20, -4, cp0)}deg) scale(${cp0})`, t >= T.chip ? clamp(cp0 * 2) : 0);
 
   // ---- Logo Casa Grande → gira a la tarjeta del retorno
   const lp = back(prog(t, T.logo, T.logo + 0.45), 1.5);
-  const flip = easeInOut(prog(t, T.flip - 0.1, T.flip + 0.3));
+  const flip = easeInOut(prog(t, T.flip - 0.12, T.flip + 0.18));
   const card = (ry, s) => `translate(0, ${bob(0)}px) perspective(1800px) rotateY(${ry}deg) scale(${s})`;
   $('logoCard').style.display = flip < 0.5 ? 'flex' : 'none';
   set($('logoCard'), card(flip * 180, lerp(0.5, 1, lp)) + ` rotate(${lerp(-10, -2, lp)}deg) translateY(${(1 - lp) * 160}px)`, clamp(lp * 2));
   $('statCard').style.display = flip >= 0.5 ? 'block' : 'none';
   set($('statCard'), card(flip * 180 - 180, 1));
-  const tp = back(prog(t, T.logo + 0.25, T.logo + 0.6), 2);
+  const tp = back(prog(t, T.logo + 0.2, T.logo + 0.5), 2);
   set($('tickerPill'), `translate(0, ${bob(1.2, 8) - flip * 0}px) rotate(-4deg) scale(${tp})`, flip < 0.5 ? clamp(tp * 2) : 0);
 
   // contador + barra + golpe con rayos al llegar

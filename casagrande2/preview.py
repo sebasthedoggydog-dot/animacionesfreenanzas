@@ -11,7 +11,7 @@ import numpy as np
 
 video, SRC, MASKS, GFX, OUT = sys.argv[1:6]
 FPS, W, H = 30, 1080, 1920
-LOGO, LAND = 1.93, 4.15   # empujón en "Casa Grande" · punch-in de sorpresa al llegar al 8,83 %
+LOGO, LAND, CUT, DOS = 0.05, 2.65, 3.60, 4.40   # "Casa Grande" · llega al 8,83 % · corte · "dos"
 
 
 def ease(p):
@@ -26,10 +26,12 @@ def ease_in_out(p):
 
 def zoom(t):
     """Devuelve (escala, rotación en grados)."""
-    z = 1.0 + 0.06 * ease_out((t - LOGO) / (6 / 30))                    # 100 → 106 % en 6 frames
-    z += 0.14 * ease_out((t - LAND) / (5 / 30))                         # 106 → 120 % en 5 frames
-    rot = -2.0 * (1 - ease_out((t - LAND) / (10 / 30))) if t >= LAND else 0.0   # -2° que vuelve a 0°
-    return z, rot
+    if t < CUT:
+        z = 1.0 + 0.06 * ease_out((t - LOGO) / (6 / 30))                # 100 → 106 % en 6 frames
+        z += 0.14 * ease_out((t - LAND) / (5 / 30))                     # 106 → 120 % en 5 frames
+        rot = -2.0 * (1 - ease_out((t - LAND) / (10 / 30))) if t >= LAND else 0.0   # -2° que vuelve a 0°
+        return z, rot
+    return 1.0 + 0.08 * ease_out((t - DOS) / (4 / 30)), 0.0              # toma nueva; golpe corto en "dos"
 
 
 def ease_out(p):
