@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Casa Grande 2</title>
+<style>
+  /* ===== Paleta oficial Freenanzas ===== */
+  :root {
+    --morado: #5723f4;
+    --verde: #1a6f66;
+    --lima: #c6fd34;
+    --blanco: #fdfdfc;
+  }
+  @font-face { font-family: 'Montserrat'; font-weight: 800; src: url(../hook-dividendos/fonts/montserrat-latin-800-normal.woff2) format('woff2'); }
+  @font-face { font-family: 'Montserrat'; font-weight: 900; src: url(../hook-dividendos/fonts/montserrat-latin-900-normal.woff2) format('woff2'); }
+  @font-face { font-family: 'Free Serif'; font-style: italic; src: url(../hook-dividendos/fonts/FreeSerifItalic.ttf); }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: transparent; overflow: hidden; }
+  body { font-family: 'Montserrat', sans-serif; font-weight: 900; color: var(--blanco); }
+  body:not(.render) { background: #2a2a2a; }
+  #stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; }
+  .abs { position: absolute; will-change: transform, opacity; }
+  .pill {
+    background: var(--lima); color: var(--morado); font-weight: 800; font-size: 32px;
+    letter-spacing: .06em; padding: 12px 26px 10px; border-radius: 999px; line-height: 1; white-space: nowrap;
+  }
+  .serif { font-family: 'Free Serif', serif; font-style: italic; font-weight: 400; }
+  .check { width: 96px; height: 96px; border-radius: 50%; background: var(--lima); display: flex; align-items: center; justify-content: center; flex: none; }
+
+  /* --- "Incluso a mí me pagó mis dividendos": aviso tipo notificación --- */
+  #notif { left: 130px; top: 300px; width: 820px; height: 170px; border-radius: 40px; background: var(--blanco);
+    display: flex; align-items: center; gap: 28px; padding: 0 36px; box-shadow: 0 26px 50px rgba(20, 8, 70, .3); }
+  #notif .t { color: var(--morado); font-size: 46px; line-height: 1; letter-spacing: -0.01em; }
+  #notif .s { color: var(--verde); font-size: 38px; margin-top: 8px; }
+  #paidChip { left: 60px; top: 190px; background: var(--morado); color: var(--blanco); font-size: 32px; font-weight: 800;
+    padding: 12px 24px 10px 14px; border-radius: 999px; border: 5px solid var(--lima); white-space: nowrap;
+    display: flex; align-items: center; gap: 12px; box-shadow: 0 12px 26px rgba(30, 10, 110, .35); }
+  #paidChip .check { width: 44px; height: 44px; }
+
+  /* --- Logo y tarjeta del retorno (arriba de la cabeza, que está en y ≈ 730) --- */
+  #logoCard { left: 110px; top: 330px; width: 860px; height: 230px; border-radius: 44px; background: var(--blanco);
+    display: flex; align-items: center; justify-content: center; box-shadow: 0 30px 60px rgba(20, 8, 70, .3); backface-visibility: hidden; }
+  #logoCard img { width: 760px; }
+  #tickerPill { left: 90px; top: 290px; }
+  #statCard { left: 90px; top: 300px; width: 900px; height: 500px; border-radius: 52px; background: var(--verde);
+    box-shadow: 0 30px 60px rgba(0, 30, 25, .35); backface-visibility: hidden; overflow: hidden; }
+  #statLogo { left: 40px; top: 40px; width: 310px; height: 66px; border-radius: 18px; background: var(--blanco);
+    display: flex; align-items: center; justify-content: center; }
+  #statLogo img { width: 276px; }
+  #statCard .pill { position: absolute; right: 40px; top: 50px; color: var(--verde); font-size: 28px; }
+  #rays { left: 450px; top: 300px; }
+  #pct { left: 0; right: 0; top: 150px; text-align: center; font-size: 230px; line-height: 1; letter-spacing: -0.03em; color: var(--lima); }
+  #pct span { font-size: 160px; }
+  #bar { left: 60px; top: 420px; width: 780px; height: 26px; border-radius: 13px; background: rgba(253,253,252,.18); overflow: hidden; }
+  #barFill { width: 100%; height: 100%; background: var(--lima); border-radius: 13px; transform-origin: left center; }
+  #src { right: 60px; top: 380px; font-size: 26px; color: rgba(253,253,252,.85); }
+
+  #rank { left: 50px; top: 720px; width: 240px; height: 240px; border-radius: 50%;
+    background: var(--lima); border: 8px solid var(--morado); color: var(--morado);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: .85;
+    box-shadow: 0 18px 40px rgba(30, 10, 110, .35); }
+  #rank small { font-size: 28px; font-weight: 800; letter-spacing: .08em; }
+  #rank b { font-size: 140px; }
+
+  #controls { position: fixed; left: 10px; bottom: 10px; right: 10px; font: 600 14px sans-serif; color: #fff; }
+  body.render #controls { display: none; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="abs" id="notif">
+    <div class="check"><svg width="54" height="54" viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5" fill="none" stroke="#5723f4" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div><div class="t">DIVIDENDO RECIBIDO</div><div class="s serif">Incluso a mí me pagó</div></div>
+  </div>
+
+  <div class="abs" id="logoCard"><img src="assets/casagrande-logo.png" alt="Casa Grande"></div>
+  <div class="abs" id="statCard">
+    <svg class="abs" id="rays" width="0" height="0" style="overflow:visible"><g id="raysG"></g></svg>
+    <div class="abs" id="statLogo"><img src="assets/casagrande-logo.png" alt="Casa Grande"></div>
+    <div class="pill">RETORNO POR DIVIDENDO</div>
+    <div class="abs" id="pct"><b id="num">0,00</b><span>%</span></div>
+    <div class="abs serif" id="src">Fuente: BVL · TTM</div>
+    <div class="abs" id="bar"><div id="barFill"></div></div>
+  </div>
+  <div class="abs pill" id="tickerPill">CASAGRC1 · AGROINDUSTRIAL</div>
+  <div class="abs" id="paidChip"><div class="check"><svg width="26" height="26" viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5" fill="none" stroke="#5723f4" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>ME PAGÓ DIVIDENDOS</div>
+  <div class="abs" id="rank"><small>PUESTO</small><b>#2</b></div>
+</div>
+<div id="controls"><input id="scrub" type="range" min="0" max="6.7" step="0.0333" value="0" style="width:100%"><span id="tc"></span></div>
+
+<script>
+// Tiempos en segundos desde el inicio del clip (00:01:24:15 de la línea de tiempo)
+const T = {
+  notif: 0.25,   // "Incluso a mí me pagó…" → 00:01:24:23
+  logo: 1.93,    // "Casa Grande"          → 00:01:26:13
+  flip: 2.62,    // "Con un…"              → 00:01:27:04
+  count: 3.00,   // "ocho punto…"
+  land: 4.15,    // "…ochenta y tres"      → 00:01:28:20
+  rank: 6.23,    // "dos"                  → 00:01:30:22
+};
+const VALUE = 8.83, TOP = 10.14;
+const DURATION = 6.7;
+window.__DURATION = DURATION;
+const fmt = (v) => v.toFixed(2).replace('.', ',');
+
+const $ = (id) => document.getElementById(id);
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const prog = (t, a, b) => clamp((t - a) / (b - a));
+const easeOut = (p) => 1 - Math.pow(1 - p, 3);
+const easeIn = (p) => p * p * p;
+const easeInOut = (p) => p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
+const back = (p, s = 1.7) => 1 + (s + 1) * Math.pow(p - 1, 3) + s * Math.pow(p - 1, 2);
+const lerp = (a, b, p) => a + (b - a) * p;
+const set = (el, tf, op = 1) => { el.style.transform = tf; el.style.opacity = op; };
+
+// rayos de "sorpresa" detrás del número
+const NS = 'http://www.w3.org/2000/svg';
+const rays = [];
+for (let k = 0; k < 14; k++) {
+  const l = document.createElementNS(NS, 'line');
+  l.setAttribute('stroke', k % 2 ? '#fdfdfc' : '#c6fd34');
+  l.setAttribute('stroke-width', k % 2 ? 8 : 14);
+  l.setAttribute('stroke-linecap', 'round');
+  $('raysG').appendChild(l);
+  rays.push([l, (k / 14) * Math.PI * 2 + 0.2]);
+}
+
+function render(t) {
+  const bob = (ph, amp = 10) => Math.sin(t * 2.2 + ph) * amp;
+
+  // ---- Aviso "dividendo recibido" (entra desde arriba como notificación)
+  const np0 = back(prog(t, T.notif, T.notif + 0.45), 1.4);
+  const nOut = easeIn(prog(t, T.logo - 0.2, T.logo + 0.05));
+  set($('notif'), `translate(0, ${(1 - np0) * -420 + bob(0, 6) - nOut * 200}px) scale(${1 - nOut * 0.4})`, clamp(np0 * 2) * (1 - nOut));
+  // queda como chip arriba a la izquierda durante todo el segmento
+  const cp0 = back(prog(t, T.logo - 0.05, T.logo + 0.3), 2.2);
+  set($('paidChip'), `translate(0, ${bob(1.5, 6)}px) rotate(${lerp(-20, -4, cp0)}deg) scale(${cp0})`, t >= T.logo - 0.05 ? clamp(cp0 * 2) : 0);
+
+  // ---- Logo Casa Grande → gira a la tarjeta del retorno
+  const lp = back(prog(t, T.logo, T.logo + 0.45), 1.5);
+  const flip = easeInOut(prog(t, T.flip - 0.1, T.flip + 0.3));
+  const card = (ry, s) => `translate(0, ${bob(0)}px) perspective(1800px) rotateY(${ry}deg) scale(${s})`;
+  $('logoCard').style.display = flip < 0.5 ? 'flex' : 'none';
+  set($('logoCard'), card(flip * 180, lerp(0.5, 1, lp)) + ` rotate(${lerp(-10, -2, lp)}deg) translateY(${(1 - lp) * 160}px)`, clamp(lp * 2));
+  $('statCard').style.display = flip >= 0.5 ? 'block' : 'none';
+  set($('statCard'), card(flip * 180 - 180, 1));
+  const tp = back(prog(t, T.logo + 0.25, T.logo + 0.6), 2);
+  set($('tickerPill'), `translate(0, ${bob(1.2, 8) - flip * 0}px) rotate(-4deg) scale(${tp})`, flip < 0.5 ? clamp(tp * 2) : 0);
+
+  // contador + barra + golpe con rayos al llegar
+  const cp = easeOut(prog(t, T.count, T.land));
+  $('num').textContent = fmt(VALUE * cp);
+  const hit = t >= T.land ? Math.exp(-(t - T.land) * 6) : 0;
+  $('pct').style.transform = `scale(${1 + 0.16 * hit}) rotate(${-3 * hit}deg)`;
+  $('barFill').style.transform = `scaleX(${(VALUE / TOP) * cp})`;
+  const rpz = easeOut(prog(t, T.land, T.land + 0.5));
+  rays.forEach(([l, a]) => {
+    const r0 = 170 + rpz * 120, r1 = r0 + 60 + 80 * (1 - rpz);
+    l.setAttribute('x1', Math.cos(a) * r0); l.setAttribute('y1', Math.sin(a) * r0 * 0.55);
+    l.setAttribute('x2', Math.cos(a) * r1); l.setAttribute('y2', Math.sin(a) * r1 * 0.55);
+  });
+  $('rays').style.opacity = t >= T.land ? (1 - prog(t, T.land + 0.3, T.land + 0.8)) : 0;
+
+  // ---- Puesto #2
+  const rp = back(prog(t, T.rank, T.rank + 0.4), 2.6);
+  set($('rank'), `translate(0, ${bob(2.2, 10)}px) rotate(${lerp(-40, -8, rp)}deg) scale(${rp})`, clamp(rp * 2));
+}
+
+window.__render = (t) => { render(t); $('tc').textContent = t.toFixed(2) + ' s'; };
+
+if (new URLSearchParams(location.search).has('render')) document.body.classList.add('render');
+else {
+  const sc = $('scrub');
+  sc.oninput = () => __render(+sc.value);
+  const t0 = performance.now();
+  const loop = () => { if (document.activeElement !== sc) { const t = ((performance.now() - t0) / 1000) % DURATION; sc.value = t; __render(t); } requestAnimationFrame(loop); };
+  document.fonts.ready.then(loop);
+}
+</script>
+</body>
+</html>
