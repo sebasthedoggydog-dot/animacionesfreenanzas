@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Últimos 12 meses</title>
+<style>
+  /* ===== Paleta oficial Freenanzas ===== */
+  :root {
+    --morado: #5723f4;
+    --verde: #1a6f66;
+    --lima: #c6fd34;
+    --blanco: #fdfdfc;
+  }
+  @font-face { font-family: 'Montserrat'; font-weight: 800; src: url(../hook-dividendos/fonts/montserrat-latin-800-normal.woff2) format('woff2'); }
+  @font-face { font-family: 'Montserrat'; font-weight: 900; src: url(../hook-dividendos/fonts/montserrat-latin-900-normal.woff2) format('woff2'); }
+  @font-face { font-family: 'Free Serif'; font-style: italic; src: url(../hook-dividendos/fonts/FreeSerifItalic.ttf); }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: transparent; overflow: hidden; }
+  body { font-family: 'Montserrat', sans-serif; font-weight: 900; color: var(--blanco); }
+  body:not(.render) { background: #2a2a2a; }
+  #stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; }
+  .abs { position: absolute; will-change: transform, opacity; }
+  svg { display: block; overflow: visible; }
+  .serif { font-family: 'Free Serif', serif; font-style: italic; font-weight: 400; }
+  /* Franja y 230–390 al centro = subtítulos de Premiere: no se usa.
+     La cabeza está en y ≈ 420–540, así que todo va a los costados. */
+
+  /* --- Toma 1: "Pero este top octubre 2026" --- */
+  #cal { left: 40px; top: 440px; width: 240px; height: 280px; border-radius: 34px; overflow: hidden; background: var(--blanco);
+    box-shadow: 0 22px 44px rgba(20, 8, 70, .3); }
+  #cal .hd { height: 84px; background: var(--morado); color: var(--blanco); font-size: 36px; letter-spacing: .04em;
+    display: flex; align-items: center; justify-content: center; }
+  #cal .rings { position: absolute; top: -14px; left: 0; right: 0; display: flex; justify-content: space-around; padding: 0 50px; }
+  #cal .rings i { width: 18px; height: 40px; border-radius: 9px; background: var(--lima); border: 4px solid var(--morado); display: block; }
+  #yearBox { height: 196px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  #year { font-size: 76px; color: var(--morado); letter-spacing: -0.02em; }
+  #top5 { left: 805px; top: 450px; width: 240px; height: 240px; border-radius: 50%; background: var(--lima); border: 8px solid var(--morado);
+    color: var(--morado); display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: .85;
+    box-shadow: 0 18px 40px rgba(30, 10, 110, .35); }
+  #top5 small { font-size: 44px; letter-spacing: .04em; }
+  #top5 b { font-size: 130px; }
+
+  /* --- Toma 2: "Es un rendimiento histórico" --- */
+  #histCard { left: 735px; top: 430px; width: 320px; height: 470px; border-radius: 40px; background: var(--verde);
+    display: flex; flex-direction: column; align-items: center; padding-top: 26px; box-shadow: 0 24px 50px rgba(0, 30, 25, .35); }
+  #histCard .l1 { font-size: 32px; letter-spacing: .02em; margin-top: 14px; }
+  #histCard .l2 { font-size: 46px; color: var(--lima); letter-spacing: -0.01em; }
+  #histCard .note { font-size: 24px; color: rgba(253,253,252,.85); text-align: center; line-height: 1.1; margin-top: 14px; padding: 0 18px; }
+
+  /* --- Toma 3: "por dividendos pagados en los últimos 12 meses" --- */
+  #divPill { left: 655px; top: 420px; background: var(--lima); color: var(--morado); font-size: 24px; font-weight: 800; letter-spacing: .03em;
+    padding: 12px 18px 10px; border-radius: 999px; white-space: nowrap; display: flex; align-items: center; gap: 10px; }
+  #divPill .ok { width: 34px; height: 34px; border-radius: 50%; background: var(--morado); display: flex; align-items: center; justify-content: center; }
+  #ringWrap { left: 735px; top: 500px; width: 320px; height: 320px; }
+  #ringTxt, #ringDol { left: 735px; top: 500px; width: 320px; height: 320px; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: .9; }
+  #ringTxt b { font-size: 120px; color: var(--lima); -webkit-text-stroke: 10px var(--morado); paint-order: stroke fill; }
+  #ringTxt small { font-size: 36px; color: var(--blanco); -webkit-text-stroke: 8px var(--morado); paint-order: stroke fill; letter-spacing: .04em; }
+  #ringDol { font-size: 150px; color: var(--lima); }
+  .coin { width: 70px; height: 70px; border-radius: 50%; background: var(--lima); color: var(--verde); border: 4px solid var(--verde);
+    display: flex; align-items: center; justify-content: center; font-size: 40px; }
+
+  #controls { position: fixed; left: 10px; bottom: 10px; right: 10px; font: 600 14px sans-serif; color: #fff; }
+  body.render #controls { display: none; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <!-- Toma 1 -->
+  <div class="abs" id="cal"><div class="hd">OCTUBRE</div><div id="yearBox"><div id="year">2026</div></div></div>
+  <div class="abs" id="top5"><small>TOP</small><b>5</b></div>
+
+  <!-- Toma 2 -->
+  <div class="abs" id="histCard">
+    <svg id="clock" width="120" height="120" viewBox="-60 -60 120 120">
+      <circle r="48" fill="none" stroke="#c6fd34" stroke-width="10" stroke-dasharray="250 52" transform="rotate(-60)"/>
+      <path d="M-46 -30 L-30 -8 L-56 -2 Z" fill="#c6fd34"/>
+      <g id="hands"><line x1="0" y1="0" x2="0" y2="-30" stroke="#fdfdfc" stroke-width="9" stroke-linecap="round"/><line x1="0" y1="0" x2="20" y2="0" stroke="#fdfdfc" stroke-width="9" stroke-linecap="round"/></g>
+    </svg>
+    <div class="l1">RENDIMIENTO</div>
+    <div class="l2">HISTÓRICO</div>
+    <svg width="260" height="90" viewBox="0 0 260 90" style="margin-top:14px">
+      <polyline id="histLine" points="6,78 50,60 90,68 130,40 170,48 206,22" fill="none" stroke="#c6fd34" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+      <line id="futLine" x1="206" y1="22" x2="254" y2="22" stroke="rgba(253,253,252,.7)" stroke-width="7" stroke-dasharray="4 12" stroke-linecap="round"/>
+      <text id="q" x="246" y="62" font-family="Montserrat" font-weight="900" font-size="38" fill="#fdfdfc">?</text>
+    </svg>
+    <div class="note serif">No asegura rendimientos futuros</div>
+  </div>
+
+  <!-- Toma 3 -->
+  <div class="abs" id="divPill"><span class="ok"><svg width="20" height="20" viewBox="0 0 24 24"><path id="okPath" d="M4 12.5l5 5L20 6.5" fill="none" stroke="#c6fd34" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>DIVIDENDOS PAGADOS</div>
+  <svg class="abs" id="ringWrap" viewBox="-160 -160 320 320"><circle r="128" fill="#5723f4"/><g id="segs"></g></svg>
+  <div class="abs" id="ringDol">$</div>
+  <div class="abs" id="ringTxt"><b id="n12">12</b><small>MESES</small></div>
+  <div class="abs coin" id="c1" style="left:770px;top:840px">$</div>
+  <div class="abs coin" id="c2" style="left:875px;top:880px">$</div>
+  <div class="abs coin" id="c3" style="left:965px;top:830px">$</div>
+</div>
+<div id="controls"><input id="scrub" type="range" min="0" max="6.93" step="0.0333" value="0" style="width:100%"><span id="tc"></span></div>
+
+<script>
+// Tiempos en segundos desde el inicio del clip (00:00:14:15), tomados de los subtítulos del clip
+const T = {
+  top: 0.70,       // "top"          → 00:00:14:36 ≈ 00:00:15:06
+  octubre: 0.90,   // "octubre"      → 00:00:15:12
+  year: 1.40,      // "2026"         → 00:00:15:27
+  shot2: 2.33,     // corte · "es"   → 00:00:16:25
+  rend: 2.70,      // "rendimiento"  → 00:00:17:06
+  hist: 3.20,      // "histórico"    → 00:00:17:21
+  shot3: 3.97,     // corte · "por"  → 00:00:18:14
+  div: 4.20,       // "dividendos"   → 00:00:18:21
+  pag: 4.80,       // "pagados"      → 00:00:19:09
+  ult: 5.70,       // "últimos"      → 00:00:20:06
+  doce: 6.10,      // "12"           → 00:00:20:18
+  meses: 6.40,     // "meses"        → 00:00:20:27
+};
+const DURATION = 6.9333;
+window.__DURATION = DURATION;
+
+const $ = (id) => document.getElementById(id);
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const prog = (t, a, b) => clamp((t - a) / (b - a));
+const easeOut = (p) => 1 - Math.pow(1 - p, 3);
+const easeIn = (p) => p * p * p;
+const back = (p, s = 1.7) => 1 + (s + 1) * Math.pow(p - 1, 3) + s * Math.pow(p - 1, 2);
+const lerp = (a, b, p) => a + (b - a) * p;
+const set = (el, tf, op = 1) => { el.style.transform = tf; el.style.opacity = op; };
+const NS = 'http://www.w3.org/2000/svg';
+
+// 12 segmentos del anillo (uno por mes), se encienden hacia atrás: del mes actual a hace 12 meses
+const SEG = [];
+for (let k = 0; k < 12; k++) {
+  const a0 = -Math.PI / 2 - (k / 12) * Math.PI * 2, a1 = a0 - (Math.PI * 2) / 12 + 0.07, R = 150, r = 128;
+  const p = document.createElementNS(NS, 'path');
+  const P = (a, rr) => `${(Math.cos(a) * rr).toFixed(1)} ${(Math.sin(a) * rr).toFixed(1)}`;
+  p.setAttribute('d', `M${P(a0 - 0.035, R)} A${R} ${R} 0 0 0 ${P(a1, R)} L${P(a1, r)} A${r} ${r} 0 0 1 ${P(a0 - 0.035, r)}Z`);
+  $('segs').appendChild(p);
+  SEG.push(p);
+}
+
+function render(t) {
+  const bob = (ph, amp = 8) => Math.sin(t * 2.2 + ph) * amp;
+  const s1 = t < T.shot2, s2 = t >= T.shot2 && t < T.shot3, s3 = t >= T.shot3;
+  const out1 = easeIn(prog(t, T.shot2 - 0.2, T.shot2));
+  const out2 = easeIn(prog(t, T.shot3 - 0.2, T.shot3));
+
+  // ---- Toma 1
+  const tp = back(prog(t, T.top, T.top + 0.35), 2.4);
+  set($('top5'), `translate(${out1 * 400}px, ${bob(1)}px) rotate(${lerp(30, 8, tp)}deg) scale(${tp})`, s1 ? clamp(tp * 2) : 0);
+  const cp = back(prog(t, T.octubre, T.octubre + 0.35), 1.8);
+  set($('cal'), `translate(${-out1 * 400}px, ${bob(0) + (1 - cp) * 80}px) rotate(${lerp(-20, -6, cp)}deg) scale(${cp})`, s1 ? clamp(cp * 2) : 0);
+  const yp = easeOut(prog(t, T.year, T.year + 0.25));
+  const yh = t >= T.year ? Math.exp(-(t - T.year - 0.25) * 6) * (t > T.year + 0.25 ? 1 : 0) : 0;
+  $('year').style.transform = `translateY(${(1 - yp) * 140}px) scale(${1 + 0.15 * yh})`;
+  $('year').style.opacity = yp;
+
+  // ---- Toma 2
+  const hp = back(prog(t, T.rend, T.rend + 0.4), 1.6);
+  set($('histCard'), `translate(${(1 - hp) * 380 + out2 * 400}px, ${bob(0.5)}px) rotate(${lerp(12, 3, hp)}deg)`, s2 ? 1 : 0);
+  const lp = easeOut(prog(t, T.rend + 0.2, T.hist));
+  $('histLine').style.strokeDasharray = 300; $('histLine').style.strokeDashoffset = 300 * (1 - lp);
+  const fp = prog(t, T.hist + 0.2, T.hist + 0.5);
+  $('futLine').style.opacity = fp; $('q').style.opacity = fp;
+  // "histórico": el reloj gira hacia atrás
+  const rw = easeOut(prog(t, T.hist, T.hist + 0.6));
+  $('hands').setAttribute('transform', `rotate(${-rw * 540})`);
+  $('clock').style.transform = `scale(${1 + 0.18 * (t >= T.hist ? Math.exp(-(t - T.hist) * 6) : 0)})`;
+
+  // ---- Toma 3
+  const dp = back(prog(t, T.div, T.div + 0.35), 2);
+  set($('divPill'), `translate(0, ${bob(1.4, 5)}px) rotate(-4deg) scale(${dp})`, s3 ? clamp(dp * 2) : 0);
+  const ok = easeOut(prog(t, T.pag, T.pag + 0.3));
+  $('okPath').style.strokeDasharray = 30; $('okPath').style.strokeDashoffset = 30 * (1 - ok);
+  // monedas caen al decir "pagados"
+  ['c1', 'c2', 'c3'].forEach((id, k) => {
+    const ts = T.pag + k * 0.1, p = back(prog(t, ts, ts + 0.35), 2);
+    const gone = easeIn(prog(t, T.ult - 0.1, T.ult + 0.2));
+    set($(id), `translate(0, ${(1 - p) * -260 + bob(k, 6) - gone * 120}px) rotate(${(1 - p) * 120}deg) scale(${p * (1 - gone)})`, s3 ? clamp(p * 2) * (1 - gone) : 0);
+  });
+  const rg = back(prog(t, T.pag + 0.3, T.pag + 0.65), 1.6);
+  set($('ringWrap'), `translate(0, ${bob(0.3, 6)}px) scale(${rg})`, s3 ? clamp(rg * 2) : 0);
+  SEG.forEach((p, k) => {
+    const on = prog(t, T.ult + k * 0.05, T.ult + k * 0.05 + 0.06);
+    p.setAttribute('fill', on > 0.5 ? '#c6fd34' : 'rgba(253,253,252,.25)');
+  });
+  const np = back(prog(t, T.doce, T.doce + 0.3), 2.6);
+  const mp = back(prog(t, T.meses, T.meses + 0.3), 2);
+  $('ringTxt').style.opacity = s3 && t >= T.doce ? 1 : 0;
+  $('n12').style.transform = `scale(${np})`;
+  $('ringTxt').querySelector('small').style.transform = `scale(${mp})`;
+  $('ringTxt').style.transform = `translate(0, ${bob(0.3, 6)}px)`;
+  const dOut = easeIn(prog(t, T.doce - 0.12, T.doce));
+  set($('ringDol'), `translate(0, ${bob(0.3, 6)}px) scale(${rg * (1 - dOut)})`, s3 ? clamp(rg * 2) * (1 - dOut) : 0);
+}
+
+window.__render = (t) => { render(t); $('tc').textContent = t.toFixed(2) + ' s'; };
+
+if (new URLSearchParams(location.search).has('render')) document.body.classList.add('render');
+else {
+  const sc = $('scrub');
+  sc.oninput = () => __render(+sc.value);
+  const t0 = performance.now();
+  const loop = () => { if (document.activeElement !== sc) { const t = ((performance.now() - t0) / 1000) % DURATION; sc.value = t; __render(t); } requestAnimationFrame(loop); };
+  document.fonts.ready.then(loop);
+}
+</script>
+</body>
+</html>
