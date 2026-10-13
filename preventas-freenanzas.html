@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Preventas Freenanzas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@500&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=block" rel="stylesheet">
+<style>
+  /* ===== Paleta oficial Freenanzas ===== */
+  :root {
+    --morado: #5723f4;
+    --verde: #1a6f66;
+    --lima: #c6fd34;
+    --blanco: #fdfdfc;
+    --tinta: #14112a;      /* texto oscuro de las tarjetas (como en la web) */
+    --gris: #5d6272;
+    --lavanda: #f1edfe;    /* tinte del morado usado en las tarjetas de la web */
+    --borde: #e3dbfd;
+    --serif: 'Instrument Serif', Georgia, serif;
+    --sans: 'Plus Jakarta Sans', 'Inter', sans-serif;
+    --mono: 'DM Mono', ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; background: #111; overflow: hidden; }
+  body { font-family: var(--sans); font-weight: 800; color: var(--blanco); }
+
+  #wrap { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+  #stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: var(--morado); flex: none; }
+  body.render #wrap { position: static; display: block; }
+  body.render #stage { transform: none !important; }
+  body.render #controls { display: none; }
+
+  .scene { position: absolute; inset: 0; overflow: hidden; display: none; }
+  .center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+  .el { display: block; will-change: transform, opacity; }
+  .mask { overflow: hidden; display: block; padding: 0 16px; }
+  .serif { font-family: var(--serif); font-weight: 400; letter-spacing: -0.01em; }
+  .ital { font-style: italic; }
+  .mono { font-family: var(--mono); font-weight: 500; text-transform: uppercase; }
+  .lima { color: var(--lima); }
+  .tight { line-height: .98; letter-spacing: -0.02em; }
+  svg { display: block; overflow: visible; }
+  .grid { position: absolute; inset: 0; background-image: radial-gradient(rgba(253,253,252,.10) 3px, transparent 3.5px); background-size: 54px 54px; }
+
+  /* ---------- Escena 1 · Hook ---------- */
+  #s1 { background: var(--morado); }
+  #s1-tag { font-size: 34px; letter-spacing: .32em; color: var(--lima); border: 2px solid rgba(198,253,52,.6); border-radius: 60px; padding: 14px 30px 12px; margin-bottom: 56px; }
+  #s1-l1, #s1-l2 { font-size: 150px; line-height: .92; }
+  #s1-dot { font-size: 150px; line-height: .6; color: var(--lima); margin: 6px 0 2px; }
+  #s1-pre { font-size: 260px; line-height: .95; margin-top: -6px; }
+  #s1-uline { width: 600px; height: 14px; border-radius: 7px; background: var(--lima); margin-top: 6px; transform-origin: left center; }
+  #s1-badges { display: flex; gap: 22px; margin-top: 64px; }
+  .badge { font-size: 38px; font-weight: 800; color: var(--morado); background: var(--lima); padding: 16px 32px; border-radius: 60px; }
+  .spark { position: absolute; }
+
+  /* ---------- Escena 2 · Identificación ---------- */
+  #s2 { background: var(--verde); }
+  #s2 .col { position: absolute; left: 96px; right: 70px; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; }
+  #s2 .ln { font-size: 100px; }
+  #s2 .acc { font-size: 140px; line-height: 1.02; color: var(--lima); }
+  #s2-box { display: inline-block; position: relative; }
+  #s2-hl { position: absolute; left: -22px; right: -22px; top: 14px; bottom: -6px; background: var(--lima); border-radius: 14px; transform-origin: left center; }
+  #s2-box span, #s2 #s2-box .acc { position: relative; color: var(--verde); }
+
+  /* ---------- Escenas 3 y 4 · Tarjetas de curso (calco del diseño web) ---------- */
+  #s3 { background: var(--morado); }
+  #s4 { background: var(--verde); }
+  .card {
+    position: absolute; left: 64px; right: 64px; top: 300px;
+    background: linear-gradient(180deg, var(--lavanda) 0%, var(--blanco) 46%);
+    border: 3px solid var(--borde); border-radius: 56px; padding: 70px 66px 62px;
+    color: var(--tinta); text-align: left; box-shadow: 0 50px 90px rgba(10,6,40,.35);
+  }
+  .c-top { display: flex; align-items: center; gap: 26px; }
+  .c-lvl { font-size: 34px; letter-spacing: .34em; color: #4b5d64; min-width: 230px; }
+  .c-pill { font-size: 32px; font-weight: 700; color: var(--tinta); background: var(--lima); padding: 12px 30px; border-radius: 60px; }
+  .c-cat { font-size: 30px; font-weight: 800; letter-spacing: .16em; color: var(--morado); margin-top: 40px; display: flex; align-items: center; gap: 18px; transform-origin: left center; }
+  .c-cat i { width: 12px; height: 12px; border-radius: 50%; background: var(--morado); }
+  .c-title { margin-top: 26px; }
+  .c-title .mask { padding: 0 0 6px; margin: 0 -10px; padding-left: 10px; }
+  .c-title .el { font-size: 116px; line-height: 1.0; }
+  .c-title .ital { color: var(--morado); }
+  .c-uline { height: 10px; width: 520px; background: var(--lima); border-radius: 6px; margin-top: 4px; transform-origin: left center; }
+  .c-sub { font-size: 39px; font-weight: 500; color: var(--gris); line-height: 1.35; margin-top: 30px; }
+  .c-chips { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 38px; }
+  .chip { font-size: 31px; font-weight: 700; color: var(--morado); border: 2.5px solid #cfc2fb; border-radius: 60px; padding: 14px 28px; display: flex; align-items: center; gap: 12px; background: var(--blanco); }
+  .chip.gift { background: var(--lima); border-color: var(--lima); color: var(--tinta); }
+  .c-list { margin-top: 44px; display: flex; flex-direction: column; gap: 26px; }
+  .c-item { display: flex; align-items: center; gap: 26px; font-size: 42px; font-weight: 500; }
+  .chk { flex: none; width: 54px; height: 54px; border-radius: 12px; background: var(--lima); display: flex; align-items: center; justify-content: center; }
+  .c-div { border-top: 3px dashed #e1def0; margin-top: 46px; transform-origin: left center; }
+  .c-link { font-size: 36px; font-weight: 800; color: var(--morado); margin-top: 36px; display: flex; align-items: center; gap: 16px; }
+
+  /* ---------- Escena 5 · CTA ---------- */
+  #s5 { background: var(--morado); }
+  #s5-l1 { font-size: 112px; }
+  #s5-l2 { font-size: 200px; line-height: .95; margin-top: -4px; }
+  #s5-url { margin-top: 64px; display: flex; align-items: center; gap: 22px; background: var(--blanco); color: var(--tinta); border-radius: 80px; padding: 26px 46px 26px 34px; font-size: 54px; font-weight: 700; position: relative; min-width: 640px; }
+  #s5-url .lock { width: 64px; height: 64px; border-radius: 50%; background: var(--lavanda); display: flex; align-items: center; justify-content: center; flex: none; }
+  #s5-caret { width: 5px; height: 58px; background: var(--morado); border-radius: 2px; }
+  #s5-cursor { position: absolute; right: -20px; bottom: -64px; }
+  #s5-btnwrap { position: relative; margin-top: 54px; }
+  #s5-ring { position: absolute; inset: -10px; border: 7px solid var(--lima); border-radius: 80px; }
+  #s5-btn { background: var(--lima); color: var(--morado); font-size: 48px; font-weight: 800; padding: 30px 56px; border-radius: 80px; display: flex; align-items: center; gap: 18px; }
+  #s5-bio { font-size: 34px; letter-spacing: .24em; color: rgba(253,253,252,.85); margin-top: 52px; }
+  #s5-dates { position: absolute; left: 0; right: 0; top: 1440px; display: flex; justify-content: center; gap: 20px; }
+  .date { font-family: var(--mono); font-weight: 500; font-size: 28px; letter-spacing: .12em; color: var(--blanco); border: 2px solid rgba(253,253,252,.4); border-radius: 60px; padding: 12px 24px; text-transform: uppercase; }
+
+  #controls { position: fixed; left: 0; right: 0; bottom: 0; display: flex; gap: 12px; align-items: center; padding: 10px 16px;
+    background: rgba(0,0,0,.7); font: 600 14px/1 'Plus Jakarta Sans', sans-serif; color: #fff; z-index: 10; }
+  #controls button { font: inherit; background: #c6fd34; color: #5723f4; border: 0; border-radius: 8px; padding: 8px 14px; cursor: pointer; }
+  #controls input { flex: 1; accent-color: #c6fd34; min-width: 0; }
+  #controls span { font-variant-numeric: tabular-nums; min-width: 64px; text-align: right; }
+</style>
+</head>
+<body>
+<div id="wrap">
+<div id="stage">
+
+  <!-- ===================== ESCENA 1 · HOOK ===================== -->
+  <section class="scene" id="s1">
+    <div id="s1-sparks"></div>
+    <div class="center">
+      <span class="el mono" id="s1-tag">Freenanzas · Se viene</span>
+      <span class="mask"><span class="el serif" id="s1-l1">Nuevos</span></span>
+      <span class="mask"><span class="el serif" id="s1-l2">lanzamientos</span></span>
+      <span class="el serif" id="s1-dot">·</span>
+      <span class="mask" style="padding:0 40px 20px"><span class="el serif ital lima" id="s1-pre">Preventas</span></span>
+      <span class="el" id="s1-uline"></span>
+      <div id="s1-badges">
+        <span class="el badge" id="s1-b1">Nivel 3</span>
+        <span class="el badge" id="s1-b2">Nivel 4</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== ESCENA 2 · IDENTIFICACIÓN ===================== -->
+  <section class="scene" id="s2">
+    <div class="col">
+      <span class="mask"><span class="el ln tight" id="s2-w1">¿Quieres tu</span></span>
+      <span class="mask" style="padding-bottom:10px"><span class="el serif ital acc" id="s2-w2">primer depa</span></span>
+      <span class="mask"><span class="el ln tight" id="s2-w3">de inversión?</span></span>
+      <span style="height:60px"></span>
+      <span class="mask"><span class="el ln tight" id="s2-w4">¿Y declarar tus</span></span>
+      <span class="mask"><span class="el ln tight" id="s2-w5">inversiones</span></span>
+      <span class="mask" style="padding:18px 34px 16px;margin-left:-18px"><span class="el" id="s2-w6"><span id="s2-box"><i class="el" id="s2-hl"></i><span class="serif ital acc">sin miedo?</span></span></span></span>
+    </div>
+  </section>
+
+  <!-- ===================== ESCENA 3 · NIVEL 3 ===================== -->
+  <section class="scene" id="s3">
+    <div class="grid"></div>
+    <div class="card el" id="n3">
+      <div class="c-top"><span class="c-lvl mono" id="n3-lvl"></span><span class="c-pill el" id="n3-pill">Preventa</span></div>
+      <div class="c-cat el" id="n3-cat"><i></i>INVERSIÓN INMOBILIARIA</div>
+      <div class="c-title">
+        <span class="mask"><span class="el serif" id="n3-t1">Tu primer</span></span>
+        <span class="mask"><span class="el serif ital" id="n3-t2">depa de inversión.</span></span>
+        <div class="c-uline el" id="n3-ul" style="width:660px"></div>
+      </div>
+      <p class="c-sub el" id="n3-sub">Elige tu depa, conoce los gastos y aprende a alquilarlo.</p>
+      <div class="c-chips">
+        <span class="chip gift el" id="n3-ch1">
+          <svg width="40" height="40" viewBox="0 0 120 120" fill="none" stroke="#14112a" stroke-width="10" stroke-linejoin="round" stroke-linecap="round"><rect x="30" y="52" width="60" height="40" rx="4"/><rect x="25" y="40" width="70" height="14" rx="4"/><path d="M60 40 V92"/><path d="M60 40 C50 24 34 28 42 38 C46 42 54 41 60 40 C66 41 74 42 78 38 C86 28 70 24 60 40Z"/></svg>
+          Excel de 59 depas de regalo</span>
+        <span class="chip el" id="n3-ch2">Disponible en diciembre 2026</span>
+      </div>
+      <div class="c-list">
+        <div class="c-item el" id="n3-i1"><span class="chk"><svg width="34" height="34" viewBox="0 0 24 24"><path class="tick" d="M4 12.5 L9.5 18 L20 6" fill="none" stroke="#14112a" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" pathLength="1"/></svg></span>Qué depa te conviene</div>
+        <div class="c-item el" id="n3-i2"><span class="chk"><svg width="34" height="34" viewBox="0 0 24 24"><path class="tick" d="M4 12.5 L9.5 18 L20 6" fill="none" stroke="#14112a" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" pathLength="1"/></svg></span>Cómo comprarlo con el banco</div>
+        <div class="c-item el" id="n3-i3"><span class="chk"><svg width="34" height="34" viewBox="0 0 24 24"><path class="tick" d="M4 12.5 L9.5 18 L20 6" fill="none" stroke="#14112a" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" pathLength="1"/></svg></span>Cómo alquilarlo en Airbnb</div>
+      </div>
+      <div class="c-div el" id="n3-div"></div>
+      <div class="c-link el" id="n3-link">Ver cómo funciona el programa <span class="el arrow" id="n3-arr">→</span></div>
+    </div>
+  </section>
+
+  <!-- ===================== ESCENA 4 · NIVEL 4 ===================== -->
+  <section class="scene" id="s4">
+    <div class="grid"></div>
+    <div class="card el" id="n4">
+      <div class="c-top"><span class="c-lvl mono" id="n4-lvl"></span><span class="c-pill el" id="n4-pill">Preventa</span></div>
+      <div class="c-cat el" id="n4-cat"><i></i>DECLARACIÓN DE IMPUESTOS</div>
+      <div class="c-title">
+        <span class="mask"><span class="el serif" id="n4-t1">Declara tus</span></span>
+        <span class="mask"><span class="el serif" id="n4-t2">inversiones</span></span>
+        <span class="mask"><span class="el serif ital" id="n4-t3">sin miedo.</span></span>
+        <div class="c-uline el" id="n4-ul" style="width:440px"></div>
+      </div>
+      <p class="c-sub el" id="n4-sub">Prepara tu declaración anual de acciones con más claridad.</p>
+      <div class="c-chips">
+        <span class="chip el" id="n4-ch1">Disponible en marzo 2027</span>
+      </div>
+      <div class="c-list">
+        <div class="c-item el" id="n4-i1"><span class="chk"><svg width="34" height="34" viewBox="0 0 24 24"><path class="tick" d="M4 12.5 L9.5 18 L20 6" fill="none" stroke="#14112a" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" pathLength="1"/></svg></span>Dividendos y ganancias</div>
+        <div class="c-item el" id="n4-i2"><span class="chk"><svg width="34" height="34" viewBox="0 0 24 24"><path class="tick" d="M4 12.5 L9.5 18 L20 6" fill="none" stroke="#14112a" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" pathLength="1"/></svg></span>Brokers y reportes</div>
+        <div class="c-item el" id="n4-i3"><span class="chk"><svg width="34" height="34" viewBox="0 0 24 24"><path class="tick" d="M4 12.5 L9.5 18 L20 6" fill="none" stroke="#14112a" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" pathLength="1"/></svg></span>Caso práctico real</div>
+      </div>
+      <div class="c-div el" id="n4-div"></div>
+      <div class="c-link el" id="n4-link">Ver cómo funciona el programa <span class="el arrow" id="n4-arr">→</span></div>
+    </div>
+  </section>
+
+  <!-- ===================== ESCENA 5 · CTA ===================== -->
+  <section class="scene" id="s5">
+    <div id="s5-sparks"></div>
+    <div class="center">
+      <span class="mask"><span class="el tight" id="s5-l1">Separa tu cupo</span></span>
+      <span class="mask" style="padding:0 40px 24px"><span class="el serif ital lima" id="s5-l2">en preventa</span></span>
+      <div id="s5-url" class="el">
+        <span class="lock"><svg width="30" height="34" viewBox="0 0 20 24" fill="none" stroke="#5723f4" stroke-width="2.6" stroke-linecap="round"><rect x="2" y="10" width="16" height="12" rx="3"/><path d="M6 10 V7 a4 4 0 0 1 8 0 V10"/></svg></span>
+        <span id="s5-typed"></span><span id="s5-caret"></span>
+        <svg class="el" id="s5-cursor" width="70" height="84" viewBox="0 0 28 34"><path d="M3 2 L3 26 L9.5 20 L14 31 L18.5 29 L14 18.5 L23 18.5 Z" fill="#14112a" stroke="#fdfdfc" stroke-width="2" stroke-linejoin="round"/></svg>
+      </div>
+      <div id="s5-btnwrap" class="el">
+        <div id="s5-ring" class="el"></div>
+        <div id="s5-btn" class="el">Ver cómo funciona <span>→</span></div>
+      </div>
+      <span class="el mono" id="s5-bio">Link en nuestra bio</span>
+    </div>
+    <div id="s5-dates">
+      <span class="date el" id="s5-d1">Nivel 3 · Dic 2026</span>
+      <span class="date el" id="s5-d2">Nivel 4 · Mar 2027</span>
+    </div>
+  </section>
+
+</div>
+</div>
+
+<div id="controls">
+  <button id="play">Pausa</button>
+  <input id="scrub" type="range" min="0" max="21" step="0.0333" value="0">
+  <span id="time">0.00s</span>
+</div>
+
+<script>
+/* =====================================================================
+   Mismo motor de keyframes del Reel del sorteo. render(t) es determinista.
+   Ritmo: 120 BPM → 1 beat = 0,5 s. Duración: 21 s (630 frames @30fps).
+   ===================================================================== */
+const DURATION = 21;
+const $ = (id) => document.getElementById(id);
+
+const E = {
+  lin: (p) => p,
+  outCubic: (p) => 1 - Math.pow(1 - p, 3),
+  inCubic: (p) => p * p * p,
+  inOutCubic: (p) => (p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2),
+  outExpo: (p) => (p === 1 ? 1 : 1 - Math.pow(2, -10 * p)),
+  inExpo: (p) => (p === 0 ? 0 : Math.pow(2, 10 * p - 10)),
+  inOutExpo: (p) => p === 0 ? 0 : p === 1 ? 1 : p < .5 ? Math.pow(2, 20 * p - 10) / 2 : (2 - Math.pow(2, -20 * p + 10)) / 2,
+  outBack: (p) => { const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(p - 1, 3) + c1 * Math.pow(p - 1, 2); },
+  outBackBig: (p) => { const c1 = 2.6, c3 = c1 + 1; return 1 + c3 * Math.pow(p - 1, 3) + c1 * Math.pow(p - 1, 2); },
+  outElastic: (p) => { const c4 = (2 * Math.PI) / 3.2; return p === 0 ? 0 : p === 1 ? 1 : Math.pow(2, -9 * p) * Math.sin((p * 10 - .75) * c4) + 1; },
+};
+const DEF = { x: 0, y: 0, s: 1, sx: 1, sy: 1, r: 0, o: 1, blur: 0 };
+const tracks = [];
+function track(id, keys) { tracks.push({ el: typeof id === 'string' ? $(id) : id, keys }); }
+function sample(keys, t) {
+  const out = { ...DEF }; const full = []; let acc = { ...DEF };
+  for (const [kt, props, ease] of keys) { acc = { ...acc, ...props }; full.push([kt, acc, ease || 'outCubic']); }
+  if (t <= full[0][0]) return { ...full[0][1] };
+  for (let i = 1; i < full.length; i++) {
+    const [t0, a] = full[i - 1], [t1, b, ease] = full[i];
+    if (t <= t1) { const p = E[ease]((t - t0) / (t1 - t0)); for (const k in b) out[k] = a[k] + (b[k] - a[k]) * p; return out; }
+  }
+  return { ...full[full.length - 1][1] };
+}
+function apply(el, v) {
+  el.style.transform = `translate(${v.x}px, ${v.y}px) rotate(${v.r}deg) scale(${v.s * v.sx}, ${v.s * v.sy})`;
+  el.style.opacity = Math.max(0, Math.min(1, v.o));
+  el.style.filter = v.blur > 0.05 ? `blur(${v.blur}px)` : 'none';
+}
+function wordIn(id, t, opts = {}) {
+  const d = opts.d || 0.45;
+  track(id, [[t, { y: opts.from ?? 150, o: 0, s: opts.s0 ?? 1 }], [t + d, { y: 0, o: 1, s: 1 }, opts.ease || 'outBack'], ...(opts.extra || [])]);
+}
+// Texto que se "escribe" letra por letra (etiquetas mono y URL)
+const typers = [];
+function typeIn(id, text, t0, cps) { typers.push({ el: $(id), text, t0, cps }); }
+
+/* ===================== Ventanas de escena y transiciones ===================== */
+const SCENES = [
+  { id: 's1', in: 0,    out: 2.5,  wipe: null },
+  { id: 's2', in: 2.2,  out: 6.0,  wipe: { type: 'circle', t0: 2.2,  t1: 2.6, cx: 540, cy: 1060 } },
+  { id: 's3', in: 5.7,  out: 12.0, wipe: { type: 'up',     t0: 5.7,  t1: 6.1 } },
+  { id: 's4', in: 11.7, out: 17.0, wipe: { type: 'left',   t0: 11.7, t1: 12.1 } },
+  { id: 's5', in: 16.7, out: 21.0, wipe: { type: 'circle', t0: 16.7, t1: 17.1, cx: 540, cy: 960 } },
+];
+
+/* ----------------------- ESCENA 1 · HOOK (0–2,5 s) ----------------------- */
+track('s1-tag', [[0, { s: .6, o: 0 }], [0.35, { s: 1, o: 1 }, 'outBack']]);
+wordIn('s1-l1', 0.15, { from: 170 });
+wordIn('s1-l2', 0.35, { from: 170 });
+track('s1-dot', [[0.55, { s: 0 }], [0.8, { s: 1 }, 'outBackBig']]);
+track('s1-pre', [[0.6, { y: 0, s: 1.8, o: 0, blur: 16 }], [1.0, { s: 1, o: 1, blur: 0 }, 'outExpo'],
+                 [1.5, { s: 1 }], [1.62, { s: 1.06 }, 'outCubic'], [1.8, { s: 1 }, 'outBack']]);
+track('s1-uline', [[1.0, { sx: 0 }], [1.35, { sx: 1 }, 'outExpo']]);
+track('s1-b1', [[1.25, { y: 60, s: .5, o: 0 }], [1.6, { y: 0, s: 1, o: 1 }, 'outBackBig']]);
+track('s1-b2', [[1.4, { y: 60, s: .5, o: 0 }], [1.75, { y: 0, s: 1, o: 1 }, 'outBackBig']]);
+
+function makeSparks(hostId, pos, t0, tEnd) {
+  const host = $(hostId);
+  pos.forEach(([x, y, size, white], i) => {
+    const s = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    s.setAttribute('width', size); s.setAttribute('height', size); s.setAttribute('viewBox', '0 0 40 40');
+    s.setAttribute('class', 'spark el'); s.style.left = x + 'px'; s.style.top = y + 'px';
+    s.innerHTML = `<path d="M20 0 C22 14 26 18 40 20 C26 22 22 26 20 40 C18 26 14 22 0 20 C14 18 18 14 20 0Z" fill="${white ? '#fdfdfc' : '#c6fd34'}"/>`;
+    host.appendChild(s);
+    const ts = t0 + i * 0.1;
+    track(s, [[ts, { s: 0, r: -90 }], [ts + .4, { s: 1, r: 0 }, 'outBackBig'], [ts + .9, { s: .8, r: 30 }, 'inOutCubic'], [tEnd, { s: 1, r: 70 }, 'lin']]);
+  });
+}
+makeSparks('s1-sparks', [[140, 380, 70], [880, 330, 50, 1], [900, 1180, 80], [110, 1250, 46, 1], [800, 1500, 56], [230, 1540, 64, 1]], 0.8, 2.5);
+
+/* ----------------------- ESCENA 2 · IDENTIFICACIÓN (2,5–6 s) ----------------------- */
+wordIn('s2-w1', 2.55);
+track('s2-w2', [[2.85, { y: 170, s: .7, o: 0 }], [3.25, { y: 0, s: 1.08, o: 1 }, 'outBack'], [3.4, { s: 1 }, 'outCubic']]);
+wordIn('s2-w3', 3.25);
+wordIn('s2-w4', 4.0);
+wordIn('s2-w5', 4.35);
+track('s2-w6', [[4.75, { y: 170, s: .8, o: 0 }], [5.15, { y: 0, s: 1, o: 1 }, 'outBack']]);
+track('s2-hl', [[5.05, { sx: 0 }], [5.4, { sx: 1 }, 'outExpo']]);
+
+/* ----------------------- Tarjetas de curso (Nivel 3 y Nivel 4) ----------------------- */
+function cardAnim(p, T, opt) {
+  // Entrada de la tarjeta
+  track(p, opt.cardKeys);
+  typeIn(`${p}-lvl`, opt.level, T + 0.35, 22);
+  track(`${p}-pill`, [[T + 0.55, { s: 0, r: -10 }], [T + 0.85, { s: 1, r: 0 }, 'outBackBig'], [T + 1.0, { s: 1 }], [T + 1.12, { s: 1.12 }], [T + 1.3, { s: 1 }, 'outBack']]);
+  track(`${p}-cat`, [[T + 0.7, { x: -40, o: 0 }], [T + 1.05, { x: 0, o: 1 }, 'outCubic']]);
+  opt.titles.forEach((id, i) => wordIn(id, T + 0.95 + i * 0.25, { from: 140 }));
+  const tEndTitle = T + 0.95 + opt.titles.length * 0.25 + 0.2;
+  track(`${p}-ul`, [[tEndTitle, { sx: 0 }], [tEndTitle + 0.4, { sx: 1 }, 'outExpo']]);
+  track(`${p}-sub`, [[tEndTitle + 0.15, { y: 30, o: 0 }], [tEndTitle + 0.55, { y: 0, o: 1 }, 'outCubic']]);
+  opt.chips.forEach((id, i) => {
+    const tc = tEndTitle + 0.55 + i * 0.25;
+    track(id, [[tc, { s: 0, o: 0 }], [tc + 0.35, { s: 1, o: 1 }, 'outBackBig'], ...(opt.chipExtra?.[i] || [])]);
+  });
+  const tList = opt.listAt;
+  [1, 2, 3].forEach((n, i) => {
+    const ti = tList + i * 0.5; // uno por beat
+    track(`${p}-i${n}`, [[ti, { x: -60, o: 0 }], [ti + 0.4, { x: 0, o: 1 }, 'outBack']]);
+  });
+  track(`${p}-div`, [[tList + 1.4, { sx: 0 }], [tList + 1.8, { sx: 1 }, 'outExpo']]);
+  track(`${p}-link`, [[tList + 1.6, { y: 24, o: 0 }], [tList + 2.0, { y: 0, o: 1 }, 'outCubic']]);
+  ticks.push({ els: [...document.querySelectorAll(`#${p} .tick`)], t0: tList + 0.15 });
+  arrows.push({ el: $(`${p}-arr`), t0: tList + 2.0 });
+}
+const ticks = [], arrows = [];
+
+// Nivel 3: 6,0–12,0 s
+cardAnim('n3', 6.0, {
+  level: 'Nivel 3',
+  cardKeys: [[5.9, { y: 260, s: .92, o: 0, r: 2 }], [6.45, { y: 0, s: 1, o: 1, r: 0 }, 'outBack'],
+             [11.55, { x: 0, r: 0 }], [12.0, { x: -1250, r: -8 }, 'inExpo']],
+  titles: ['n3-t1', 'n3-t2'],
+  chips: ['n3-ch1', 'n3-ch2'],
+  // el regalo hace un "wiggle" para llamar la atención
+  chipExtra: [[[9.6, { r: 0 }], [9.7, { r: -4, s: 1.06 }], [9.8, { r: 4 }], [9.9, { r: -2 }], [10.0, { r: 0, s: 1 }]]],
+  listAt: 9.0,
+});
+// Nivel 4: 12,0–17,0 s
+cardAnim('n4', 12.0, {
+  level: 'Nivel 4',
+  cardKeys: [[11.75, { x: 1250, r: 8, o: 1 }], [12.35, { x: 0, r: 0 }, 'outBack'],
+             [16.55, { y: 0, s: 1, o: 1 }], [17.0, { y: 120, s: .9, o: 0 }, 'inCubic']],
+  titles: ['n4-t1', 'n4-t2', 'n4-t3'],
+  chips: ['n4-ch1'],
+  listAt: 14.25,
+});
+
+/* ----------------------- ESCENA 5 · CTA (17–21 s) ----------------------- */
+wordIn('s5-l1', 17.1);
+track('s5-l2', [[17.35, { s: 1.7, o: 0, blur: 14 }], [17.75, { s: 1, o: 1, blur: 0 }, 'outExpo']]);
+track('s5-url', [[17.8, { y: 80, s: .9, o: 0 }], [18.2, { y: 0, s: 1, o: 1 }, 'outBack']]);
+typeIn('s5-typed', 'freenanzas.app', 18.2, 22);
+// Cursor entra y hace "clic" sobre la URL
+track('s5-cursor', [[18.6, { x: 160, y: 140, o: 0 }], [19.0, { x: 0, y: 0, o: 1 }, 'outCubic'], [19.1, { s: .8 }, 'outCubic'], [19.25, { s: 1 }, 'outBack']]);
+track('s5-btnwrap', [[19.15, { s: 0, o: 0 }], [19.55, { s: 1, o: 1 }, 'outBackBig']]);
+track('s5-bio', [[19.6, { y: 24, o: 0 }], [19.95, { y: 0, o: 1 }, 'outCubic']]);
+track('s5-d1', [[19.8, { y: 40, o: 0 }], [20.15, { y: 0, o: 1 }, 'outBack']]);
+track('s5-d2', [[19.95, { y: 40, o: 0 }], [20.3, { y: 0, o: 1 }, 'outBack']]);
+makeSparks('s5-sparks', [[130, 470, 60], [900, 420, 48, 1], [940, 1240, 70], [120, 1330, 44, 1]], 17.5, 21);
+
+function renderCustom(t) {
+  // máquina de escribir
+  for (const ty of typers) {
+    const n = Math.max(0, Math.min(ty.text.length, Math.floor((t - ty.t0) * ty.cps)));
+    ty.el.textContent = ty.text.slice(0, n);
+  }
+  // caret parpadeante de la URL
+  $('s5-caret').style.opacity = t < 18.1 ? 0 : (Math.floor(t * 2.5) % 2 ? .15 : 1);
+  // checks que se dibujan
+  for (const g of ticks) g.els.forEach((el, i) => {
+    const p = Math.max(0, Math.min(1, (t - g.t0 - i * 0.5) / 0.3));
+    el.style.strokeDasharray = '1'; el.style.strokeDashoffset = String(1 - E.outCubic(p));
+  });
+  // flechas "→" que empujan hacia el link
+  for (const a of arrows) {
+    const k = t < a.t0 ? 0 : Math.pow(Math.sin(Math.PI * ((t - a.t0) % 0.5) / 0.5), 2);
+    a.el.style.transform = `translateX(${k * 12}px)`;
+  }
+  // Pulso del botón CTA (cada 1 s = 2 beats)
+  const btn = $('s5-btn'), ring = $('s5-ring');
+  if (t < 19.55) { btn.style.transform = 'scale(1)'; ring.style.opacity = 0; }
+  else {
+    const ph = ((t - 19.55) % 1);
+    const k = ph < .35 ? Math.pow(Math.sin(Math.PI * ph / .35), 2) : 0;
+    btn.style.transform = `scale(${1 + 0.045 * k})`;
+    ring.style.transform = `scale(${1 + 0.18 * E.outCubic(ph)}, ${1 + 0.5 * E.outCubic(ph)})`;
+    ring.style.opacity = (1 - E.outCubic(ph)) * 0.9;
+  }
+}
+
+function renderScenes(t) {
+  SCENES.forEach((sc, i) => {
+    const el = $(sc.id);
+    const visible = t >= sc.in && t < sc.out + (i === SCENES.length - 1 ? 1 : 0.0001);
+    el.style.display = visible ? 'block' : 'none';
+    el.style.zIndex = i + 1;
+    if (!visible || !sc.wipe) { el.style.clipPath = 'none'; return; }
+    const w = sc.wipe;
+    const p = E.inOutExpo(Math.max(0, Math.min(1, (t - w.t0) / (w.t1 - w.t0))));
+    if (p >= 1) { el.style.clipPath = 'none'; return; }
+    if (w.type === 'circle') el.style.clipPath = `circle(${p * 1200}px at ${w.cx}px ${w.cy}px)`;
+    if (w.type === 'up')     el.style.clipPath = `inset(${(1 - p) * 100}% 0 0 0 round ${80 * (1 - p)}px)`;
+    if (w.type === 'left')   el.style.clipPath = `inset(0 0 0 ${(1 - p) * 100}% round ${80 * (1 - p)}px)`;
+  });
+}
+
+function render(t) {
+  renderScenes(t);
+  for (const tr of tracks) apply(tr.el, sample(tr.keys, t));
+  renderCustom(t);
+}
+window.__render = render;
+window.__DURATION = DURATION;
+window.__STILLS = { '1-hook': 2.2, '2-identificacion': 5.8, '3-nivel3': 11.4, '4-nivel4': 16.4, '5-cta': 20.6 };
+
+const RENDER = new URLSearchParams(location.search).has('render');
+if (RENDER) { document.body.classList.add('render'); render(0); }
+else {
+  const stage = $('stage');
+  const fit = () => { const s = Math.min(innerWidth / 1080, (innerHeight - 52) / 1920); stage.style.transform = `scale(${s}) translateY(-26px)`; };
+  addEventListener('resize', fit); fit();
+  let playing = true, t = 0, last = null;
+  const scrub = $('scrub'), time = $('time'), btn = $('play');
+  btn.onclick = () => { playing = !playing; btn.textContent = playing ? 'Pausa' : 'Play'; last = null; };
+  scrub.oninput = () => { t = +scrub.value; render(t); time.textContent = t.toFixed(2) + 's'; };
+  const loop = (now) => {
+    if (playing) { if (last !== null) t = (t + (now - last) / 1000) % DURATION; last = now; render(t); scrub.value = t; time.textContent = t.toFixed(2) + 's'; }
+    requestAnimationFrame(loop);
+  };
+  document.fonts.ready.then(() => requestAnimationFrame(loop));
+}
+</script>
+</body>
+</html>
