@@ -92,20 +92,20 @@
   </svg>
   <svg class="abs" id="mini1" width="220" height="220" viewBox="-110 -110 220 220"><path id="miniPath" fill="#c6fd34" stroke="#5723f4" stroke-width="8" stroke-linejoin="round"/><text id="miniTxt" x="0" y="22" text-anchor="middle" font-family="Montserrat" font-weight="900" font-size="70" fill="#5723f4">#1</text></svg>
 </div>
-<div id="controls"><input id="scrub" type="range" min="0" max="7" step="0.0333" value="0" style="width:100%"><span id="tc"></span></div>
+<div id="controls"><input id="scrub" type="range" min="0" max="6.93" step="0.0333" value="0" style="width:100%"><span id="tc"></span></div>
 
 <script>
 // Tiempos en segundos desde el inicio del clip (00:01:31:02 de la línea de tiempo)
 const T = {
   teaser: 0.30,  // "Y quién sí en el puesto…" → 00:01:31:11
-  uno: 2.15,     // "…uno"                     → 00:01:33:07
-  logo: 2.70,    // "Minsur Minera"            → 00:01:33:23
-  flip: 4.20,    // "Con un…"                  → 00:01:35:08
-  count: 4.65,   // "diez punto…"
-  land: 5.90,    // "…catorce"                 → 00:01:36:29
+  uno: 2.05,     // "…uno"                     → 00:01:33:04
+  logo: 2.47,    // corte · "Minsur Minera"    → 00:01:33:16
+  flip: 4.20,    // corte · "Con un…"          → 00:01:35:08
+  count: 4.50,   // "diez punto…"              → 00:01:35:17
+  land: 5.45,    // "…catorce"                 → 00:01:36:15
 };
 const VALUE = 10.14;
-const DURATION = 7.0;
+const DURATION = 6.9333;
 window.__DURATION = DURATION;
 const fmt = (v) => v.toFixed(2).replace('.', ',');
 

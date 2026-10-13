@@ -11,7 +11,7 @@ import numpy as np
 
 video, SRC, MASKS, GFX, OUT = sys.argv[1:6]
 FPS, W, H = 30, 1080, 1920
-UNO, LOGO, LAND = 2.15, 2.70, 5.90   # "puesto uno" · "Minsur" · llega al 10,14 %
+UNO, LOGO, FLIP, LAND = 2.05, 2.47, 4.20, 5.45   # "uno" · corte "Minsur" · corte "Con un" · llega al 10,14 %
 
 
 def ease(p):
@@ -27,8 +27,8 @@ def ease_in_out(p):
 def zoom(t):
     """Devuelve (escala, rotación en grados)."""
     z = 1.0 + 0.25 * ease_out((t - UNO) / (4 / 30))                    # golpe fuerte 100 → 125 % en 4 frames
-    z -= 0.17 * ease_out((t - LOGO) / (8 / 30))                         # abre a 108 % para ver la placa
-    z -= 0.08 * ease_out((t - 4.20) / (6 / 30))                         # "Con un…": vuelve a 100 %
+    z -= 0.17 * ease_out((t - LOGO) / (8 / 30))                         # corte: abre a 108 % para ver la placa
+    z -= 0.08 * ease_out((t - FLIP) / (6 / 30))                         # corte "Con un…": vuelve a 100 %
     z += 0.30 * ease_out((t - LAND) / (6 / 30))                         # cierre: 100 → 130 % en 6 frames
     rot = 3.0 * ease_out((t - LAND) / (6 / 30))                          # + giro de 3° para celebrar
     return z, rot
