@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hook migrantes</title>
+<style>
+  /* ===== Paleta oficial Freenanzas ===== */
+  :root {
+    --morado: #5723f4;
+    --verde: #1a6f66;
+    --lima: #c6fd34;
+    --blanco: #fdfdfc;
+  }
+  @font-face { font-family: 'Montserrat'; font-weight: 900; src: url(../hook-dividendos/fonts/montserrat-latin-900-normal.woff2) format('woff2'); }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: transparent; overflow: hidden; }
+  body { font-family: 'Montserrat', sans-serif; font-weight: 900; color: var(--blanco); }
+  body:not(.render) { background: linear-gradient(135deg, #5723f4, #1a6f66); }
+  #stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; }
+
+  /* Texto detrás de la persona: la cabeza está en y ≈ 460–590, la palabra clave queda justo encima
+     y la cabeza tapa un poco su borde inferior (efecto de profundidad). */
+  .group { position: absolute; left: 40px; right: 40px; top: 150px; height: 470px;
+    display: flex; flex-direction: column; align-items: center; justify-content: flex-end; text-align: center; }
+  .line { display: flex; flex-wrap: wrap; justify-content: center; line-height: 1; }
+  .w { display: inline-block; text-transform: uppercase; letter-spacing: -0.01em; margin: 0 12px;
+    transform-origin: 50% 80%; will-change: transform, opacity;
+    filter: drop-shadow(0 8px 0 rgba(30, 10, 110, .55)) drop-shadow(0 0 24px rgba(20, 8, 70, .45)); }
+  .s { font-size: 84px; }
+  .m { font-size: 112px; }
+  .k { color: var(--lima); font-size: 158px; letter-spacing: -0.03em; margin-top: 8px; }
+  .k2 { color: var(--lima); font-size: 210px; letter-spacing: -0.03em; margin-top: 4px; }
+
+  #controls { position: fixed; left: 10px; bottom: 10px; right: 10px; font: 600 14px sans-serif; color: #fff; }
+  body.render #controls { display: none; }
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<div id="controls"><input id="scrub" type="range" min="0" max="4.06" step="0.0333" value="0" style="width:100%"><span id="tc"></span></div>
+
+<script>
+// Tiempos (segundos desde 00:00:00:00). Frases según la transcripción; palabras estimadas con el audio.
+// [texto, inicio, clase]  clase: s = chica, m = mediana, k / k2 = palabra clave en lima (k2 más grande)
+const GROUPS = [
+  { from: 0.10, to: 2.37, lines: [
+    [['Este', 0.10, 's'], ['es', 0.38, 's'], ['un', 0.48, 's'], ['video', 0.58, 's']],
+    [['para', 0.92, 's'], ['las', 1.20, 's'], ['personas', 1.30, 's']],
+    [['migrantes', 1.80, 'k']],
+  ]},
+  { from: 2.37, to: 3.10, lines: [
+    [['que', 2.40, 'm'], ['buscan', 2.55, 'm']],
+    [['hacer', 2.78, 'm']],
+  ]},
+  { from: 3.10, to: 4.07, lines: [
+    [['crecer', 3.12, 'm'], ['su', 3.38, 'm']],
+    [['platita', 3.48, 'k2']],
+  ]},
+];
+const DURATION = 4.0667;
+window.__DURATION = DURATION;
+
+const $ = (id) => document.getElementById(id);
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const prog = (t, a, b) => clamp((t - a) / (b - a));
+const easeOut = (p) => 1 - Math.pow(1 - p, 3);
+const back = (p, s = 2.2) => 1 + (s + 1) * Math.pow(p - 1, 3) + s * Math.pow(p - 1, 2);
+
+const els = GROUPS.map((g) => {
+  const box = document.createElement('div');
+  box.className = 'group';
+  const words = [];
+  g.lines.forEach((ln) => {
+    const row = document.createElement('div');
+    row.className = 'line';
+    ln.forEach(([txt, ts, cls]) => {
+      const sp = document.createElement('span');
+      sp.className = 'w ' + cls;
+      sp.textContent = txt;
+      row.appendChild(sp);
+      words.push({ el: sp, ts, key: cls[0] === 'k' });
+    });
+    box.appendChild(row);
+  });
+  $('stage').appendChild(box);
+  return { g, box, words };
+});
+
+function render(t) {
+  els.forEach(({ g, box, words }) => {
+    const on = t >= g.from && t < g.to;
+    box.style.display = on ? 'flex' : 'none';
+    if (!on) return;
+    words.forEach(({ el, ts, key }) => {
+      const p = prog(t, ts - 0.04, ts + (key ? 0.22 : 0.16));
+      if (p <= 0) { el.style.opacity = 0; return; }
+      let sc = 0.3 + 0.7 * back(p, key ? 2.8 : 2.2);
+      // la palabra clave da un segundo "latido" y queda con leve rotación
+      const beat = key ? 0.06 * Math.sin(prog(t, ts + 0.22, ts + 0.6) * Math.PI) : 0;
+      el.style.opacity = clamp(p * 3);
+      el.style.transform = `translateY(${(1 - easeOut(p)) * 50}px) scale(${sc + beat}) rotate(${key ? -3 : 0}deg)`;
+    });
+  });
+}
+
+window.__render = (t) => { render(t); $('tc').textContent = t.toFixed(2) + ' s'; };
+
+if (new URLSearchParams(location.search).has('render')) document.body.classList.add('render');
+else {
+  const sc = $('scrub');
+  sc.oninput = () => __render(+sc.value);
+  const t0 = performance.now();
+  const loop = () => { if (document.activeElement !== sc) { const t = ((performance.now() - t0) / 1000) % DURATION; sc.value = t; __render(t); } requestAnimationFrame(loop); };
+  document.fonts.ready.then(loop);
+}
+</script>
+</body>
+</html>
