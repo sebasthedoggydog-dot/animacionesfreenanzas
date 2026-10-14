@@ -12,8 +12,10 @@
     --lima: #c6fd34;
     --blanco: #fdfdfc;
   }
+  @font-face { font-family: 'Montserrat'; font-weight: 900; src: url(../hook-dividendos/fonts/montserrat-latin-900-normal.woff2) format('woff2'); }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { background: transparent; overflow: hidden; }
+  body { font-family: 'Montserrat', sans-serif; font-weight: 900; }
   body:not(.render) { background: #2a2a2a; }
   #stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; }
   svg { display: block; overflow: visible; }
@@ -23,17 +25,32 @@
 </head>
 <body>
 <div id="stage">
-  <!-- Flecha de crecimiento: sube en zigzag de abajo-izquierda a arriba-derecha, pasando detrás de la persona -->
-  <svg id="arrow" width="1080" height="1920" viewBox="0 0 1080 1920">
-    <g id="arrowG">
-      <polyline id="shadow" points="90,1180 300,900 430,1010 640,640 760,760 930,330"
-        fill="none" stroke="#5723f4" stroke-width="64" stroke-linecap="round" stroke-linejoin="round"/>
-      <polyline id="line" points="90,1180 300,900 430,1010 640,640 760,760 930,330"
-        fill="none" stroke="#c6fd34" stroke-width="40" stroke-linecap="round" stroke-linejoin="round"/>
-      <g id="head" transform="translate(930 330)">
-        <path d="M0 -112 L92 30 L-92 30 Z" fill="#c6fd34" stroke="#5723f4" stroke-width="14" stroke-linejoin="round"/>
+  <!-- Ruta PERÚ → mundo, en arco por encima de la cabeza (la cabeza está en y ≈ 520) -->
+  <svg id="route" width="1080" height="1920" viewBox="0 0 1080 1920">
+    <g id="dots"></g>
+    <!-- pin PERÚ -->
+    <g id="pin" transform="translate(190 450)">
+      <path d="M0 0 C-14 -26 -48 -52 -48 -88 A48 48 0 1 1 48 -88 C48 -52 14 -26 0 0Z" fill="#c6fd34" stroke="#5723f4" stroke-width="10" stroke-linejoin="round"/>
+      <circle cx="0" cy="-88" r="18" fill="#5723f4"/>
+      <g transform="translate(0 -170)">
+        <rect x="-92" y="-34" width="184" height="62" rx="31" fill="#5723f4" stroke="#c6fd34" stroke-width="5"/>
+        <text x="0" y="12" text-anchor="middle" font-family="Montserrat" font-weight="900" font-size="38" fill="#fdfdfc">PERÚ</text>
       </g>
     </g>
+    <!-- globo terráqueo -->
+    <g id="globe" transform="translate(840 400)">
+      <g id="glow"></g>
+      <circle r="92" fill="#5723f4" stroke="#c6fd34" stroke-width="10"/>
+      <g fill="none" stroke="#c6fd34" stroke-width="6" stroke-linecap="round">
+        <ellipse id="mer1" rx="40" ry="92"/>
+        <ellipse id="mer2" rx="75" ry="92"/>
+        <line x1="0" y1="-92" x2="0" y2="92"/>
+        <path d="M-84 -38 H84 M-92 0 H92 M-84 38 H84"/>
+      </g>
+    </g>
+    <!-- avioncito -->
+    <g id="plane"><path d="M44 0 L-26 -12 L-40 -42 L-52 -42 L-44 -10 L-70 -8 L-80 -24 L-90 -24 L-84 0 L-90 24 L-80 24 L-70 8 L-44 10 L-52 42 L-40 42 L-26 12 Z"
+      fill="#fdfdfc" stroke="#5723f4" stroke-width="7" stroke-linejoin="round" transform="scale(.85)"/></g>
   </svg>
 </div>
 <div id="controls"><input id="scrub" type="range" min="0" max="4.06" step="0.0333" value="0" style="width:100%"><span id="tc"></span></div>
@@ -41,34 +58,67 @@
 <script>
 // Tiempos en segundos desde 00:00:00:00
 const T = {
-  crecer: 3.12,    // "crecer…"   → 00:00:03:04 · la flecha empieza a subir
-  platita: 3.48,   // "…platita"  → 00:00:03:14 · la punta llega y late
+  pin: 0.58,       // "…un video…"        → 00:00:00:17 · aparece el pin PERÚ
+  fly: 0.85,       // "…para las personas" → el avión despega y dibuja la ruta
+  globe: 1.80,     // "migrantes"          → 00:00:01:24 · llega al mundo
+  out: 3.02,       // "crecer su platita"  → la ruta sale cuando entra el dinero
 };
 const DURATION = 4.0667;
 window.__DURATION = DURATION;
-
+const NS = 'http://www.w3.org/2000/svg';
 const $ = (id) => document.getElementById(id);
 const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const prog = (t, a, b) => clamp((t - a) / (b - a));
-const easeOut = (p) => 1 - Math.pow(1 - p, 3);
-const back = (p, s = 2.4) => 1 + (s + 1) * Math.pow(p - 1, 3) + s * Math.pow(p - 1, 2);
+const easeInOut = (p) => p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
+const back = (p, s = 2.2) => 1 + (s + 1) * Math.pow(p - 1, 3) + s * Math.pow(p - 1, 2);
 
-// largo de la polilínea y ángulo del último tramo (para orientar la punta)
-const P = [[90,1180],[300,900],[430,1010],[640,640],[760,760],[930,330]];
-let L = 0; for (let k = 1; k < P.length; k++) L += Math.hypot(P[k][0] - P[k-1][0], P[k][1] - P[k-1][1]);
-const ang = Math.atan2(P[5][1] - P[4][1], P[5][0] - P[4][0]) * 180 / Math.PI + 90;
+// arco (bezier cuadrática) del pin al globo
+const P0 = [252, 345], C = [500, 70], P1 = [742, 382];
+const bez = (u) => [
+  (1 - u) * (1 - u) * P0[0] + 2 * (1 - u) * u * C[0] + u * u * P1[0],
+  (1 - u) * (1 - u) * P0[1] + 2 * (1 - u) * u * C[1] + u * u * P1[1]];
+const tan = (u) => Math.atan2(2 * (1 - u) * (C[1] - P0[1]) + 2 * u * (P1[1] - C[1]), 2 * (1 - u) * (C[0] - P0[0]) + 2 * u * (P1[0] - C[0])) * 180 / Math.PI;
+const DOTS = 26, dots = [];
+for (let k = 0; k <= DOTS; k++) {
+  const c = document.createElementNS(NS, 'circle');
+  const [x, y] = bez(k / DOTS);
+  c.setAttribute('cx', x); c.setAttribute('cy', y); c.setAttribute('r', 9); c.setAttribute('fill', '#c6fd34');
+  c.setAttribute('stroke', '#5723f4'); c.setAttribute('stroke-width', 4);
+  $('dots').appendChild(c); dots.push(c);
+}
+// destello del globo
+const rays = [];
+for (let k = 0; k < 10; k++) {
+  const l = document.createElementNS(NS, 'line');
+  l.setAttribute('stroke', k % 2 ? '#fdfdfc' : '#c6fd34'); l.setAttribute('stroke-width', 10); l.setAttribute('stroke-linecap', 'round');
+  $('glow').appendChild(l); rays.push([l, (k / 10) * Math.PI * 2]);
+}
 
 function render(t) {
-  const on = t >= T.crecer;
-  $('arrow').style.opacity = on ? 1 : 0;
-  const d = easeOut(prog(t, T.crecer, T.platita));
-  ['line', 'shadow'].forEach((id) => { $(id).style.strokeDasharray = L; $(id).style.strokeDashoffset = L * (1 - d); });
-  const hp = back(prog(t, T.platita - 0.06, T.platita + 0.2));
-  const beat = t > T.platita + 0.2 ? 0.08 * Math.sin((t - T.platita - 0.2) * 9) * Math.exp(-(t - T.platita - 0.2) * 2) : 0;
-  $('head').setAttribute('transform', `translate(930 330) rotate(${ang}) scale(${hp + beat})`);
-  // la flecha completa da un pequeño salto hacia arriba al decir "platita"
-  const jump = t >= T.platita ? -24 * Math.sin(prog(t, T.platita, T.platita + 0.35) * Math.PI) : 0;
-  $('arrowG').setAttribute('transform', `translate(0 ${jump})`);
+  const fade = 1 - prog(t, T.out, T.out + 0.15);
+  $('route').style.opacity = fade;
+
+  const pp = back(prog(t, T.pin, T.pin + 0.35));
+  $('pin').setAttribute('transform', `translate(190 450) scale(${pp})`);
+
+  const u = easeInOut(prog(t, T.fly, T.globe));
+  dots.forEach((d, k) => d.style.opacity = k / DOTS <= u && t >= T.fly ? 1 : 0);
+  const [px, py] = bez(u);
+  const landed = t >= T.globe + 0.05;
+  $('plane').setAttribute('transform', `translate(${px} ${py}) rotate(${tan(u)}) scale(${t >= T.fly && !landed ? 1 : 0})`);
+
+  const gp = back(prog(t, T.globe - 0.05, T.globe + 0.3), 2.6);
+  const spin = (t - T.globe) * 1.6;
+  $('mer1').setAttribute('rx', Math.abs(40 * Math.cos(spin)));
+  $('mer2').setAttribute('rx', Math.abs(75 * Math.cos(spin + 0.6)));
+  $('globe').setAttribute('transform', `translate(840 400) scale(${t >= T.globe - 0.05 ? gp : 0})`);
+  const rp = prog(t, T.globe, T.globe + 0.45);
+  rays.forEach(([l, a]) => {
+    const r0 = 110 + 60 * rp, r1 = r0 + 50 * (1 - rp);
+    l.setAttribute('x1', Math.cos(a) * r0); l.setAttribute('y1', Math.sin(a) * r0);
+    l.setAttribute('x2', Math.cos(a) * r1); l.setAttribute('y2', Math.sin(a) * r1);
+  });
+  $('glow').style.opacity = t >= T.globe && rp < 1 ? 1 : 0;
 }
 
 window.__render = (t) => { render(t); $('tc').textContent = t.toFixed(2) + ' s'; };
@@ -79,7 +129,7 @@ else {
   sc.oninput = () => __render(+sc.value);
   const t0 = performance.now();
   const loop = () => { if (document.activeElement !== sc) { const t = ((performance.now() - t0) / 1000) % DURATION; sc.value = t; __render(t); } requestAnimationFrame(loop); };
-  loop();
+  document.fonts.ready.then(loop);
 }
 </script>
 </body>

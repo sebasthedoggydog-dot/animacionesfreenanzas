@@ -1,17 +1,17 @@
-"""Monta el hook "migrantes": dinero (croma) + flecha detrás de la persona, solo en "crecer su platita".
+"""Monta el hook "migrantes": ruta PERÚ → mundo y, en "crecer su platita", dinero (croma) detrás de la persona.
 
-Antes de "crecer" el video queda tal cual. Desde ahí (de abajo hacia arriba):
+Capas (de abajo hacia arriba):
   1. Video original (el cuarto)
-  2. Billetes: se quita el verde del croma, se tiñen con la paleta, desenfoque leve, entran con un fundido corto
-  3. Flecha de crecimiento (render de overlay.html)
+  2. Billetes (solo desde "crecer"): se quita el verde del croma, se tiñen con la paleta, desenfoque leve, fundido corto
+  3. Gráficos de overlay.html (ruta con pin PERÚ, avión y globo)
   4. Persona recortada (máscaras de ../hook-dividendos/segment.py)
 
 Uso:
-  python3 compose.py <video_persona> <video_dinero> <frames_persona> <mascaras> <flecha> <carpeta_salida> [segundo_inicio_dinero]
+  python3 compose.py <video_persona> <video_dinero> <frames_persona> <mascaras> <graficos> <carpeta_salida> [segundo_inicio_dinero]
 
 Escribe en <carpeta_salida>:
   hook-migrantes_FINAL.mp4   montaje completo con el audio original
-  .graficos/fNNNN.png        dinero + flecha con transparencia (para exportar a Premiere)
+  .graficos/fNNNN.png        dinero + ruta con transparencia (para exportar a Premiere)
 """
 import glob
 import os
@@ -21,7 +21,7 @@ import sys
 import cv2
 import numpy as np
 
-person_video, money_video, SRC, MASKS, ARROW, OUT = sys.argv[1:7]
+person_video, money_video, SRC, MASKS, ARROW, OUT = sys.argv[1:7]   # ARROW = carpeta de PNG de overlay.html
 MONEY_START = float(sys.argv[7]) if len(sys.argv) > 7 else 1.0
 FPS, W, H = 30, 1080, 1920
 MONEY_IN, FADE = 3.10, 4 / 30          # "crecer su platita" (00:00:03:03) · fundido de 4 frames
@@ -63,7 +63,7 @@ final = subprocess.Popen(
 for i in range(1, n + 1):
     t = (i - 1) / FPS
     frame = cv2.imread(f'{SRC}/f{i:04d}.png').astype(np.float32)
-    gfx = np.zeros((H, W, 4), np.float32)                      # dinero + flecha (premultiplicado no)
+    gfx = np.zeros((H, W, 4), np.float32)                      # dinero + gráficos (alfa no premultiplicado)
     if i - 1 >= first:
         raw = money.stdout.read(W * H * 3)
         mf = np.frombuffer(raw, np.uint8).reshape(H, W, 3) if len(raw) == W * H * 3 else np.zeros((H, W, 3), np.uint8)
@@ -71,11 +71,11 @@ for i in range(1, n + 1):
         col = cv2.GaussianBlur(col * 0.8 + tint * 0.2, (0, 0), 1.4)    # tinte sutil de la paleta + blur ligero
         a = cv2.GaussianBlur(a[..., 0], (0, 0), 1.4)[..., None] * 0.9 * min(1.0, (t - MONEY_IN) / FADE + 1 / 30)
         gfx[..., :3], gfx[..., 3:] = col, a
-        arr = cv2.imread(f'{ARROW}/f{i:04d}.png', cv2.IMREAD_UNCHANGED).astype(np.float32)
-        aa = arr[..., 3:4] / 255
-        out_a = aa + gfx[..., 3:] * (1 - aa)
-        gfx[..., :3] = (arr[..., :3] * aa + gfx[..., :3] * gfx[..., 3:] * (1 - aa)) / np.maximum(out_a, 1e-4)
-        gfx[..., 3:] = out_a
+    ov = cv2.imread(f'{ARROW}/f{i:04d}.png', cv2.IMREAD_UNCHANGED).astype(np.float32)
+    oa = ov[..., 3:4] / 255
+    out_a = oa + gfx[..., 3:] * (1 - oa)
+    gfx[..., :3] = (ov[..., :3] * oa + gfx[..., :3] * gfx[..., 3:] * (1 - oa)) / np.maximum(out_a, 1e-4)
+    gfx[..., 3:] = out_a
     cv2.imwrite(f'{GFX}/f{i:04d}.png', np.dstack([np.clip(gfx[..., :3], 0, 255), gfx[..., 3:] * 255]).astype(np.uint8))
     comp = frame * (1 - gfx[..., 3:]) + gfx[..., :3] * gfx[..., 3:]
     m = cv2.imread(f'{MASKS}/f{i:04d}.png', 0).astype(np.float32)[..., None] / 255
