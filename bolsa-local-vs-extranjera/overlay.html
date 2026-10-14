@@ -14,7 +14,6 @@
   }
   @font-face { font-family: 'Montserrat'; font-weight: 800; src: url(../hook-dividendos/fonts/montserrat-latin-800-normal.woff2) format('woff2'); }
   @font-face { font-family: 'Montserrat'; font-weight: 900; src: url(../hook-dividendos/fonts/montserrat-latin-900-normal.woff2) format('woff2'); }
-  @font-face { font-family: 'Free Serif'; font-weight: 700; src: url(../hook-dividendos/fonts/FreeSerifBold.ttf); }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { background: transparent; overflow: hidden; }
@@ -23,41 +22,42 @@
   #stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; }
   .abs { position: absolute; will-change: transform, opacity; }
   svg { display: block; overflow: visible; }
-  .shadow { filter: drop-shadow(0 6px 10px rgba(20, 8, 40, .45)); }
 
-  /* ---- Título estilo referencia: bandera + "Bolsa" (serif) + palabra en lima ---- */
-  .title { display: flex; flex-direction: column; align-items: center; }
-  .title .flag { border-radius: 22px; overflow: hidden; }
-  .title .bolsa { font-family: 'Free Serif', serif; font-weight: 700; color: var(--blanco); line-height: .9; letter-spacing: -0.01em; position: relative; }
-  .title .kw { color: var(--lima); line-height: .95; letter-spacing: -0.01em; }
+  /* Todo vive en y 100–470: la cabeza empieza en y ≈ 500 (435 en el último plano) */
+  .card { border-radius: 44px; box-shadow: 0 26px 50px rgba(20, 8, 60, .38); border: 6px solid transparent; }
+  .card .ico { position: absolute; width: 112px; height: 112px; border-radius: 50%; background: var(--blanco);
+    display: flex; align-items: center; justify-content: center; }
+  .card .small { position: absolute; font-size: 30px; font-weight: 800; letter-spacing: .14em; color: rgba(253,253,252,.85); }
+  .card .name { position: absolute; color: var(--lima); letter-spacing: -0.02em; line-height: .9; }
 
-  /* título grande del inicio (y 150–510, la cabeza empieza en y ≈ 550) */
-  #big { left: 0; right: 0; top: 150px; }
-  #big .flag { width: 250px; height: 168px; }
-  #big .bolsa { font-size: 170px; margin-top: -78px; }
-  #big .kw { font-size: 118px; margin-top: 4px; }
-  #rise { left: 0; top: 0; }
-  #crecChip { left: 690px; top: 120px; background: var(--morado); color: var(--lima); font-size: 34px; padding: 12px 22px 10px;
-    border-radius: 999px; border: 5px solid var(--lima); white-space: nowrap; }
+  /* tarjeta grande del inicio */
+  #hero { left: 120px; top: 150px; width: 840px; height: 330px; background: var(--morado); }
+  #hero .ico { left: 44px; top: 44px; width: 140px; height: 140px; }
+  #hero .small { left: 214px; top: 62px; font-size: 36px; }
+  #hero .name { left: 210px; top: 108px; font-size: 92px; }
+  #spark { left: 44px; top: 214px; }
+  #crecChip { left: 600px; top: 112px; background: var(--lima); color: var(--morado); font-size: 32px; padding: 12px 22px 10px;
+    border-radius: 999px; border: 5px solid var(--morado); white-space: nowrap; }
 
-  /* columnas del cara a cara */
-  .col { top: 70px; width: 500px; }
-  #colE { left: 30px; }
-  #colL { left: 550px; }
-  .col .flag { width: 150px; height: 100px; border-radius: 16px; }
-  .col .bolsa { font-size: 96px; margin-top: -44px; }
-  .col .kw { font-size: 60px; margin-top: 2px; }
-  .card { top: 330px; width: 500px; height: 140px; border-radius: 34px; background: var(--morado);
-    box-shadow: 0 18px 36px rgba(20, 8, 70, .35); padding: 20px 26px; }
-  #cardE { left: 30px; }
-  #cardL { left: 550px; }
-  .metric { font-size: 30px; font-weight: 800; letter-spacing: .05em; color: var(--blanco); display: flex; align-items: center; gap: 12px; height: 40px; }
-  .track { margin-top: 16px; height: 40px; border-radius: 20px; background: rgba(253,253,252,.18); overflow: hidden; }
-  .fill { height: 100%; width: 100%; border-radius: 20px; background: var(--lima); transform-origin: left center; transform: scaleX(0); }
-  .win { top: 300px; background: var(--lima); color: var(--morado); font-size: 30px; padding: 10px 20px 8px; border-radius: 999px;
-    border: 5px solid var(--morado); white-space: nowrap; }
-  #coins .coin { position: absolute; width: 64px; height: 64px; border-radius: 50%; background: var(--lima); color: var(--verde);
-    border: 4px solid var(--verde); display: flex; align-items: center; justify-content: center; font-size: 36px; }
+  /* duelo */
+  .duel { top: 110px; width: 470px; height: 350px; }
+  #cE { left: 30px; background: var(--morado); }
+  #cL { left: 580px; background: var(--verde); }
+  .duel .ico { left: 30px; top: 30px; width: 96px; height: 96px; }
+  .duel .small { left: 146px; top: 42px; font-size: 26px; }
+  .duel .name { left: 144px; top: 82px; font-size: 40px; }
+  .meter { position: absolute; left: 30px; right: 30px; top: 168px; height: 150px; border-radius: 28px; background: rgba(0,0,0,.18); padding: 18px 22px; }
+  .meter .lbl { font-size: 28px; font-weight: 800; letter-spacing: .06em; display: flex; align-items: center; gap: 10px; height: 40px; }
+  .segs { display: flex; gap: 10px; margin-top: 20px; }
+  .segs i { flex: 1; height: 48px; border-radius: 14px; background: rgba(253,253,252,.18); display: block; transform-origin: bottom center; }
+  .segs i.on { background: var(--lima); }
+  #vs { left: 470px; top: 200px; width: 140px; height: 140px; border-radius: 50%; background: var(--lima); color: var(--morado);
+    border: 8px solid var(--blanco); display: flex; align-items: center; justify-content: center; font-size: 56px; letter-spacing: -0.03em;
+    box-shadow: 0 14px 30px rgba(20, 8, 60, .4); }
+  .win { top: 70px; background: var(--lima); color: var(--morado); font-size: 30px; padding: 10px 20px 8px; border-radius: 999px;
+    border: 5px solid var(--blanco); white-space: nowrap; box-shadow: 0 10px 20px rgba(20, 8, 60, .3); }
+  .coin { position: absolute; width: 66px; height: 66px; border-radius: 50%; background: var(--lima); color: var(--verde);
+    border: 5px solid var(--blanco); display: flex; align-items: center; justify-content: center; font-size: 38px; }
 
   #controls { position: fixed; left: 10px; bottom: 10px; right: 10px; font: 600 14px sans-serif; color: #fff; }
   body.render #controls { display: none; }
@@ -66,56 +66,66 @@
 <body>
 <svg width="0" height="0" style="position:absolute">
   <defs>
-    <!-- Bandera de EE. UU. (simplificada) -->
-    <symbol id="usa" viewBox="0 0 190 100" preserveAspectRatio="none">
-      <rect width="190" height="100" fill="#fdfdfc"/>
-      <g fill="#c8102e"><rect y="0" width="190" height="7.7"/><rect y="15.4" width="190" height="7.7"/><rect y="30.8" width="190" height="7.7"/>
-        <rect y="46.2" width="190" height="7.7"/><rect y="61.6" width="190" height="7.7"/><rect y="77" width="190" height="7.7"/><rect y="92.3" width="190" height="7.7"/></g>
-      <rect width="76" height="53.9" fill="#1f2a6b"/>
-      <g fill="#fdfdfc" id="stars"></g>
+    <!-- globo (bolsa extranjera) -->
+    <symbol id="gGlobe" viewBox="-50 -50 100 100">
+      <circle r="40" fill="#5723f4"/>
+      <g fill="none" stroke="#c6fd34" stroke-width="5" stroke-linecap="round">
+        <circle r="40"/><ellipse class="mer" rx="17" ry="40"/><line x1="0" y1="-40" x2="0" y2="40"/>
+        <path d="M-37 -15 H37 M-40 0 H40 M-37 15 H37"/>
+      </g>
     </symbol>
-    <!-- Bandera del Perú -->
-    <symbol id="peru" viewBox="0 0 3 2" preserveAspectRatio="none">
-      <rect width="3" height="2" fill="#d91023"/><rect x="1" width="1" height="2" fill="#fdfdfc"/>
+    <!-- pin con casa (bolsa local) -->
+    <symbol id="gHome" viewBox="-50 -50 100 100">
+      <path d="M0 44 C-8 30 -32 12 -32 -10 A32 32 0 1 1 32 -10 C32 12 8 30 0 44Z" fill="#1a6f66"/>
+      <path d="M-15 -4 L0 -18 L15 -4 V12 H-15 Z" fill="#c6fd34"/><rect x="-5" y="2" width="10" height="10" fill="#1a6f66"/>
     </symbol>
   </defs>
 </svg>
 <div id="stage">
   <!-- Inicio: "La bolsa extranjera … a nivel de crecimiento" -->
-  <svg class="abs" id="rise" width="1080" height="1920" viewBox="0 0 1080 1920">
-    <polyline id="riseLine" points="70,560 250,470 380,510 560,350 700,390 900,170" fill="none" stroke="#5723f4" stroke-width="52" stroke-linecap="round" stroke-linejoin="round"/>
-    <polyline id="riseLine2" points="70,560 250,470 380,510 560,350 700,390 900,170" fill="none" stroke="#c6fd34" stroke-width="30" stroke-linecap="round" stroke-linejoin="round"/>
-    <g id="riseHead" transform="translate(900 170)"><path d="M0 -70 L60 18 L-60 18 Z" fill="#c6fd34" stroke="#5723f4" stroke-width="11" stroke-linejoin="round"/></g>
-  </svg>
-  <div class="abs title shadow" id="big">
-    <svg class="flag"><use href="#usa" width="100%" height="100%"/></svg>
-    <div class="bolsa">Bolsa</div>
-    <div class="kw">EXTRANJERA</div>
+  <div class="abs card" id="hero">
+    <div class="ico"><svg width="120" height="120"><use href="#gGlobe" width="120" height="120"/></svg></div>
+    <div class="small">BOLSA</div>
+    <div class="name">EXTRANJERA</div>
+    <svg class="abs" id="spark" width="752" height="90" viewBox="0 0 752 90">
+      <rect width="752" height="90" rx="24" fill="rgba(0,0,0,.18)"/>
+      <polyline id="sparkLine" points="30,72 140,58 230,64 330,42 420,48 520,26 610,32 720,12" fill="none" stroke="#c6fd34" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle id="sparkDot" cx="720" cy="12" r="15" fill="#fdfdfc" stroke="#c6fd34" stroke-width="7"/>
+    </svg>
   </div>
   <div class="abs" id="crecChip">▲ CRECIMIENTO</div>
 
-  <!-- Cara a cara -->
+  <!-- Duelo -->
   <div class="abs" id="coins" style="left:0;top:0"></div>
-  <div class="abs col title shadow" id="colE"><svg class="flag"><use href="#usa" width="100%" height="100%"/></svg><div class="bolsa">Bolsa</div><div class="kw">EXTRANJERA</div></div>
-  <div class="abs col title shadow" id="colL"><svg class="flag"><use href="#peru" width="100%" height="100%"/></svg><div class="bolsa">Bolsa</div><div class="kw">LOCAL</div></div>
-  <div class="abs card" id="cardE"><div class="metric" id="mE"></div><div class="track"><div class="fill" id="fE"></div></div></div>
-  <div class="abs card" id="cardL"><div class="metric" id="mL"></div><div class="track"><div class="fill" id="fL"></div></div></div>
-  <div class="abs win" id="winE" style="left:330px">▲ MÁS</div>
-  <div class="abs win" id="winL" style="left:850px">▲ MÁS</div>
+  <div class="abs card duel" id="cE">
+    <div class="ico"><svg width="84" height="84"><use href="#gGlobe" width="84" height="84"/></svg></div>
+    <div class="small">BOLSA</div>
+    <div class="name">EXTRANJERA</div>
+    <div class="meter"><div class="lbl" id="lE"></div><div class="segs" id="sE"><i></i><i></i><i></i><i></i><i></i></div></div>
+  </div>
+  <div class="abs card duel" id="cL">
+    <div class="ico"><svg width="84" height="84"><use href="#gHome" width="84" height="84"/></svg></div>
+    <div class="small">BOLSA</div>
+    <div class="name">LOCAL</div>
+    <div class="meter"><div class="lbl" id="lL"></div><div class="segs" id="sL"><i></i><i></i><i></i><i></i><i></i></div></div>
+  </div>
+  <div class="abs" id="vs">VS</div>
+  <div class="abs win" id="winE" style="left:290px">▲ GANA</div>
+  <div class="abs win" id="winL" style="left:840px">▲ GANA</div>
 </div>
 <div id="controls"><input id="scrub" type="range" min="0" max="7.2" step="0.0333" value="0" style="width:100%"><span id="tc"></span></div>
 
 <script>
 // Tiempos en segundos desde el inicio del clip (00:00:39:16). Las frases calzan con los cortes del clip.
 const T = {
-  ext: 0.05,       // "La bolsa extranjera"            → 00:00:39:18
-  crec: 1.45,      // "a nivel de crecimiento"         → 00:00:40:29
+  ext: 0.05,       // "La bolsa extranjera"              → 00:00:39:18
+  crec: 1.45,      // "a nivel de crecimiento"           → 00:00:40:29
   split: 2.37,     // corte · "da más que la bolsa local" → 00:00:41:27
-  local1: 2.95,    // "…la bolsa local"                → 00:00:42:15
-  pero: 3.60,      // "pero la bolsa local"            → 00:00:43:04
-  div: 4.43,       // corte · "paga más dividendos"    → 00:00:43:29
-  divWord: 5.10,   // "…dividendos"                    → 00:00:44:19
-  que: 6.17,       // corte · "que bolsa extranjera"   → 00:00:45:21
+  local1: 2.95,    // "…la bolsa local"                  → 00:00:42:15
+  pero: 3.60,      // "pero la bolsa local"              → 00:00:43:04
+  div: 4.43,       // corte · "paga más dividendos"      → 00:00:43:29
+  divWord: 5.10,   // "…dividendos"                      → 00:00:44:19
+  que: 6.17,       // corte · "que bolsa extranjera"     → 00:00:45:21
 };
 const DURATION = 7.2333;
 window.__DURATION = DURATION;
@@ -124,89 +134,76 @@ const $ = (id) => document.getElementById(id);
 const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const prog = (t, a, b) => clamp((t - a) / (b - a));
 const easeOut = (p) => 1 - Math.pow(1 - p, 3);
-const easeIn = (p) => p * p * p;
 const easeInOut = (p) => p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
 const back = (p, s = 1.8) => 1 + (s + 1) * Math.pow(p - 1, 3) + s * Math.pow(p - 1, 2);
 const lerp = (a, b, p) => a + (b - a) * p;
 const set = (el, tf, op = 1) => { el.style.transform = tf; el.style.opacity = op; };
 
-// estrellas de la bandera de EE. UU.
-for (let r = 0; r < 5; r++) for (let c = 0; c < 6; c++) {
-  const s = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-  s.setAttribute('cx', 7 + c * 12.4 + (r % 2) * 6); s.setAttribute('cy', 6 + r * 10.4); s.setAttribute('r', 2.6);
-  if (!(r % 2 && c === 5)) $('stars').appendChild(s);
-}
-// monedas de dividendos (caen sobre la columna LOCAL)
-const COINS = [[640, 0.00], [760, 0.10], [880, 0.05], [980, 0.16]];
+const ICON_UP = '<svg width="34" height="34" viewBox="0 0 24 24"><path d="M3 17 L9 11 L13 14 L21 6" fill="none" stroke="#c6fd34" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 6 H21 V12" fill="none" stroke="#c6fd34" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const ICON_COIN = '<svg width="34" height="34" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#c6fd34"/><text x="12" y="17" text-anchor="middle" font-family="Montserrat" font-weight="900" font-size="14" fill="#1a6f66">$</text></svg>';
+
+// monedas de dividendos (llueven detrás de la tarjeta LOCAL)
+const COINS = [[610, 0.00], [720, 0.12], [830, 0.05], [940, 0.18], [680, 0.30], [890, 0.36]];
 COINS.forEach(([x], k) => {
   const d = document.createElement('div'); d.className = 'coin'; d.textContent = '$'; d.style.left = x + 'px'; d.id = 'coin' + k; $('coins').appendChild(d);
 });
 
-const metric = (icon, label) => `<svg width="34" height="34" viewBox="0 0 24 24">${icon}</svg>${label}`;
-const ICON_UP = '<path d="M3 17 L9 11 L13 14 L21 6" fill="none" stroke="#c6fd34" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 6 H21 V12" fill="none" stroke="#c6fd34" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>';
-const ICON_COIN = '<circle cx="12" cy="12" r="9.5" fill="#c6fd34"/><text x="12" y="16.5" text-anchor="middle" font-family="Montserrat" font-weight="900" font-size="13" fill="#1a6f66">$</text>';
+// medidor de 5 segmentos: n encendidos, cada uno aparece escalonado desde "from"
+function meter(id, n, t, from) {
+  [...$(id).children].forEach((s, k) => {
+    const p = back(prog(t, from + k * 0.07, from + k * 0.07 + 0.22), 2.4);
+    const on = k < n && t >= from + k * 0.07;
+    s.className = on ? 'on' : '';
+    s.style.transform = on ? `scaleY(${p})` : 'none';
+  });
+}
 
 function render(t) {
   const bob = (ph, amp = 6) => Math.sin(t * 2.2 + ph) * amp;
-  const A = t < T.split;
+  const A = t < T.split, B = !A;
+  document.querySelectorAll('.mer').forEach((m) => m.setAttribute('rx', Math.abs(17 * Math.cos(t * 2.4))));
 
-  // ---- Inicio: título grande + línea que sube
-  const bp = back(prog(t, T.ext, T.ext + 0.4));
-  const toCol = easeInOut(prog(t, T.split - 0.2, T.split + 0.15));
-  set($('big'), `translate(${-toCol * 260}px, ${-toCol * 80}px) scale(${lerp(0.4, 1, bp) * (1 - toCol * 0.45)})`, A ? clamp(bp * 2) * (1 - toCol) : 0);
-  const rl = easeOut(prog(t, T.crec, T.crec + 0.7));
-  ['riseLine', 'riseLine2'].forEach((id) => { $(id).style.strokeDasharray = 1300; $(id).style.strokeDashoffset = 1300 * (1 - rl); });
-  const rh = back(prog(t, T.crec + 0.6, T.crec + 0.85), 2.4);
-  $('riseHead').setAttribute('transform', `translate(900 170) rotate(52) scale(${rh})`);
-  $('rise').style.opacity = A ? (t >= T.crec ? 1 : 0) * (1 - toCol) : 0;
-  const cc = back(prog(t, T.crec + 0.25, T.crec + 0.55), 2.4);
-  set($('crecChip'), `rotate(${lerp(20, 5, cc)}deg) scale(${cc})`, A ? clamp(cc * 2) * (1 - toCol) : 0);
+  // ---- Inicio: tarjeta grande EXTRANJERA + línea de crecimiento
+  const hp = back(prog(t, T.ext, T.ext + 0.42), 1.6);
+  const out = easeInOut(prog(t, T.split - 0.18, T.split + 0.1));
+  set($('hero'), `translate(${-out * 240}px, ${bob(0) - out * 40}px) rotate(${lerp(-6, -1.5, hp)}deg) scale(${lerp(0.5, 1, hp) * (1 - out * 0.4)})`, A ? clamp(hp * 2) * (1 - out) : 0);
+  const sp = easeOut(prog(t, T.crec, T.crec + 0.75));
+  $('sparkLine').style.strokeDasharray = 760; $('sparkLine').style.strokeDashoffset = 760 * (1 - sp);
+  const sd = back(prog(t, T.crec + 0.7, T.crec + 0.9), 2.6);
+  $('sparkDot').setAttribute('r', Math.max(0, 15 * sd));
+  const cc = back(prog(t, T.crec + 0.3, T.crec + 0.6), 2.6);
+  set($('crecChip'), `translate(0, ${bob(1.2, 5) - out * 40}px) rotate(${lerp(20, 6, cc)}deg) scale(${cc})`, A ? clamp(cc * 2) * (1 - out) : 0);
 
-  // ---- Cara a cara
-  const B = !A;
-  const ce = back(prog(t, T.split, T.split + 0.35), 1.6);
-  const cl = back(prog(t, T.local1 - 0.1, T.local1 + 0.3), 2);
-  // "pero la bolsa local" → la columna local se destaca; en "que bolsa extranjera" vuelve el foco a extranjera
+  // ---- Duelo
+  const ce = back(prog(t, T.split - 0.05, T.split + 0.32), 1.6);
+  const cl = back(prog(t, T.local1 - 0.1, T.local1 + 0.3), 1.8);
   const focusL = prog(t, T.pero, T.pero + 0.25) * (1 - prog(t, T.que, T.que + 0.2));
   const focusE = prog(t, T.que, T.que + 0.2);
-  const pulse = (at) => t >= at ? 0.12 * Math.exp(-(t - at) * 5) : 0;
-  set($('colE'), `translate(0, ${bob(0)}px) scale(${ce * (1 - 0.12 * focusL + pulse(T.que))})`, B ? clamp(ce * 2) * (1 - 0.45 * focusL) : 0);
-  set($('colL'), `translate(0, ${bob(1.4)}px) scale(${cl * (1 + 0.06 * focusL + pulse(T.pero))})`, B && t >= T.local1 - 0.1 ? clamp(cl * 2) * (1 - 0.45 * focusE) : 0);
+  const pulse = (at) => t >= at ? 0.10 * Math.exp(-(t - at) * 5) : 0;
+  set($('cE'), `translate(${(1 - ce) * -120}px, ${bob(0)}px) rotate(-2deg) scale(${ce * (1 - 0.08 * focusL + pulse(T.que))})`, B ? clamp(ce * 2) * (1 - 0.5 * focusL) : 0);
+  set($('cL'), `translate(${(1 - cl) * 160}px, ${bob(1.4)}px) rotate(2deg) scale(${cl * (1 + 0.04 * focusL + pulse(T.pero)) * (1 - 0.08 * focusE)})`, B && t >= T.local1 - 0.1 ? clamp(cl * 2) * (1 - 0.5 * focusE) : 0);
+  $('cE').style.borderColor = focusE > 0.5 ? '#c6fd34' : 'transparent';
+  $('cL').style.borderColor = focusL > 0.5 ? '#c6fd34' : 'transparent';
+  const vp = back(prog(t, T.local1 + 0.1, T.local1 + 0.4), 2.8);
+  set($('vs'), `rotate(${lerp(-90, -8, vp) + Math.sin(t * 3) * 3}deg) scale(${vp})`, B && t >= T.local1 + 0.1 ? clamp(vp * 2) : 0);
 
-  // tarjetas: primero CRECIMIENTO (gana extranjera), luego DIVIDENDOS (gana local)
+  // medidores: CRECIMIENTO (gana extranjera) → DIVIDENDOS (gana local)
   const isDiv = t >= T.div;
-  $('mE').innerHTML = isDiv ? metric(ICON_COIN, 'DIVIDENDOS') : metric(ICON_UP, 'CRECIMIENTO');
-  $('mL').innerHTML = $('mE').innerHTML;
-  const k1 = back(prog(t, T.split + 0.1, T.split + 0.45), 1.4);
-  const k2 = back(prog(t, T.local1, T.local1 + 0.35), 1.4);
-  const flipE = isDiv ? 1 - Math.abs(Math.cos(prog(t, T.div, T.div + 0.3) * Math.PI)) * 0 : 1;
-  set($('cardE'), `translate(0, ${bob(0.5, 5)}px) scale(${k1})`, B ? clamp(k1 * 2) * (1 - 0.45 * focusL) : 0);
-  set($('cardL'), `translate(0, ${bob(1.9, 5)}px) scale(${k2})`, B && t >= T.local1 ? clamp(k2 * 2) * (1 - 0.45 * focusE) : 0);
-  // barras (comparación cualitativa)
-  let fE, fL;
-  if (!isDiv) {
-    fE = 0.92 * easeOut(prog(t, T.split + 0.25, T.split + 0.9));
-    fL = 0.45 * easeOut(prog(t, T.local1 + 0.15, T.local1 + 0.7));
-  } else {
-    fE = 0.40 * easeOut(prog(t, T.div + 0.15, T.div + 0.6));
-    fL = 0.92 * easeOut(prog(t, T.divWord - 0.1, T.divWord + 0.6));
-  }
-  $('fE').style.transform = `scaleX(${fE})`;
-  $('fL').style.transform = `scaleX(${fL})`;
-  // insignia "▲ MÁS" del ganador
-  const wE = back(prog(t, T.split + 0.8, T.split + 1.1), 2.6) * (isDiv ? 0 : 1);
-  const wL = back(prog(t, T.divWord + 0.5, T.divWord + 0.8), 2.6);
-  set($('winE'), `rotate(${lerp(-20, 6, wE)}deg) scale(${wE})`, B ? clamp(wE * 2) : 0);
-  set($('winL'), `rotate(${lerp(20, 6, wL)}deg) scale(${wL})`, B && isDiv ? clamp(wL * 2) : 0);
-  // monedas en "dividendos"
+  const lbl = isDiv ? `${ICON_COIN}DIVIDENDOS` : `${ICON_UP}CRECIMIENTO`;
+  if ($('lE').innerHTML !== lbl) { $('lE').innerHTML = lbl; $('lL').innerHTML = lbl; }
+  if (!isDiv) { meter('sE', 5, t, T.split + 0.25); meter('sL', 2, t, T.local1 + 0.2); }
+  else { meter('sE', 2, t, T.div + 0.15); meter('sL', 5, t, T.divWord - 0.05); }
+  const wE = back(prog(t, T.split + 0.75, T.split + 1.05), 2.6);
+  const wL = back(prog(t, T.divWord + 0.4, T.divWord + 0.7), 2.6);
+  set($('winE'), `translate(0, ${bob(2, 4)}px) rotate(${lerp(-25, -6, wE)}deg) scale(${wE})`, B && !isDiv ? clamp(wE * 2) : 0);
+  set($('winL'), `translate(0, ${bob(2.5, 4)}px) rotate(${lerp(25, 6, wL)}deg) scale(${wL})`, B && isDiv ? clamp(wL * 2) : 0);
+
+  // lluvia de monedas en "dividendos"
   COINS.forEach(([x, d], k) => {
-    // lluvia de monedas que pasa por detrás de la tarjeta LOCAL (dos tandas)
-    let op = 0, y = 0, rot = 0;
-    for (const extra of [0, 0.45]) {
-      const tt = t - (T.divWord + d + extra);
-      if (tt >= 0 && tt < 0.8) { y = -90 + 1100 * tt * tt + 300 * tt; rot = tt * 300 * (k % 2 ? 1 : -1); op = 1 - prog(tt, 0.6, 0.8); }
-    }
-    set($('coin' + k), `translate(0, ${y}px) rotate(${rot}deg)`, B && isDiv ? op : 0);
+    const tt = t - (T.divWord + d);
+    const on = B && isDiv && tt >= 0 && tt < 0.55;
+    const y = -90 + 900 * tt * tt + 380 * tt;
+    set($('coin' + k), `translate(0, ${y}px) rotate(${tt * 320 * (k % 2 ? 1 : -1)}deg)`, on ? 1 - prog(tt, 0.38, 0.55) : 0);
   });
 }
 
