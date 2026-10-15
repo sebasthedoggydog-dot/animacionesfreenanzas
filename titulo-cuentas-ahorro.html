@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Top 5 cuentas de ahorro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600&family=Playfair+Display:wght@900&family=Great+Vibes&display=block" rel="stylesheet">
+<style>
+  /* Título de serie para Reel 9:16 — PNG con fondo transparente para poner encima del video.
+     Jerarquía de la referencia: línea corta redondeada → palabra clave en serif condensada → script en lima. */
+  :root { --lima: #c6fd34; --blanco: #fdfdfc; }
+  html, body { margin: 0; background: transparent; }
+  body.preview { background: linear-gradient(180deg, #6b5a44 0%, #3b3128 100%); }
+  #stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; }
+  #title { position: absolute; top: 150px; left: 0; right: 0; text-align: center; color: var(--blanco);
+    filter: drop-shadow(0 6px 18px rgba(0,0,0,.35)); }
+  #kicker { font-family: 'Quicksand', sans-serif; font-weight: 500; font-size: 78px; letter-spacing: .005em; line-height: 1; }
+  #keyword { font-family: 'Playfair Display', serif; font-weight: 900; font-size: 250px; line-height: .8;
+    transform: scaleX(.7); letter-spacing: -.01em; margin-top: 30px; }
+  #script { font-family: 'Great Vibes', cursive; color: var(--lima); font-size: 260px; line-height: .75;
+    margin-top: 0; transform: rotate(-4deg); }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="title">
+    <div id="kicker">Serie: Top 5 mejores</div>
+    <div id="keyword">CUENTAS</div>
+    <div id="script">de Ahorro</div>
+  </div>
+</div>
+<script>if (location.search.includes('preview')) document.body.classList.add('preview');</script>
+</body>
+</html>
