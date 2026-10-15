@@ -1,5 +1,5 @@
 // Renderiza overlay.html como secuencia PNG transparente 1080x1920 @30fps.
-// Uso: node render.mjs <carpeta_salida>
+// Uso: node render.mjs <carpeta_salida> [solo: calendario | formas | monedas]
 import { chromium } from 'playwright';
 import { mkdirSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
@@ -11,7 +11,7 @@ mkdirSync(out, { recursive: true });
 const FPS = 30;
 const browser = await chromium.launch();
 const page = await browser.newPage({ viewport: { width: 1080, height: 1920 }, deviceScaleFactor: 1 });
-await page.goto(pathToFileURL(resolve(here, 'overlay.html')).href + '?render');
+await page.goto(pathToFileURL(resolve(here, 'overlay.html')).href + '?render' + (process.argv[3] ? '&only=' + process.argv[3] : ''));
 await page.evaluate(() => document.fonts.ready);
 await page.waitForTimeout(300);
 const total = Math.round((await page.evaluate(() => window.__DURATION)) * FPS);

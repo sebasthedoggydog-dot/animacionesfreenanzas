@@ -176,6 +176,14 @@ function render(t) {
   });
 }
 
+// ?only=calendario | formas | monedas → exporta solo ese gráfico, sin letras
+const ONLY = new URLSearchParams(location.search).get('only');
+const GROUPS = { calendario: ['cal'], formas: ['b1', 'b2', 'b3'], monedas: ['coins'] };
+if (ONLY) {
+  const keep = new Set(GROUPS[ONLY]);
+  ['wNuevo', 'wMes', 'wNuevas', 'wFormas', 'wDe', 'wPlatita', 'cal', 'b1', 'b2', 'b3', 'coins']
+    .forEach((id) => { if (!keep.has(id)) $(id).style.visibility = 'hidden'; });
+}
 window.__render = (t) => { render(t); $('tc').textContent = t.toFixed(2) + ' s'; };
 
 if (new URLSearchParams(location.search).has('render')) document.body.classList.add('render');

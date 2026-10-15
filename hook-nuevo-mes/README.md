@@ -28,3 +28,13 @@ python3 ../hook-dividendos/segment.py work
 node render.mjs work/g
 python3 preview.py hook.mp4 work/src work/masks work/g output/PREVIEW_hook-nuevo-mes.mp4
 ```
+
+## Solo gráficos, sin letras (`output/solo-graficos/`)
+Cada gráfico por separado, 3,2 s, misma posición y tiempos que en el montaje (colócalos desde 00:00:00:00 o muévelos libremente):
+| Archivo | Qué es | Momento |
+|---|---|---|
+| `calendario.mov` / `_CROMA-MAGENTA.mp4` | Calendario: entra en "Nuevo" (00:00:00:08) y en "mes" (00:00:00:20) se arranca la hoja "31" y queda la nueva ✓ | 00:00:00:08 → 00:00:01:04 |
+| `formas.mov` / `_CROMA-MAGENTA.mp4` | 3 íconos (crecimiento, moneda, globo) que aparecen escalonados | 00:00:01:17 → 00:00:01:27 |
+| `monedas.mov` / `_CROMA-MAGENTA.mp4` | Explosión de monedas `$` que luego caen | 00:00:02:12 → 00:00:03:06 |
+
+Se generan con `node render.mjs <carpeta> calendario|formas|monedas`.
