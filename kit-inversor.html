@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kit Inversor Freenanzas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@500&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=block" rel="stylesheet">
+<style>
+  /* ===== Paleta oficial Freenanzas + tintes tomados de la web ===== */
+  :root {
+    --morado: #5723f4; --verde: #1a6f66; --lima: #c6fd34; --blanco: #fdfdfc;
+    --tinta: #14112a; --gris: #5d6272; --lavanda: #ebe5ff; --lima-suave: #eaffc2; --durazno: #ffc339;
+    --noche: #1d1150; --menta: #5ee6c8;
+    --serif: 'Instrument Serif', Georgia, serif; --sans: 'Plus Jakarta Sans', 'Inter', sans-serif; --mono: 'DM Mono', ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; background: #111; overflow: hidden; }
+  body { font-family: var(--sans); font-weight: 800; color: var(--blanco); }
+  #wrap { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+  #stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: var(--morado); flex: none; }
+  body.render #wrap { position: static; display: block; }
+  body.render #stage { transform: none !important; }
+  body.render #controls { display: none; }
+
+  .scene { position: absolute; inset: 0; overflow: hidden; display: none; }
+  /* Márgenes de seguridad: contenido dentro de x 100–980 y por encima del logo (y < 1560) */
+  .center { position: absolute; left: 100px; right: 100px; top: 0; bottom: 300px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+  .el { display: block; will-change: transform, opacity; }
+  .mask { overflow: hidden; display: block; padding: 0 16px; }
+  .serif { font-family: var(--serif); font-weight: 400; letter-spacing: -0.01em; }
+  .ital { font-style: italic; }
+  .mono { font-family: var(--mono); font-weight: 500; text-transform: uppercase; }
+  .lima { color: var(--lima); }
+  .tight { line-height: .98; letter-spacing: -0.02em; }
+  svg { display: block; overflow: visible; }
+  .grid { position: absolute; inset: 0; background-image: radial-gradient(rgba(253,253,252,.10) 3px, transparent 3.5px); background-size: 54px 54px; }
+  .spark { position: absolute; }
+  #logo { position: absolute; left: 50%; top: 1625px; width: 400px; margin-left: -200px; z-index: 50; }
+
+  /* ---------- 1 · Hook ---------- */
+  #s1 { background: var(--morado); }
+  #s1-pill { font-size: 36px; color: var(--morado); background: var(--lima); padding: 16px 34px; border-radius: 60px; margin-bottom: 50px; display: flex; gap: 12px; align-items: center; letter-spacing: .04em; }
+  #s1-l1 { font-size: 170px; line-height: .95; }
+  #s1-l2 { font-size: 250px; line-height: .95; }
+  #s1-uline { width: 560px; height: 14px; border-radius: 7px; background: var(--lima); margin-top: 6px; transform-origin: left center; }
+
+  /* ---------- 2 · Los dos bootcamps ---------- */
+  #s2 { background: var(--verde); }
+  #s2 .ln { font-size: 96px; }
+  #s2-box { display: inline-block; position: relative; }
+  #s2-hl { position: absolute; left: -22px; right: -22px; top: 16px; bottom: -4px; background: var(--lima); border-radius: 14px; transform-origin: left center; }
+  #s2-box span { position: relative; color: var(--verde); font-size: 128px; line-height: 1.05; }
+  #s2-kit { position: relative; margin-top: 74px; width: 100%; padding: 56px 34px 34px; border-radius: 40px; }
+  #s2-frame { position: absolute; inset: 0; border: 4px solid var(--lima); border-radius: 40px; }
+  #s2-tag { position: absolute; left: 50%; top: -26px; transform: translateX(-50%); }
+  #s2-tag span { display: block; background: var(--lima); color: var(--verde); font-size: 28px; letter-spacing: .24em; padding: 10px 24px; border-radius: 40px; white-space: nowrap; }
+  .boot { background: var(--blanco); color: var(--tinta); border-radius: 28px; padding: 26px 30px; display: flex; align-items: center; gap: 22px; font-size: 40px; font-weight: 700; text-align: left; }
+  .boot + .boot { margin-top: 18px; }
+  .boot .n { font-family: var(--mono); font-weight: 500; font-size: 24px; letter-spacing: .18em; text-transform: uppercase; color: var(--lima); background: var(--morado); border-radius: 30px; padding: 10px 18px; flex: none; }
+
+  /* ---------- 3 · Qué incluye ---------- */
+  #s3 { background: var(--morado); }
+  #s3-title { font-size: 130px; line-height: 1; margin-bottom: 50px; }
+  .item { width: 100%; display: flex; align-items: center; gap: 30px; background: var(--blanco); color: var(--tinta); border-radius: 36px; padding: 36px 34px; text-align: left; box-shadow: 0 30px 60px rgba(10,6,40,.25); }
+  .item + .item { margin-top: 24px; }
+  .ico { flex: none; width: 112px; height: 112px; border-radius: 26px; display: flex; align-items: center; justify-content: center; }
+  .i1 .ico { background: var(--lavanda); } .i2 .ico { background: var(--lima-suave); } .i3 .ico { background: #ffe1a6; }
+  .item h3 { font-size: 46px; font-weight: 800; line-height: 1.1; }
+  .item p { font-size: 31px; font-weight: 500; color: var(--gris); line-height: 1.35; margin-top: 8px; }
+
+  /* ---------- 4 · Exclusivo ---------- */
+  #s4 { background: linear-gradient(160deg, var(--noche) 0%, #2b149a 55%, var(--morado) 100%); }
+  #s4-star { width: 120px; height: 120px; border-radius: 50%; background: var(--lima); display: flex; align-items: center; justify-content: center; margin-bottom: 34px; }
+  #s4-lbl { font-size: 34px; letter-spacing: .3em; color: var(--lima); }
+  #s4-l1 { font-size: 92px; margin-top: 24px; }
+  #s4-row { display: flex; align-items: baseline; gap: 26px; margin-top: -10px; }
+  #s4-10 { font-size: 330px; line-height: 1; color: var(--lima); }
+  #s4-prim { font-size: 150px; line-height: 1; }
+  #s4-dots { display: flex; gap: 16px; margin-top: 18px; }
+  #s4-dots i { width: 34px; height: 34px; border-radius: 50%; border: 3px solid var(--lima); display: block; }
+  #s4-box { margin-top: 56px; background: rgba(253,253,252,.10); border: 2px solid rgba(253,253,252,.25); border-radius: 36px; padding: 34px 40px; width: 100%; }
+  #s4-live { display: inline-flex; align-items: center; gap: 12px; background: var(--blanco); color: var(--tinta); font-size: 28px; font-weight: 800; border-radius: 40px; padding: 10px 22px; }
+  #s4-dot { width: 18px; height: 18px; border-radius: 50%; background: #ff3b3b; display: block; }
+  #s4-qa { font-size: 52px; margin-top: 18px; }
+  #s4-qa2 { font-size: 34px; font-weight: 500; color: rgba(253,253,252,.85); margin-top: 8px; line-height: 1.35; }
+
+  /* ---------- 5 · Precio ---------- */
+  #s5 { background: var(--verde); }
+  #s5-card { width: 100%; background: var(--blanco); color: var(--tinta); border-radius: 56px; padding: 34px 34px 50px; box-shadow: 0 50px 90px rgba(5,30,26,.45); text-align: left; }
+  #s5-widget { background: linear-gradient(150deg, #241a5c, #120d33); border-radius: 36px; padding: 34px 40px; color: var(--blanco); position: relative; overflow: hidden; }
+  #s5-wlive { display: inline-flex; align-items: center; gap: 10px; background: var(--blanco); color: var(--tinta); font-size: 24px; font-weight: 800; border-radius: 40px; padding: 8px 18px; }
+  #s5-wdot { width: 14px; height: 14px; border-radius: 50%; background: #ff3b3b; display: block; }
+  #s5-wt { font-size: 50px; margin-top: 20px; }
+  #s5-wsub { font-size: 30px; font-weight: 500; color: rgba(253,253,252,.7); margin-top: 6px; }
+  #s5-wval { display: flex; align-items: center; gap: 14px; font-size: 56px; color: var(--menta); margin-top: 8px; font-variant-numeric: tabular-nums; }
+  #s5-chart { position: absolute; right: 30px; top: 40px; }
+  #s5-save { display: inline-block; margin-top: 38px; background: var(--lima); color: var(--tinta); font-size: 32px; letter-spacing: .06em; border-radius: 40px; padding: 14px 28px; }
+  #s5-pu { font-size: 28px; letter-spacing: .24em; color: #4b5d64; margin-top: 34px; }
+  #s5-price { display: flex; align-items: baseline; gap: 18px; margin-top: 2px; }
+  #s5-num { font-size: 230px; line-height: .95; color: var(--morado); font-variant-numeric: tabular-nums; }
+  #s5-usd { font-size: 46px; font-weight: 600; color: #4b5d64; }
+  #s5-before { position: relative; display: inline-block; font-size: 36px; font-weight: 600; color: #9a98a8; margin-top: 10px; }
+  #s5-strike { position: absolute; left: -4px; right: -4px; top: 52%; height: 4px; background: #9a98a8; border-radius: 2px; transform-origin: left center; }
+
+  #controls { position: fixed; left: 0; right: 0; bottom: 0; display: flex; gap: 12px; align-items: center; padding: 10px 16px;
+    background: rgba(0,0,0,.7); font: 600 14px/1 'Plus Jakarta Sans', sans-serif; color: #fff; z-index: 10; }
+  #controls button { font: inherit; background: #c6fd34; color: #5723f4; border: 0; border-radius: 8px; padding: 8px 14px; cursor: pointer; }
+  #controls input { flex: 1; accent-color: #c6fd34; min-width: 0; }
+  #controls span { font-variant-numeric: tabular-nums; min-width: 64px; text-align: right; }
+</style>
+</head>
+<body>
+<div id="wrap">
+<div id="stage">
+
+  <!-- ===================== 1 · HOOK ===================== -->
+  <section class="scene" id="s1">
+    <div id="s1-sparks"></div>
+    <div class="center">
+      <span class="el" id="s1-pill">★ MÁS POPULAR</span>
+      <span class="mask"><span class="el serif" id="s1-l1">El Kit</span></span>
+      <span class="mask" style="padding:0 40px 20px"><span class="el serif ital lima" id="s1-l2">Inversor</span></span>
+      <span class="el" id="s1-uline"></span>
+    </div>
+  </section>
+
+  <!-- ===================== 2 · LOS DOS BOOTCAMPS ===================== -->
+  <section class="scene" id="s2">
+    <div class="center">
+      <span class="mask"><span class="el ln tight" id="s2-w1">Los dos bootcamps</span></span>
+      <span class="mask"><span class="el ln tight" id="s2-w2">completos,</span></span>
+      <span class="mask" style="padding:20px 34px 14px"><span class="el" id="s2-w3"><span id="s2-box"><i class="el" id="s2-hl"></i><span class="serif ital">en un solo kit.</span></span></span></span>
+      <div id="s2-kit">
+        <div class="el" id="s2-frame"></div>
+        <div id="s2-tag"><span class="el mono" id="s2-tagin">Kit Inversor</span></div>
+        <div class="boot el" id="s2-b1"><span class="n">Nivel 1</span>Bolsa Local</div>
+        <div class="boot el" id="s2-b2"><span class="n">Nivel 2</span>Bolsa Extranjera</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 3 · QUÉ INCLUYE ===================== -->
+  <section class="scene" id="s3">
+    <div class="grid"></div>
+    <div class="center">
+      <span class="mask" style="padding:0 30px 16px"><span class="el serif" id="s3-title">¿Qué <i class="lima">incluye?</i></span></span>
+      <div class="item i1 el" id="s3-c1">
+        <div class="ico el" id="s3-k1"><svg width="56" height="56" viewBox="0 0 24 24"><path class="tick" d="M4 12.5 L9.5 18 L20 6" fill="none" stroke="#14112a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" pathLength="1"/></svg></div>
+        <div><h3>Dos bootcamps completos</h3><p>Todo el Nivel 1 · Bolsa Local y Nivel 2 · Bolsa Extranjera.</p></div>
+      </div>
+      <div class="item i2 el" id="s3-c2">
+        <div class="ico el" id="s3-k2"><svg width="56" height="56" viewBox="0 0 24 24"><path class="tick" d="M4 12.5 L9.5 18 L20 6" fill="none" stroke="#14112a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" pathLength="1"/></svg></div>
+        <div><h3>Guías y herramientas</h3><p>Guía de impuestos, plantillas, calculadoras y recursos.</p></div>
+      </div>
+      <div class="item i3 el" id="s3-c3">
+        <div class="ico el" id="s3-k3"><svg width="64" height="64" viewBox="0 0 32 32" fill="none" stroke="#14112a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="7" width="24" height="21" rx="4"/><path d="M4 13 H28 M10 4 V9 M22 4 V9"/><text x="16" y="25" text-anchor="middle" font-family="Plus Jakarta Sans" font-weight="800" font-size="9.5" fill="#14112a" stroke="none">60</text></svg></div>
+        <div><h3>Acompañamiento por 60 días</h3><p>Resuelve tus dudas mientras avanzas por los dos bootcamps.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 4 · EXCLUSIVO ===================== -->
+  <section class="scene" id="s4">
+    <div id="s4-sparks"></div>
+    <div class="center">
+      <div class="el" id="s4-star"><svg width="64" height="64" viewBox="0 0 24 24"><path d="M12 2 L14.9 8.6 L22 9.3 L16.6 14 L18.2 21 L12 17.3 L5.8 21 L7.4 14 L2 9.3 L9.1 8.6 Z" fill="#5723f4" stroke="#5723f4" stroke-width="1.5" stroke-linejoin="round"/></svg></div>
+      <span class="el mono" id="s4-lbl">Exclusivo</span>
+      <span class="mask"><span class="el tight" id="s4-l1">Solo para los</span></span>
+      <div id="s4-row">
+        <span class="el serif ital" id="s4-10">10</span>
+        <span class="mask" style="padding:0 10px 10px"><span class="el serif" id="s4-prim">primeros</span></span>
+      </div>
+      <div id="s4-dots"></div>
+      <div class="el" id="s4-box">
+        <span id="s4-live"><i id="s4-dot"></i>EN VIVO</span>
+        <div id="s4-qa">Sesión de preguntas y respuestas (Q&amp;A)</div>
+        <div id="s4-qa2">con el equipo Freenanzas.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 5 · PRECIO ===================== -->
+  <section class="scene" id="s5">
+    <div class="grid"></div>
+    <div class="center">
+      <div class="el" id="s5-card">
+        <div class="el" id="s5-widget">
+          <span id="s5-wlive"><i id="s5-wdot"></i>En vivo</span>
+          <div id="s5-wt">Mi inversión</div>
+          <div id="s5-wsub">Vas ganando aprox.</div>
+          <div id="s5-wval"><svg width="40" height="52" viewBox="0 0 20 26"><path d="M12 1 L3 15 H9 L7 25 L17 10 H11 Z" fill="#5ee6c8"/></svg><span id="s5-wnum">+S/ 0.00 (0.00%)</span></div>
+          <svg id="s5-chart" width="230" height="110" viewBox="0 0 230 110"><path id="s5-line" d="M5 95 L45 80 L80 86 L120 55 L155 62 L190 30 L225 12" fill="none" stroke="#5ee6c8" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" pathLength="1" opacity=".9"/></svg>
+        </div>
+        <span class="el mono" id="s5-save">Ahorras $160</span>
+        <div class="el mono" id="s5-pu">Pago único</div>
+        <div id="s5-price"><span class="serif ital" id="s5-num">$559</span><span class="el" id="s5-usd">USD</span></div>
+        <span class="el" id="s5-before">Antes $559 USD<i class="el" id="s5-strike"></i></span>
+      </div>
+    </div>
+  </section>
+
+  <img id="logo" class="el" src="assets/logo-freenanzas-blanco.png" alt="Freenanzas">
+</div>
+</div>
+
+<div id="controls">
+  <button id="play">Pausa</button>
+  <input id="scrub" type="range" min="0" max="19" step="0.0333" value="0">
+  <span id="time">0.00s</span>
+</div>
+
+<script>
+/* =====================================================================
+   Mismo motor de keyframes de los Reels anteriores. render(t) es determinista.
+   Ritmo: 120 BPM → 1 beat = 0,5 s. Duración: 19 s (570 frames @30fps).
+   ===================================================================== */
+const DURATION = 19;
+const $ = (id) => document.getElementById(id);
+const E = {
+  lin: (p) => p,
+  outCubic: (p) => 1 - Math.pow(1 - p, 3),
+  inCubic: (p) => p * p * p,
+  inOutCubic: (p) => (p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2),
+  outExpo: (p) => (p === 1 ? 1 : 1 - Math.pow(2, -10 * p)),
+  inExpo: (p) => (p === 0 ? 0 : Math.pow(2, 10 * p - 10)),
+  inOutExpo: (p) => p === 0 ? 0 : p === 1 ? 1 : p < .5 ? Math.pow(2, 20 * p - 10) / 2 : (2 - Math.pow(2, -20 * p + 10)) / 2,
+  outBack: (p) => { const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(p - 1, 3) + c1 * Math.pow(p - 1, 2); },
+  outBackBig: (p) => { const c1 = 2.6, c3 = c1 + 1; return 1 + c3 * Math.pow(p - 1, 3) + c1 * Math.pow(p - 1, 2); },
+  outElastic: (p) => { const c4 = (2 * Math.PI) / 3.2; return p === 0 ? 0 : p === 1 ? 1 : Math.pow(2, -9 * p) * Math.sin((p * 10 - .75) * c4) + 1; },
+};
+const clamp01 = (x) => Math.max(0, Math.min(1, x));
+const DEF = { x: 0, y: 0, s: 1, sx: 1, sy: 1, r: 0, o: 1, blur: 0 };
+const tracks = [];
+function track(id, keys) { tracks.push({ el: typeof id === 'string' ? $(id) : id, keys }); }
+function sample(keys, t) {
+  const out = { ...DEF }; const full = []; let acc = { ...DEF };
+  for (const [kt, props, ease] of keys) { acc = { ...acc, ...props }; full.push([kt, acc, ease || 'outCubic']); }
+  if (t <= full[0][0]) return { ...full[0][1] };
+  for (let i = 1; i < full.length; i++) {
+    const [t0, a] = full[i - 1], [t1, b, ease] = full[i];
+    if (t <= t1) { const p = E[ease]((t - t0) / (t1 - t0)); for (const k in b) out[k] = a[k] + (b[k] - a[k]) * p; return out; }
+  }
+  return { ...full[full.length - 1][1] };
+}
+function apply(el, v) {
+  el.style.transform = `translate(${v.x}px, ${v.y}px) rotate(${v.r}deg) scale(${v.s * v.sx}, ${v.s * v.sy})`;
+  el.style.opacity = clamp01(v.o);
+  el.style.filter = v.blur > 0.05 ? `blur(${v.blur}px)` : 'none';
+}
+function wordIn(id, t, opts = {}) {
+  const d = opts.d || 0.45;
+  track(id, [[t, { y: opts.from ?? 150, o: 0, s: opts.s0 ?? 1 }], [t + d, { y: 0, o: 1, s: 1 }, opts.ease || 'outBack'], ...(opts.extra || [])]);
+}
+function makeSparks(hostId, pos, t0, tEnd) {
+  const host = $(hostId);
+  pos.forEach(([x, y, size, white], i) => {
+    const s = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    s.setAttribute('width', size); s.setAttribute('height', size); s.setAttribute('viewBox', '0 0 40 40');
+    s.setAttribute('class', 'spark el'); s.style.left = x + 'px'; s.style.top = y + 'px';
+    s.innerHTML = `<path d="M20 0 C22 14 26 18 40 20 C26 22 22 26 20 40 C18 26 14 22 0 20 C14 18 18 14 20 0Z" fill="${white ? '#fdfdfc' : '#c6fd34'}"/>`;
+    host.appendChild(s);
+    const ts = t0 + i * 0.1;
+    track(s, [[ts, { s: 0, r: -90 }], [ts + .4, { s: 1, r: 0 }, 'outBackBig'], [ts + .9, { s: .8, r: 30 }, 'inOutCubic'], [tEnd, { s: 1, r: 70 }, 'lin']]);
+  });
+}
+
+/* ===================== Escenas y transiciones ===================== */
+const SCENES = [
+  { id: 's1', in: 0,    out: 2.5,  wipe: null },
+  { id: 's2', in: 2.2,  out: 6.5,  wipe: { type: 'circle', t0: 2.2,  t1: 2.6,  cx: 540, cy: 900 } },
+  { id: 's3', in: 6.2,  out: 12.0, wipe: { type: 'up',     t0: 6.2,  t1: 6.6 } },
+  { id: 's4', in: 11.7, out: 15.0, wipe: { type: 'left',   t0: 11.7, t1: 12.1 } },
+  { id: 's5', in: 14.7, out: 19.0, wipe: { type: 'circle', t0: 14.7, t1: 15.1, cx: 540, cy: 900 } },
+];
+
+/* ----------------------- 1 · HOOK (0–2,5 s) ----------------------- */
+track('s1-pill', [[0.05, { s: 0, r: -8 }], [0.4, { s: 1, r: 0 }, 'outBackBig']]);
+wordIn('s1-l1', 0.25, { from: 190 });
+track('s1-l2', [[0.55, { s: 1.8, o: 0, blur: 16 }], [0.95, { s: 1, o: 1, blur: 0 }, 'outExpo'],
+                [1.5, { s: 1 }], [1.62, { s: 1.06 }, 'outCubic'], [1.8, { s: 1 }, 'outBack']]);
+track('s1-uline', [[0.95, { sx: 0 }], [1.3, { sx: 1 }, 'outExpo']]);
+makeSparks('s1-sparks', [[150, 470, 66], [860, 430, 46, 1], [880, 1180, 72], [140, 1260, 44, 1]], 0.8, 2.5);
+track('logo', [[0.9, { y: 30, o: 0 }], [1.4, { y: 0, o: 1 }, 'outCubic']]);
+
+/* ----------------------- 2 · LOS DOS BOOTCAMPS (2,5–6,5 s) ----------------------- */
+wordIn('s2-w1', 2.55);
+wordIn('s2-w2', 2.85);
+track('s2-w3', [[3.25, { y: 170, s: .8, o: 0 }], [3.65, { y: 0, s: 1, o: 1 }, 'outBack']]);
+track('s2-hl', [[3.55, { sx: 0 }], [3.9, { sx: 1 }, 'outExpo']]);
+// Los dos bootcamps entran desde lados opuestos y el kit "los encierra"
+track('s2-b1', [[4.0, { x: -900, r: -4 }], [4.45, { x: 0, r: 0 }, 'outBack']]);
+track('s2-b2', [[4.25, { x: 900, r: 4 }], [4.7, { x: 0, r: 0 }, 'outBack']]);
+track('s2-frame', [[4.75, { s: 1.12, o: 0 }], [5.1, { s: 1, o: 1 }, 'outBack']]);
+track('s2-tagin', [[5.0, { s: 0 }], [5.3, { s: 1 }, 'outBackBig']]);
+
+/* ----------------------- 3 · QUÉ INCLUYE (6,5–12 s) ----------------------- */
+track('s3-title', [[6.55, { y: 160, o: 0 }], [7.0, { y: 0, o: 1 }, 'outBack']]);
+const ITEM_T = [7.25, 8.0, 8.75];   // un ítem cada 1,5 beats para dar tiempo de lectura
+ITEM_T.forEach((t, i) => {
+  track(`s3-c${i + 1}`, [[t, { y: -110, o: 0, s: .94 }], [t + .5, { y: 0, o: 1, s: 1 }, 'outBack']]);
+  track(`s3-k${i + 1}`, [[t + .2, { s: 0, r: -25 }], [t + .55, { s: 1, r: 0 }, 'outBackBig'],
+                         [10.4 + i * .25, { s: 1 }], [10.6 + i * .25, { s: 1.15 }, 'outCubic'], [10.85 + i * .25, { s: 1 }, 'outBack']]);
+});
+const ticks = [...document.querySelectorAll('#s3 .tick')].map((el, i) => ({ el, t0: ITEM_T[i] + .45 }));
+
+/* ----------------------- 4 · EXCLUSIVO (12–15 s) ----------------------- */
+track('s4-star', [[12.1, { s: 0, r: -120 }], [12.5, { s: 1, r: 0 }, 'outBackBig']]);
+track('s4-lbl', [[12.3, { y: 30, o: 0 }], [12.6, { y: 0, o: 1 }, 'outCubic']]);
+wordIn('s4-l1', 12.5);
+track('s4-10', [[12.8, { s: 2.2, o: 0, blur: 18 }], [13.15, { s: 1, o: 1, blur: 0 }, 'outExpo']]);
+wordIn('s4-prim', 13.0, { from: 170 });
+track('s4-box', [[13.75, { y: 60, o: 0 }], [14.15, { y: 0, o: 1 }, 'outBack']]);
+makeSparks('s4-sparks', [[140, 420, 56], [880, 480, 42, 1], [900, 1300, 60], [130, 1350, 40, 1]], 12.9, 15);
+track('s4-dots', [[13.15, { o: 0, y: 20 }], [13.35, { o: 1, y: 0 }, 'outCubic']]);
+const dots = [];
+for (let i = 0; i < 10; i++) { const d = document.createElement('i'); $('s4-dots').appendChild(d); dots.push(d); }
+
+/* ----------------------- 5 · PRECIO (15–19 s) ----------------------- */
+track('s5-card', [[15.0, { y: 260, s: .92, o: 0 }], [15.5, { y: 0, s: 1, o: 1 }, 'outBack']]);
+track('s5-widget', [[15.25, { s: .9, o: 0 }], [15.6, { s: 1, o: 1 }, 'outBack']]);
+track('s5-pu', [[16.0, { x: -30, o: 0 }], [16.3, { x: 0, o: 1 }, 'outCubic']]);
+track('s5-usd', [[16.2, { o: 0 }], [16.5, { o: 1 }, 'outCubic']]);
+track('s5-before', [[17.05, { y: 20, o: 0 }], [17.35, { y: 0, o: 1 }, 'outCubic']]);
+track('s5-strike', [[17.35, { sx: 0 }], [17.65, { sx: 1 }, 'outExpo']]);
+track('s5-save', [[17.5, { s: 0, r: -10 }], [17.85, { s: 1, r: 0 }, 'outBackBig'], [18.3, { s: 1 }], [18.42, { s: 1.1 }], [18.6, { s: 1 }, 'outBack']]);
+
+function renderCustom(t) {
+  // checks que se dibujan
+  for (const g of ticks) { const p = clamp01((t - g.t0) / 0.3); g.el.style.strokeDasharray = '1'; g.el.style.strokeDashoffset = String(1 - E.outCubic(p)); }
+  // 10 cupos que se encienden uno a uno
+  dots.forEach((d, i) => { const on = t >= 13.3 + i * 0.05; d.style.background = on ? '#c6fd34' : 'transparent'; d.style.transform = `scale(${on ? 1 : .7})`; });
+  // punto rojo "en vivo" que late
+  const live = 0.55 + 0.45 * Math.abs(Math.sin(t * Math.PI));
+  $('s4-dot').style.opacity = live; $('s5-wdot').style.opacity = live;
+  // Widget "Mi inversión": contador y línea que se dibuja
+  const pw = E.outCubic(clamp01((t - 15.5) / 1.1));
+  $('s5-wnum').textContent = `+S/ ${(688.98 * pw).toFixed(2)} (${(11.6 * pw).toFixed(2)}%)`;
+  const ln = $('s5-line'); ln.style.strokeDasharray = '1'; ln.style.strokeDashoffset = String(1 - pw);
+  // Precio: baja de $559 a $399 con un pop al llegar
+  const pp = E.inOutCubic(clamp01((t - 16.3) / 0.75));
+  const num = $('s5-num');
+  num.textContent = '$' + Math.round(559 - 160 * pp);
+  const pop = t < 17.05 ? 1 : 1 + 0.12 * Math.sin(Math.PI * clamp01((t - 17.05) / 0.25));
+  num.style.display = 'inline-block';
+  num.style.transform = `scale(${pop})`; num.style.transformOrigin = 'left 70%';
+  num.style.opacity = clamp01((t - 16.15) / 0.2);
+}
+
+function renderScenes(t) {
+  SCENES.forEach((sc, i) => {
+    const el = $(sc.id);
+    const visible = t >= sc.in && t < sc.out + (i === SCENES.length - 1 ? 1 : 0.0001);
+    el.style.display = visible ? 'block' : 'none';
+    el.style.zIndex = i + 1;
+    if (!visible || !sc.wipe) { el.style.clipPath = 'none'; return; }
+    const w = sc.wipe;
+    const p = E.inOutExpo(clamp01((t - w.t0) / (w.t1 - w.t0)));
+    if (p >= 1) { el.style.clipPath = 'none'; return; }
+    if (w.type === 'circle') el.style.clipPath = `circle(${p * 1200}px at ${w.cx}px ${w.cy}px)`;
+    if (w.type === 'up')     el.style.clipPath = `inset(${(1 - p) * 100}% 0 0 0 round ${80 * (1 - p)}px)`;
+    if (w.type === 'left')   el.style.clipPath = `inset(0 0 0 ${(1 - p) * 100}% round ${80 * (1 - p)}px)`;
+  });
+}
+function render(t) {
+  renderScenes(t);
+  for (const tr of tracks) apply(tr.el, sample(tr.keys, t));
+  renderCustom(t);
+}
+window.__render = render;
+window.__DURATION = DURATION;
+window.__STILLS = { '1-hook': 2.2, '2-bootcamps': 6.1, '3-incluye': 11.6, '4-exclusivo': 14.6, '5-precio': 18.9 };
+
+const RENDER = new URLSearchParams(location.search).has('render');
+if (RENDER) { document.body.classList.add('render'); render(0); }
+else {
+  const stage = $('stage');
+  const fit = () => { const s = Math.min(innerWidth / 1080, (innerHeight - 52) / 1920); stage.style.transform = `scale(${s}) translateY(-26px)`; };
+  addEventListener('resize', fit); fit();
+  let playing = true, t = 0, last = null;
+  const scrub = $('scrub'), time = $('time'), btn = $('play');
+  btn.onclick = () => { playing = !playing; btn.textContent = playing ? 'Pausa' : 'Play'; last = null; };
+  scrub.oninput = () => { t = +scrub.value; render(t); time.textContent = t.toFixed(2) + 's'; };
+  const loop = (now) => {
+    if (playing) { if (last !== null) t = (t + (now - last) / 1000) % DURATION; last = now; render(t); scrub.value = t; time.textContent = t.toFixed(2) + 's'; }
+    requestAnimationFrame(loop);
+  };
+  document.fonts.ready.then(() => requestAnimationFrame(loop));
+}
+</script>
+</body>
+</html>
