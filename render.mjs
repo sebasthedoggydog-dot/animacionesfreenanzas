@@ -18,7 +18,7 @@ const framesDir = resolve(outDir, stillsOnly ? (name === 'sorteo-freenanzas' ? '
 rmSync(framesDir, { recursive: true, force: true });
 mkdirSync(framesDir, { recursive: true });
 
-const browser = await chromium.launch();
+const browser = await chromium.launch(process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {});
 const page = await browser.newPage({ viewport: { width: 1080, height: 1920 }, deviceScaleFactor: 1 });
 await page.goto(pathToFileURL(resolve(here, input)).href + '?render');
 await page.evaluate(() => document.fonts.ready);
