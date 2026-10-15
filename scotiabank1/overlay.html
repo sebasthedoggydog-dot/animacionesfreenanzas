@@ -76,7 +76,8 @@
 // Tiempos en segundos desde el inicio del clip (00:00:11:22). Los cortes calzan con la transcripción.
 const T = {
   top: 0.10,       // "Top…"                → 00:00:11:25
-  uno: 0.95,       // "…uno"                → 00:00:12:21
+  star: 0.00,      // la estrella "TOP #1" entra de frente, desde el primer frame
+  uno: 0.95,       // "…uno"                → 00:00:12:21 · latido de la estrella
   shot2: 1.33,     // corte · "Cuenta…"     → 00:00:13:02
   digital: 1.45,   // "Cuenta Digital"      → 00:00:13:06
   scotia: 2.10,    // "Scotiabank"          → 00:00:13:25
@@ -123,7 +124,7 @@ const conf = Array.from({ length: 70 }, (_, i) => {
   r.setAttribute('fill', COLORS[Math.floor(rnd() * 4)]);
   $('confG').appendChild(r);
   const a = -Math.PI / 2 + (rnd() - 0.5) * 3.0, v = 500 + rnd() * 650;
-  return { r, vx: Math.cos(a) * v, vy: Math.sin(a) * v, spin: (rnd() - 0.5) * 900, delay: rnd() * 0.12, at: i < 35 ? T.uno : T.scotia, oy: i < 35 ? 290 : 600 };
+  return { r, vx: Math.cos(a) * v, vy: Math.sin(a) * v, spin: (rnd() - 0.5) * 900, delay: rnd() * 0.12, at: i < 35 ? T.star : T.scotia, oy: i < 35 ? 290 : 600 };
 });
 
 function render(t) {
@@ -131,7 +132,7 @@ function render(t) {
   const s1 = t < T.shot2, s2 = !s1;
 
   // rayos: aparecen en "uno" y crecen en "Scotiabank"
-  const bp = easeOut(prog(t, T.uno, T.uno + 0.45));
+  const bp = easeOut(prog(t, T.star, T.star + 0.45));
   const hit = t >= T.scotia ? 1 + 0.25 * Math.exp(-(t - T.scotia) * 3) : 1;
   const by = s2 ? 270 : 0;                 // en la toma 2 el centro de los rayos baja con la placa
   set($('burst'), `translate(0, ${by}px) rotate(${t * 18}deg) scale(${bp * hit})`, bp);
@@ -140,12 +141,12 @@ function render(t) {
   const tp = back(prog(t, T.top, T.top + 0.35), 2);
   const tOut = easeIn(prog(t, T.uno - 0.12, T.uno));
   const drum = t > T.top + 0.35 && t < T.uno ? Math.sin(t * 42) * 4 * prog(t, T.top + 0.35, T.uno) : 0;
-  set($('teaser'), `translate(${drum}px, ${bob(0, 5)}px) scale(${tp * (1 + tOut * 0.6)})`, clamp(tp * 2) * (1 - tOut));
-  const sp = back(prog(t, T.uno, T.uno + 0.4), 2.4);
+  $('teaser').style.display = 'none';   // sin la píldora "TOP…": la estrella entra de frente
+  const sp = back(prog(t, T.star, T.star + 0.35), 2.4) * (1 + (t >= T.uno ? 0.14 * Math.exp(-(t - T.uno) * 7) : 0));
   const sOut = easeInOut(prog(t, T.shot2 - 0.05, T.shot2 + 0.25));
   const st = `translate(${-sOut * 340}px, ${-sOut * 80}px) scale(${sp * (1 - sOut)})`;
-  set($('star'), st + ` rotate(${lerp(-90, 0, sp) + t * 10}deg)`, t >= T.uno ? 1 : 0);
-  set($('starTxt'), st + ` rotate(${lerp(-30, -6, sp)}deg)`, t >= T.uno ? 1 : 0);
+  set($('star'), st + ` rotate(${lerp(-90, 0, Math.min(sp, 1)) + t * 10}deg)`, 1);
+  set($('starTxt'), st + ` rotate(${lerp(-30, -6, Math.min(sp, 1))}deg)`, 1);
   const mp = back(prog(t, T.shot2 + 0.1, T.shot2 + 0.4), 2.4);
   set($('mini1'), `translate(0, ${bob(2, 8)}px) rotate(${-10 + Math.sin(t * 2) * 4}deg) scale(${mp})`, s2 ? 1 : 0);
 
