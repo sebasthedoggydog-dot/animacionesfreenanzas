@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Banco Falabella top 4</title>
+<style>
+  /* ===== Paleta oficial Freenanzas ===== */
+  :root {
+    --morado: #5723f4;
+    --verde: #1a6f66;
+    --lima: #c6fd34;
+    --blanco: #fdfdfc;
+  }
+  @font-face { font-family: 'Montserrat'; font-weight: 800; src: url(../hook-dividendos/fonts/montserrat-latin-800-normal.woff2) format('woff2'); }
+  @font-face { font-family: 'Montserrat'; font-weight: 900; src: url(../hook-dividendos/fonts/montserrat-latin-900-normal.woff2) format('woff2'); }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: transparent; overflow: hidden; }
+  body { font-family: 'Montserrat', sans-serif; font-weight: 900; color: var(--blanco); }
+  body:not(.render) { background: #8a7d78; }
+  #stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; }
+  .abs { position: absolute; will-change: transform, opacity; }
+  svg { display: block; overflow: visible; }
+
+  /* Misma plantilla que surgir2 / scotiabank1 (sin rayos, estrella desde el primer frame). Cabeza alta: y ≈ 400–495 → todo compacto arriba */
+  #star { left: 280px; top: 10px; }
+  #starTxt { left: 390px; top: 150px; width: 300px; height: 240px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    color: var(--morado); line-height: .85; }
+  #starTxt small { font-size: 34px; font-weight: 800; letter-spacing: .1em; }
+  #starTxt b { font-size: 170px; }
+  #mini2 { left: 20px; top: 200px; }
+
+  .pillWrap { left: 0; right: 0; display: flex; justify-content: center; }
+  .pill { display: flex; align-items: center; gap: 14px; border-radius: 999px; box-shadow: 0 16px 34px rgba(20, 8, 60, .3); white-space: nowrap; }
+  #fin { top: 52px; }
+  #fin .pill { font-size: 46px; padding: 16px 38px 14px; background: var(--morado); color: var(--blanco); border: 6px solid var(--lima); letter-spacing: .06em; }
+  #plaque { left: 230px; top: 150px; width: 620px; height: 250px; border-radius: 40px; background: var(--blanco); border: 9px solid var(--lima);
+    display: flex; align-items: center; justify-content: center; box-shadow: 0 30px 60px rgba(20, 8, 60, .35); }
+  #plaque img { width: 520px; display: block; }
+  #cuenta { top: 52px; }
+  #cuenta .pill { font-size: 40px; padding: 16px 36px 14px; background: var(--lima); color: var(--morado); border: 6px solid var(--morado); letter-spacing: .04em; }
+  #crown { left: 800px; top: 112px; }
+
+  #controls { position: fixed; left: 10px; bottom: 10px; right: 10px; font: 600 14px sans-serif; color: #fff; }
+  body.render #controls { display: none; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <svg class="abs" id="confetti" width="1080" height="1920" style="left:0;top:0"><g id="confG"></g></svg>
+
+  <!-- "Top dos" -->
+  <svg class="abs" id="star" width="520" height="520" viewBox="-260 -260 520 520"><path id="starPath" fill="#c6fd34" stroke="#5723f4" stroke-width="10" stroke-linejoin="round"/></svg>
+  <div class="abs" id="starTxt"><small>TOP</small><b>#4</b></div>
+  <svg class="abs" id="mini2" width="220" height="220" viewBox="-110 -110 220 220"><path id="miniPath" fill="#c6fd34" stroke="#5723f4" stroke-width="8" stroke-linejoin="round"/>
+    <text x="0" y="24" text-anchor="middle" font-family="Montserrat" font-weight="900" font-size="72" fill="#5723f4">#4</text></svg>
+
+  <!-- "Financiera Surgir Gold Select" -->
+  <div class="abs pillWrap" id="fin"><div class="pill">FINANCIERA</div></div>
+  <div class="abs" id="plaque"><img src="assets/falabella-logo.png" alt="Banco Falabella"></div>
+  <div class="abs pillWrap" id="cuenta"><div class="pill">
+    <svg width="44" height="44" viewBox="-12 -12 24 24"><path d="M0 -11 L3 -3.5 L11 -3.5 L4.6 1.6 L7 9.5 L0 4.8 L-7 9.5 L-4.6 1.6 L-11 -3.5 L-3 -3.5Z" fill="#5723f4"/></svg>
+    AHORRO CLÁSICO</div></div>
+  <!-- sin corona: solo el #1 lleva corona -->
+  <svg class="abs" id="crown" width="170" height="116" viewBox="0 0 220 150" style="display:none">
+    <path d="M14 46 L62 92 L110 18 L158 92 L206 46 L186 136 L34 136 Z" fill="#c6fd34" stroke="#5723f4" stroke-width="10" stroke-linejoin="round"/>
+    <circle cx="14" cy="42" r="14" fill="#fdfdfc" stroke="#5723f4" stroke-width="7"/><circle cx="110" cy="14" r="14" fill="#fdfdfc" stroke="#5723f4" stroke-width="7"/><circle cx="206" cy="42" r="14" fill="#fdfdfc" stroke="#5723f4" stroke-width="7"/>
+  </svg>
+</div>
+<div id="controls"><input id="scrub" type="range" min="0" max="3.3" step="0.0333" value="0" style="width:100%"><span id="tc"></span></div>
+
+<script>
+// Tiempos en segundos desde el inicio del clip (00:00:50:14). Palabras estimadas con el audio.
+const T = {
+  star: 0.00,      // la estrella "TOP #4" entra de frente, desde el primer frame
+  dos: 0.33,       // "…cuatro"                → 00:00:50:24 · latido de la estrella
+  fin: 0.73,       // corte · "Banco…"         → 00:00:51:06 · la estrella pasa al costado
+  surgir: 0.80,    // "Banco Falabella"        → 00:00:51:08 · entra la placa con el logo
+  gold: 1.95,      // "Ahorro clásico"         → 00:00:52:12
+};
+const DURATION = 3.3;
+window.__DURATION = DURATION;
+
+const $ = (id) => document.getElementById(id);
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const prog = (t, a, b) => clamp((t - a) / (b - a));
+const easeOut = (p) => 1 - Math.pow(1 - p, 3);
+const easeInOut = (p) => p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
+const back = (p, s = 1.7) => 1 + (s + 1) * Math.pow(p - 1, 3) + s * Math.pow(p - 1, 2);
+const lerp = (a, b, p) => a + (b - a) * p;
+const set = (el, tf, op = 1) => { el.style.transform = tf; el.style.opacity = op; };
+const NS = 'http://www.w3.org/2000/svg';
+
+function starPath(R, r, n = 16) {
+  let d = '';
+  for (let k = 0; k < n * 2; k++) {
+    const a = (k / (n * 2)) * Math.PI * 2 - Math.PI / 2, rr = k % 2 ? r : R;
+    d += (k ? 'L' : 'M') + (Math.cos(a) * rr).toFixed(1) + ' ' + (Math.sin(a) * rr).toFixed(1);
+  }
+  return d + 'Z';
+}
+$('starPath').setAttribute('d', starPath(240, 190));
+$('miniPath').setAttribute('d', starPath(100, 78));
+// confeti determinista al inicio y en "Banco Falabella"
+let seed = 9;
+const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+const COLORS = ['#c6fd34', '#5723f4', '#fdfdfc', '#1a6f66'];
+const conf = Array.from({ length: 70 }, (_, i) => {
+  const r = document.createElementNS(NS, 'rect');
+  const w = 14 + rnd() * 16, h = 22 + rnd() * 18;
+  r.setAttribute('width', w); r.setAttribute('height', h); r.setAttribute('x', -w / 2); r.setAttribute('y', -h / 2); r.setAttribute('rx', 4);
+  r.setAttribute('fill', COLORS[Math.floor(rnd() * 4)]);
+  $('confG').appendChild(r);
+  const a = -Math.PI / 2 + (rnd() - 0.5) * 3.0, v = 500 + rnd() * 650;
+  return { r, vx: Math.cos(a) * v, vy: Math.sin(a) * v, spin: (rnd() - 0.5) * 900, delay: rnd() * 0.12, at: i < 35 ? T.star : T.surgir, oy: i < 35 ? 230 : 290 };
+});
+
+function render(t) {
+  const bob = (ph, amp = 8) => Math.sin(t * 2.2 + ph) * amp;
+  const after = t >= T.fin;
+
+  // estrella TOP #2: entra de frente, late en "dos" y se va a la esquina en "Financiera"
+  const sp = back(prog(t, T.star, T.star + 0.35), 2.4) * (1 + (t >= T.dos ? 0.14 * Math.exp(-(t - T.dos) * 7) : 0));
+  const sOut = easeInOut(prog(t, T.fin - 0.1, T.fin + 0.2));
+  const st = `translate(${-sOut * 340}px, ${-sOut * 60}px) scale(${sp * (1 - sOut)})`;
+  set($('star'), st + ` rotate(${lerp(-90, 0, Math.min(sp, 1)) + t * 10}deg)`, 1);
+  set($('starTxt'), st + ` rotate(${lerp(-30, -6, Math.min(sp, 1))}deg)`, 1);
+  const mp = back(prog(t, T.fin + 0.05, T.fin + 0.35), 2.4);
+  set($('mini2'), `translate(0, ${bob(2, 8)}px) rotate(${-10 + Math.sin(t * 2) * 4}deg) scale(${mp})`, after ? 1 : 0);
+
+  // FINANCIERA → logo SURGIR → GOLD SELECT
+  // la píldora FINANCIERA gira y se convierte en CUENTA INSUPERABLE
+  const fp = back(prog(t, T.fin, T.fin + 0.3), 2.2);
+  const sw = easeInOut(prog(t, T.gold - 0.08, T.gold + 0.16));
+  $('fin').style.opacity = 0;   // sin píldora de tipo de entidad: el logo ya dice "Banco"
+  const lp = back(prog(t, T.surgir, T.surgir + 0.35), 2.0);
+  set($('plaque'), `translate(0, ${bob(0.4, 6)}px) rotate(${lerp(6, -1.5, lp)}deg) scale(${lerp(1.8, 1, easeOut(prog(t, T.surgir, T.surgir + 0.2))) * (lp > 1 ? 1 + (lp - 1) * 0.5 : 1)})`,
+      t >= T.surgir ? clamp(prog(t, T.surgir, T.surgir + 0.08)) : 0);
+  const cr = back(prog(t, T.surgir + 0.2, T.surgir + 0.5), 2.4);
+  set($('crown'), `translate(0, ${bob(1.5, 6)}px) rotate(${lerp(-40, 14, cr)}deg) scale(${cr})`, t >= T.surgir + 0.2 ? clamp(cr * 2) : 0);
+  const gp = back(prog(t, T.gold + 0.04, T.gold + 0.3), 2.6);
+  set($('cuenta'), `translate(0, ${bob(1, 5)}px) rotate(${lerp(8, -2, gp)}deg) scale(${gp}) rotateX(${(1 - sw) * -90}deg)`, sw >= 0.5 ? 1 : 0);
+
+  conf.forEach((c) => {
+    const tt = t - c.at - c.delay;
+    if (tt < 0 || tt > 1.1) { c.r.setAttribute('opacity', 0); return; }
+    const x = 540 + c.vx * tt * 1.3, y = c.oy + c.vy * tt + 1500 * tt * tt;
+    c.r.setAttribute('transform', `translate(${x} ${y}) rotate(${c.spin * tt})`);
+    c.r.setAttribute('opacity', 1 - prog(tt, 0.85, 1.1));
+  });
+}
+
+window.__render = (t) => { render(t); $('tc').textContent = t.toFixed(2) + ' s'; };
+
+if (new URLSearchParams(location.search).has('render')) document.body.classList.add('render');
+else {
+  const sc = $('scrub');
+  sc.oninput = () => __render(+sc.value);
+  const t0 = performance.now();
+  const loop = () => { if (document.activeElement !== sc) { const t = ((performance.now() - t0) / 1000) % DURATION; sc.value = t; __render(t); } requestAnimationFrame(loop); };
+  document.fonts.ready.then(loop);
+}
+</script>
+</body>
+</html>
