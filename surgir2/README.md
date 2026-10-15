@@ -9,7 +9,7 @@ Misma plantilla que `../scotiabank1` en su versión final: estrella desde el pri
 | 00:00:30:14 | "**Top**…" (primer frame) | Estrella lima "TOP #2" entra de frente con pop + confeti | — |
 | 00:00:30:25 | "…**dos**" | La estrella da un latido | Golpe 100 → 115 % (4 frames) |
 | 00:00:31:14 | "**Financiera**…" | La estrella pasa a la esquina (mini "#2") + píldora morada "FINANCIERA" | Vuelve a 100 % (8 frames) |
-| 00:00:32:04 | "…**Surgir**…" | Placa blanca con borde lima y el logo de Surgir (entra con golpe), corona y segundo confeti | Golpe 100 → 110 % + giro de 2° |
+| 00:00:32:04 | "…**Surgir**…" | Placa blanca con borde lima y el logo de Surgir (entra con golpe) y segundo confeti (sin corona) | Golpe 100 → 110 % + giro de 2° |
 | 00:00:32:29 | "…**Gold Select**" | Píldora lima "★ GOLD SELECT" debajo de la placa | — |
 
 Tiempos de cada palabra estimados con el audio (el clip no tiene cortes).

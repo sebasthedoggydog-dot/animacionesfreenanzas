@@ -9,7 +9,7 @@ Misma plantilla que `../surgir2` y `../scotiabank1` (estrella desde el primer fr
 | 00:00:42:24 | "**Top**…" (primer frame) | Estrella lima "TOP #3" entra de frente con pop + confeti | — |
 | 00:00:43:02 | "…**tres**" | La estrella da un latido | Golpe 100 → 115 % (4 frames), vuelve en 00:00:43:15 |
 | 00:00:43:08 | "**Financiera**…" | La estrella pasa al costado (mini "#3") + píldora morada "FINANCIERA" | — |
-| 00:00:44:00 | "…**Qapaq**…" | Placa amarilla con el logo de Qapaq y borde blanco (entra con golpe), corona y segundo confeti | Golpe 100 → 110 % + giro de 2° |
+| 00:00:44:00 | "…**Qapaq**…" | Placa amarilla con el logo de Qapaq y borde blanco (entra con golpe) y segundo confeti (sin corona) | Golpe 100 → 110 % + giro de 2° |
 | 00:00:44:15 | "…**cuenta insuperable**" | La píldora "FINANCIERA" gira y se convierte en "★ CUENTA INSUPERABLE" (lima) | — |
 
 La transcripción dice "Cápac" e "insuparable"; en pantalla quedó **QAPAQ** (logo) y **CUENTA INSUPERABLE**.
