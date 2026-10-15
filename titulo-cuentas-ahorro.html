@@ -15,20 +15,24 @@
   body.preview { background: linear-gradient(180deg, #6b5a44 0%, #3b3128 100%); }
   #stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; }
   #title { position: absolute; top: 150px; left: 0; right: 0; text-align: center; color: var(--blanco);
-    filter: drop-shadow(0 6px 18px rgba(0,0,0,.35)); }
-  #kicker { font-family: 'Quicksand', sans-serif; font-weight: 500; font-size: 78px; letter-spacing: .005em; line-height: 1; }
-  #keyword { font-family: 'Playfair Display', serif; font-weight: 900; font-size: 250px; line-height: .8;
-    transform: scaleX(.7); letter-spacing: -.01em; margin-top: 30px; }
-  #script { font-family: 'Great Vibes', cursive; color: var(--lima); font-size: 260px; line-height: .75;
-    margin-top: 0; transform: rotate(-4deg); }
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,.25)) drop-shadow(0 10px 28px rgba(0,0,0,.35)); }
+  /* Nivel 1: contexto, ligero y aireado */
+  #kicker { font-family: 'Quicksand', sans-serif; font-weight: 500; font-size: 72px; line-height: 1; letter-spacing: .01em; }
+  #kicker b { font-weight: 700; }
+  /* Nivel 2: bloque fuerte en serif condensada, una sola línea de ancho completo */
+  #keyword { font-family: 'Playfair Display', serif; font-weight: 900; font-size: 212px; line-height: .8;
+    transform: scaleX(.66); letter-spacing: -.005em; margin-top: 34px; white-space: nowrap; display: flex; justify-content: center; }
+  /* Nivel 3: la palabra emocional en script lima, grande y montada sobre la base del serif */
+  #script { font-family: 'Great Vibes', cursive; color: var(--lima); font-size: 360px; line-height: .7;
+    margin-top: 12px; padding-left: 30px; transform: rotate(-6deg); }
 </style>
 </head>
 <body>
 <div id="stage">
   <div id="title">
-    <div id="kicker">Serie: Top 5 mejores</div>
-    <div id="keyword">CUENTAS</div>
-    <div id="script">de Ahorro</div>
+    <div id="kicker">Serie: <b>Top 5</b> mejores</div>
+    <div id="keyword">CUENTAS DE</div>
+    <div id="script">Ahorro</div>
   </div>
 </div>
 <script>if (location.search.includes('preview')) document.body.classList.add('preview');</script>
