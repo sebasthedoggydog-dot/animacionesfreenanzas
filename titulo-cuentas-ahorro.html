@@ -6,35 +6,49 @@
 <title>Top 5 cuentas de ahorro</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600&family=Playfair+Display:wght@900&family=Great+Vibes&display=block" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@500&family=Plus+Jakarta+Sans:wght@500;600;800&display=block" rel="stylesheet">
 <style>
   /* Título de serie para Reel 9:16 — PNG con fondo transparente para poner encima del video.
-     Jerarquía de la referencia: línea corta redondeada → palabra clave en serif condensada → script en lima. */
-  :root { --lima: #c6fd34; --blanco: #fdfdfc; }
+     Jerarquía de la referencia (línea corta → bloque fuerte → palabra en script lima)
+     con la tipografía de marca: Instrument Serif, Plus Jakarta Sans y DM Mono. */
+  :root { --morado: #5723f4; --lima: #c6fd34; --blanco: #fdfdfc;
+    --serif: 'Instrument Serif', Georgia, serif; --sans: 'Plus Jakarta Sans', 'Inter', sans-serif; --mono: 'DM Mono', ui-monospace, monospace; }
   html, body { margin: 0; background: transparent; }
   body.preview { background: linear-gradient(180deg, #6b5a44 0%, #3b3128 100%); }
   #stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; }
-  #title { position: absolute; top: 150px; left: 0; right: 0; text-align: center; color: var(--blanco);
+  #title { position: absolute; top: 140px; left: 100px; right: 100px; text-align: center; color: var(--blanco);
     filter: drop-shadow(0 4px 6px rgba(0,0,0,.25)) drop-shadow(0 10px 28px rgba(0,0,0,.35)); }
-  /* Nivel 1: contexto, ligero y aireado */
-  #kicker { font-family: 'Quicksand', sans-serif; font-weight: 500; font-size: 72px; line-height: 1; letter-spacing: .01em; }
-  #kicker b { font-weight: 700; }
-  /* Nivel 2: bloque fuerte en serif condensada, una sola línea de ancho completo */
-  #keyword { font-family: 'Playfair Display', serif; font-weight: 900; font-size: 212px; line-height: .8;
-    transform: scaleX(.66); letter-spacing: -.005em; margin-top: 34px; white-space: nowrap; display: flex; justify-content: center; }
-  /* Nivel 3: la palabra emocional en script lima, grande y montada sobre la base del serif */
-  #script { font-family: 'Great Vibes', cursive; color: var(--lima); font-size: 360px; line-height: .7;
-    margin-top: 12px; padding-left: 30px; transform: rotate(-6deg); }
+  /* Nivel 1: etiqueta de serie (píldora DM Mono, como en la web) + contexto en Jakarta */
+  #kicker { display: flex; align-items: center; justify-content: center; gap: 22px; }
+  #tag { font-family: var(--mono); font-weight: 500; font-size: 30px; letter-spacing: .22em; text-transform: uppercase;
+    color: var(--morado); background: var(--lima); border-radius: 40px; padding: 12px 22px 12px 26px; }
+  #lead { font-family: var(--sans); font-weight: 500; font-size: 64px; line-height: 1; letter-spacing: -.01em; }
+  #lead b { font-weight: 800; }
+  /* Nivel 2: bloque fuerte en Instrument Serif, ajustado al ancho útil */
+  #keyword { font-family: var(--serif); font-weight: 400; line-height: .82; letter-spacing: -.01em;
+    white-space: nowrap; margin-top: 30px; -webkit-text-stroke: 2.5px var(--blanco); }
+  /* Nivel 3: palabra protagonista en cursiva lima, montada sobre la base del serif */
+  #script { font-family: var(--serif); font-style: italic; color: var(--lima); line-height: .8;
+    letter-spacing: -.02em; white-space: nowrap; margin-top: -10px; -webkit-text-stroke: 1.5px var(--lima); transform: rotate(-5deg); }
 </style>
 </head>
 <body>
 <div id="stage">
   <div id="title">
-    <div id="kicker">Serie: <b>Top 5</b> mejores</div>
+    <div id="kicker"><span id="tag">Serie</span><span id="lead"><b>Top 5</b> mejores</span></div>
     <div id="keyword">CUENTAS DE</div>
     <div id="script">Ahorro</div>
   </div>
 </div>
-<script>if (location.search.includes('preview')) document.body.classList.add('preview');</script>
+<script>
+  if (location.search.includes('preview')) document.body.classList.add('preview');
+  // Ajusta cada línea grande al ancho útil (880px) una vez cargadas las fuentes.
+  document.fonts.ready.then(() => {
+    const fit = (el, w) => { el.style.fontSize = '100px'; const r = document.createRange(); r.selectNodeContents(el);
+      el.style.fontSize = (100 * w / r.getBoundingClientRect().width) + 'px'; };
+    fit(document.getElementById('keyword'), 880);
+    fit(document.getElementById('script'), 760);
+  });
+</script>
 </body>
 </html>
