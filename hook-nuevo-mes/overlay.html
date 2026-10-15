@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hook nuevo mes</title>
+<style>
+  /* ===== Paleta oficial Freenanzas ===== */
+  :root {
+    --morado: #5723f4;
+    --verde: #1a6f66;
+    --lima: #c6fd34;
+    --blanco: #fdfdfc;
+  }
+  /* Tipografías de la guía de marca: Montserrat + Free Serif */
+  @font-face { font-family: 'Montserrat'; font-weight: 900; src: url(../hook-dividendos/fonts/montserrat-latin-900-normal.woff2) format('woff2'); }
+  @font-face { font-family: 'Free Serif'; font-style: italic; font-weight: 700; src: url(../hook-dividendos/fonts/FreeSerifBold.ttf); }
+  @font-face { font-family: 'Free Serif'; font-style: italic; font-weight: 400; src: url(../hook-dividendos/fonts/FreeSerifItalic.ttf); }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: transparent; overflow: hidden; }
+  body { font-family: 'Montserrat', sans-serif; font-weight: 900; color: var(--blanco); }
+  body:not(.render) { background: #8a7d78; }
+  #stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; }
+  #shake { position: absolute; inset: 0; }
+  .abs { position: absolute; will-change: transform, opacity, filter; }
+  svg { display: block; overflow: visible; }
+
+  /* Texto arriba de la cabeza (y ≈ 360–525): la cabeza tapa el borde inferior de la palabra grande */
+  .w { position: absolute; left: 0; right: 0; text-align: center; line-height: .9; white-space: nowrap;
+    filter: drop-shadow(0 8px 0 rgba(40, 14, 140, .55)) drop-shadow(0 0 30px rgba(20, 8, 60, .35)); }
+  .serif { font-family: 'Free Serif', serif; font-style: italic; font-weight: 400; color: var(--blanco); }
+  .big { color: var(--lima); letter-spacing: -0.03em; -webkit-text-stroke: 10px var(--morado); paint-order: stroke fill; }
+
+  #wNuevo  { top: 88px; font-size: 140px; }
+  #wMes    { top: 172px; font-size: 250px; }
+  #wNuevas { top: 84px; font-size: 128px; }
+  #wFormas { top: 174px; font-size: 196px; }
+  #wDe     { top: 84px; font-size: 104px; }
+  #wPlatita{ top: 166px; font-size: 186px; }
+
+  /* calendario que cambia de hoja */
+  #cal { left: 70px; top: 300px; width: 190px; height: 210px; }
+  .page { position: absolute; inset: 0; border-radius: 26px; background: var(--blanco); overflow: hidden; box-shadow: 0 14px 28px rgba(20,8,60,.35);
+    transform-origin: 50% 0; backface-visibility: hidden; }
+  .page .hd { height: 58px; background: var(--morado); }
+  .page .rings { position: absolute; top: 10px; left: 0; right: 0; display: flex; justify-content: space-around; padding: 0 34px; }
+  .page .rings i { width: 14px; height: 36px; border-radius: 7px; background: var(--lima); display: block; }
+  .page .num { height: 152px; display: flex; align-items: center; justify-content: center; font-size: 96px; color: var(--morado); }
+  #pageNew .hd { background: var(--verde); }
+  #pageNew .num { color: var(--verde); }
+
+  /* íconos de "formas" */
+  .bub { width: 128px; height: 128px; border-radius: 50%; background: var(--morado); border: 6px solid var(--lima);
+    display: flex; align-items: center; justify-content: center; box-shadow: 0 14px 28px rgba(20,8,60,.35); }
+  .coin { position: absolute; width: 74px; height: 74px; border-radius: 50%; background: var(--lima); color: var(--verde);
+    border: 5px solid var(--blanco); display: flex; align-items: center; justify-content: center; font-size: 42px; }
+
+  #controls { position: fixed; left: 10px; bottom: 10px; right: 10px; font: 600 14px sans-serif; color: #fff; }
+  body.render #controls { display: none; }
+</style>
+</head>
+<body>
+<div id="stage"><div id="shake">
+  <div class="abs" id="coins" style="left:0;top:0"></div>
+
+  <!-- 1 · "Nuevo mes" -->
+  <div class="abs" id="cal">
+    <div class="page" id="pageNew"><div class="hd"></div><div class="num">✓</div><div class="rings"><i></i><i></i><i></i></div></div>
+    <div class="page" id="pageOld"><div class="hd"></div><div class="num">31</div><div class="rings"><i></i><i></i><i></i></div></div>
+  </div>
+  <div class="w serif abs" id="wNuevo">Nuevo</div>
+  <div class="w big abs" id="wMes">MES</div>
+
+  <!-- 2 · "Nuevas formas" -->
+  <div class="abs bub" id="b1" style="left:60px;top:420px"><svg width="70" height="70" viewBox="0 0 24 24"><path d="M3 17 L9 11 L13 14 L21 6" fill="none" stroke="#c6fd34" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 6 H21 V12" fill="none" stroke="#c6fd34" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  <div class="abs bub" id="b2" style="left:110px;top:580px"><svg width="70" height="70" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#c6fd34"/><text x="12" y="17" text-anchor="middle" font-family="Montserrat" font-weight="900" font-size="14" fill="#5723f4">$</text></svg></div>
+  <div class="abs bub" id="b3" style="left:50px;top:740px"><svg width="70" height="70" viewBox="-12 -12 24 24"><g fill="none" stroke="#c6fd34" stroke-width="2.2"><circle r="10"/><ellipse id="mer" rx="4.5" ry="10"/><path d="M-10 0 H10 M-9 -4.5 H9 M-9 4.5 H9"/></g></svg></div>
+  <div class="w serif abs" id="wNuevas">Nuevas</div>
+  <div class="w big abs" id="wFormas">FORMAS</div>
+
+  <!-- 3 · "de hacer platita" -->
+  <div class="w serif abs" id="wDe">de hacer</div>
+  <div class="w big abs" id="wPlatita">PLATITA</div>
+</div></div>
+<div id="controls"><input id="scrub" type="range" min="0" max="3.2" step="0.0333" value="0" style="width:100%"><span id="tc"></span></div>
+
+<script>
+// Tiempos (segundos desde 00:00:00:00). Frase según la transcripción; palabras estimadas con el audio.
+const T = {
+  nuevo: 0.18,     // "Nuevo"    → 00:00:00:05
+  mes: 0.68,       // "mes"      → 00:00:00:20
+  nuevas: 1.13,    // "Nuevas"   → 00:00:01:04
+  formas: 1.50,    // "formas"   → 00:00:01:15
+  de: 1.90,        // "de hacer" → 00:00:01:27
+  platita: 2.33,   // "platita"  → 00:00:02:10
+};
+const DURATION = 3.2;
+window.__DURATION = DURATION;
+
+const $ = (id) => document.getElementById(id);
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const prog = (t, a, b) => clamp((t - a) / (b - a));
+const easeOut = (p) => 1 - Math.pow(1 - p, 3);
+const easeIn = (p) => p * p * p;
+const back = (p, s = 2.2) => 1 + (s + 1) * Math.pow(p - 1, 3) + s * Math.pow(p - 1, 2);
+const lerp = (a, b, p) => a + (b - a) * p;
+
+// entrada "slam": cae grande desde la cámara, con desenfoque de movimiento
+function slam(el, t, at, opts = {}) {
+  const { dur = 0.2, from = 2.4, rot = 0, out = 99, outDir = -1 } = opts;
+  const p = prog(t, at, at + dur), q = easeIn(prog(t, out, out + 0.12));
+  if (t < at) { el.style.opacity = 0; return; }
+  const s = lerp(from, 1, easeOut(p)) * (p >= 1 ? 1 + 0.05 * Math.exp(-(t - at - dur) * 12) * Math.sin((t - at - dur) * 40) : 1);
+  el.style.opacity = clamp(p * 4) * (1 - q);
+  el.style.transform = `translateX(${q * 900 * outDir}px) scale(${s}) rotate(${rot * (1 - easeOut(p))}deg)`;
+  el.style.filter = (el.classList.contains('big') ? 'drop-shadow(0 8px 0 rgba(40,14,140,.55)) ' : 'drop-shadow(0 8px 0 rgba(40,14,140,.55)) ')
+    + `blur(${(1 - p) * 10 + q * 14}px)`;
+}
+
+// sacudida de toda la capa en cada golpe
+function shake(t) {
+  let x = 0, y = 0;
+  for (const at of [T.mes, T.formas, T.platita]) {
+    const d = t - at - 0.12;
+    if (d > 0 && d < 0.3) { const a = 16 * Math.exp(-d * 14); x += Math.sin(d * 90) * a; y += Math.cos(d * 70) * a * 0.6; }
+  }
+  $('shake').style.transform = `translate(${x}px, ${y}px)`;
+}
+
+// monedas que explotan detrás de "PLATITA" y luego caen
+let seed = 11;
+const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+const COINS = Array.from({ length: 16 }, (_, k) => {
+  const d = document.createElement('div'); d.className = 'coin'; d.textContent = '$'; $('coins').appendChild(d);
+  const a = -Math.PI / 2 + (rnd() - 0.5) * 3.2, v = 700 + rnd() * 700;
+  return { d, vx: Math.cos(a) * v, vy: Math.sin(a) * v, spin: (rnd() - 0.5) * 900, delay: rnd() * 0.1, s: 0.7 + rnd() * 0.5 };
+});
+
+function render(t) {
+  shake(t);
+  // 1 · Nuevo mes
+  slam($('wNuevo'), t, T.nuevo, { from: 1.8, rot: -6, out: T.nuevas - 0.12 });
+  slam($('wMes'), t, T.mes, { from: 2.8, rot: 8, out: T.nuevas - 0.12 });
+  const cp = back(prog(t, T.nuevo + 0.1, T.nuevo + 0.4), 2);
+  const calOut = easeIn(prog(t, T.nuevas - 0.12, T.nuevas));
+  $('cal').style.opacity = t >= T.nuevo + 0.1 ? clamp(cp * 2) * (1 - calOut) : 0;
+  $('cal').style.transform = `translateX(${-calOut * 600}px) rotate(${lerp(-25, -8, cp)}deg) scale(${cp})`;
+  // en "mes" se arranca la hoja vieja y aparece la nueva
+  const flip = easeIn(prog(t, T.mes, T.mes + 0.25));
+  $('pageOld').style.transform = `rotateX(${flip * 110}deg) translateY(${flip * 60}px)`;
+  $('pageOld').style.opacity = 1 - prog(t, T.mes + 0.15, T.mes + 0.25);
+
+  // 2 · Nuevas formas
+  slam($('wNuevas'), t, T.nuevas, { from: 1.8, rot: 6, out: T.de - 0.12, outDir: 1 });
+  slam($('wFormas'), t, T.formas, { from: 2.8, rot: -8, out: T.de - 0.12, outDir: 1 });
+  ['b1', 'b2', 'b3'].forEach((id, k) => {
+    const at = T.formas + 0.05 + k * 0.08, p = back(prog(t, at, at + 0.25), 2.6);
+    const o = easeIn(prog(t, T.de - 0.12, T.de));
+    $(id).style.opacity = t >= at ? clamp(p * 2) * (1 - o) : 0;
+    $(id).style.transform = `translate(${-o * 500}px, ${Math.sin(t * 3 + k) * 8}px) rotate(${lerp(-60, 0, p)}deg) scale(${p})`;
+  });
+  $('mer').setAttribute('rx', Math.abs(4.5 * Math.cos(t * 4)));
+
+  // 3 · de hacer PLATITA
+  slam($('wDe'), t, T.de, { from: 1.8, rot: -5 });
+  slam($('wPlatita'), t, T.platita, { from: 3.0, rot: 6 });
+  // latido final de "PLATITA"
+  if (t > T.platita + 0.35) $('wPlatita').style.transform += ` scale(${1 + 0.03 * Math.sin((t - T.platita) * 8)})`;
+  COINS.forEach((c) => {
+    const tt = t - T.platita - 0.08 - c.delay;
+    if (tt < 0) { c.d.style.opacity = 0; return; }
+    const x = 540 - 37 + c.vx * tt, y = 250 + c.vy * tt + 1700 * tt * tt;
+    c.d.style.opacity = 1 - prog(tt, 0.7, 0.9);
+    c.d.style.transform = `translate(${x}px, ${y}px) rotate(${c.spin * tt}deg) scale(${c.s * back(prog(tt, 0, 0.15), 2)})`;
+  });
+}
+
+window.__render = (t) => { render(t); $('tc').textContent = t.toFixed(2) + ' s'; };
+
+if (new URLSearchParams(location.search).has('render')) document.body.classList.add('render');
+else {
+  const sc = $('scrub');
+  sc.oninput = () => __render(+sc.value);
+  const t0 = performance.now();
+  const loop = () => { if (document.activeElement !== sc) { const t = ((performance.now() - t0) / 1000) % DURATION; sc.value = t; __render(t); } requestAnimationFrame(loop); };
+  document.fonts.ready.then(loop);
+}
+</script>
+</body>
+</html>
