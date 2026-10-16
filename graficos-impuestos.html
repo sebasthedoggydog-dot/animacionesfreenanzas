@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gráficos Impuestos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Playfair+Display:ital,wght@1,700;1,800&family=Oswald:wght@500;600&display=block" rel="stylesheet">
+<style>
+  /* Capa de gráficos (fondo transparente) para el video "Impuestos al comprar acciones".
+     Se superpone al video original (fondo verde con cuadrícula + voz en off).
+     Estilo del Kit Inversor v2: Poppins · Playfair Display cursiva lima · Oswald · íconos 3D · estrellas. */
+  :root {
+    --morado: #5723f4; --verde: #1a6f66; --lima: #c6fd34; --blanco: #fdfdfc;
+    --tinta: #14112a; --gris: #5d6272; --lavanda: #ebe5ff;
+    --sans: 'Poppins', sans-serif; --serif: 'Playfair Display', Georgia, serif; --cond: 'Oswald', sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; background: #111; overflow: hidden; }
+  body { font-family: var(--sans); font-weight: 700; color: var(--blanco); }
+  #wrap { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+  #stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; flex: none; }
+  #bgvideo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  html.render, body.render { background: transparent; }
+  body.render #wrap { position: static; display: block; }
+  body.render #stage { transform: none !important; background: transparent; }
+  body.render #controls, body.render #bgvideo { display: none; }
+
+  .blk { position: absolute; left: 100px; right: 100px; top: 0; bottom: 300px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+  .el { display: block; will-change: transform, opacity; }
+  .mask { overflow: hidden; display: block; padding: 0 16px; }
+  .acc { font-family: var(--serif); font-style: italic; font-weight: 800; color: var(--lima); letter-spacing: -0.01em; }
+  .h { font-size: 96px; font-weight: 800; line-height: 1.04; letter-spacing: -0.02em; text-shadow: 0 6px 24px rgba(0,30,25,.25); }
+  .label { font-family: var(--cond); font-weight: 600; font-size: 40px; letter-spacing: .04em; color: var(--lima); text-transform: uppercase; display: flex; align-items: center; gap: 14px; }
+  .label i { width: 26px; height: 26px; border-radius: 50%; border: 4px solid var(--lima); display: flex; align-items: center; justify-content: center; }
+  .label i::after { content: ''; width: 10px; height: 10px; border-radius: 50%; background: var(--lima); }
+  .ico3d { width: 230px; height: 230px; object-fit: contain; filter: drop-shadow(0 18px 24px rgba(0,25,20,.35)); }
+  .card { width: 100%; background: var(--blanco); color: var(--tinta); border-radius: 40px; box-shadow: 0 30px 60px rgba(0,30,25,.30); text-align: left; }
+  svg { display: block; overflow: visible; }
+  .spark, .dot { position: absolute; }
+  .dot { border-radius: 50%; }
+  #logo { position: absolute; left: 50%; top: 1625px; width: 400px; margin-left: -200px; }
+
+  /* ---------- G1 · Cuando compras una acción ---------- */
+  #g1-acc { font-size: 140px; line-height: 1.1; }
+  #g1-ico { margin-bottom: 20px; }
+
+  /* ---------- G2 · No pagas impuesto a la renta ---------- */
+  #g2-acc { font-size: 110px; line-height: 1.12; text-wrap: balance; }
+  #g2-card { margin-top: 56px; padding: 34px 40px; }
+  .row { display: flex; align-items: center; justify-content: space-between; gap: 20px; font-size: 42px; font-weight: 600; padding: 18px 0; }
+  .row + .row { border-top: 3px dashed #e1def0; }
+  .row b { font-weight: 800; }
+  .ok { width: 60px; height: 60px; border-radius: 16px; background: var(--lima); display: flex; align-items: center; justify-content: center; flex: none; }
+  #g2-zero { font-family: var(--sans); font-weight: 800; font-size: 64px; color: var(--morado); background: var(--lima); border-radius: 22px; padding: 0 22px; line-height: 1.2; }
+  #g2-chip { margin-top: 34px; font-size: 44px; font-weight: 700; border: 3px solid rgba(253,253,252,.6); border-radius: 60px; padding: 14px 34px; }
+
+  /* ---------- G3 · El impuesto entra en juego cuando generas ganancias ---------- */
+  #g3-acc { font-size: 150px; line-height: 1.1; }
+  #g3-card { margin-top: 50px; padding: 30px 34px 26px; position: relative; }
+  #g3-card small { font-family: var(--cond); font-weight: 600; font-size: 30px; letter-spacing: .08em; color: var(--morado); text-transform: uppercase; }
+  #g3-tag { position: absolute; right: 30px; top: 22px; background: var(--lima); color: var(--tinta); font-family: var(--cond); font-weight: 600; font-size: 34px; letter-spacing: .06em; border-radius: 40px; padding: 4px 22px; }
+  #g3-money { position: absolute; left: -46px; bottom: -70px; width: 190px; height: 190px; }
+
+  /* ---------- G4 · Por ejemplo ---------- */
+  #g4 { justify-content: flex-start; }
+  #g4-head { margin-top: 300px; display: flex; flex-direction: column; align-items: center; transform-origin: center top; }
+  #g4-acc { font-size: 160px; line-height: 1.1; white-space: nowrap; }
+
+  /* ---------- G5 · Vendes con ganancia / Recibes dividendos ---------- */
+  #g5 { padding-top: 140px; }
+  .ex { display: flex; align-items: center; gap: 26px; padding: 30px 34px 30px 24px; }
+  .ex img { width: 170px; height: 170px; flex: none; }
+  .ex h3 { font-size: 56px; font-weight: 800; line-height: 1.08; }
+  .ex h3 em { font-family: var(--serif); font-style: italic; color: var(--morado); }
+  .ex .tax { display: inline-flex; align-items: center; gap: 10px; margin-top: 14px; background: var(--lima); color: var(--tinta); font-family: var(--cond); font-weight: 600; font-size: 32px; letter-spacing: .05em; text-transform: uppercase; border-radius: 40px; padding: 4px 20px; }
+  #g5-o { font-family: var(--serif); font-style: italic; font-weight: 800; font-size: 90px; color: var(--lima); line-height: 1.2; margin: 6px 0; }
+
+  #controls { position: fixed; left: 0; right: 0; bottom: 0; display: flex; gap: 12px; align-items: center; padding: 10px 16px;
+    background: rgba(0,0,0,.7); font: 600 14px/1 'Poppins', sans-serif; color: #fff; z-index: 10; }
+  #controls button { font: inherit; background: #c6fd34; color: #5723f4; border: 0; border-radius: 8px; padding: 8px 14px; cursor: pointer; }
+  #controls input { flex: 1; accent-color: #c6fd34; min-width: 0; }
+  #controls span { font-variant-numeric: tabular-nums; min-width: 64px; text-align: right; }
+</style>
+</head>
+<body>
+<div id="wrap">
+<div id="stage">
+  <!-- Solo para previsualizar: el video original detrás (en render se exporta transparente) -->
+  <video id="bgvideo" src="assets/video/impuestos-original.mp4" muted playsinline preload="auto"></video>
+  <div id="fx"></div>
+
+  <!-- G1 · 0,0–1,5 s · "Cuando compras una acción" -->
+  <div class="blk" id="g1">
+    <img class="el ico3d" id="g1-ico" src="assets/iconos-3d/shopping_cart.png" alt="">
+    <span class="mask"><span class="el h" id="g1-l1">Cuando compras</span></span>
+    <span class="mask" style="padding:0 30px 16px"><span class="el acc" id="g1-acc">una acción</span></span>
+  </div>
+
+  <!-- G2 · 1,6–4,7 s · "no pagas impuesto a la renta simplemente por comprarla" -->
+  <div class="blk" id="g2">
+    <span class="mask"><span class="el h" id="g2-l1">No pagas</span></span>
+    <span class="mask" style="padding:0 30px 14px"><span class="el acc" id="g2-acc">impuesto a la renta</span></span>
+    <div class="card el" id="g2-card">
+      <div class="row el" id="g2-r1"><span>Compra de acciones</span><span class="ok"><svg width="36" height="36" viewBox="0 0 24 24"><path class="tick" id="g2-tick" d="M4 12.5 L9.5 18 L20 6" fill="none" stroke="#14112a" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" pathLength="1"/></svg></span></div>
+      <div class="row el" id="g2-r2"><b>Impuesto a la renta</b><span class="el" id="g2-zero">S/ 0</span></div>
+    </div>
+    <span class="el" id="g2-chip">…solo por comprarla</span>
+  </div>
+
+  <!-- G3 · 4,9–7,8 s · "El impuesto entra en juego cuando generas ganancias" -->
+  <div class="blk" id="g3">
+    <span class="el label" id="g3-lbl"><i></i>El impuesto entra en juego</span>
+    <span class="mask" style="margin-top:24px"><span class="el h" id="g3-l1">cuando generas</span></span>
+    <span class="mask" style="padding:0 30px 18px"><span class="el acc" id="g3-acc">ganancias</span></span>
+    <div class="card el" id="g3-card">
+      <small>Tu inversión</small>
+      <span class="el" id="g3-tag">+ GANANCIA</span>
+      <svg width="812" height="250" viewBox="0 0 812 250" style="margin-top:12px">
+        <defs><linearGradient id="gfill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c6fd34" stop-opacity=".45"/><stop offset="1" stop-color="#c6fd34" stop-opacity="0"/></linearGradient></defs>
+        <path d="M0 60 H812 M0 140 H812 M0 220 H812" stroke="#ece9f6" stroke-width="3"/>
+        <path id="g3-area" d="M10 220 L130 200 L250 210 L370 160 L490 170 L610 100 L730 70 L800 30 L800 240 L10 240 Z" fill="url(#gfill)"/>
+        <path id="g3-line" d="M10 220 L130 200 L250 210 L370 160 L490 170 L610 100 L730 70 L800 30" fill="none" stroke="#5723f4" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" pathLength="1"/>
+        <circle id="g3-pt" cx="800" cy="30" r="16" fill="#c6fd34" stroke="#5723f4" stroke-width="6"/>
+      </svg>
+      <img class="el" id="g3-money" src="assets/iconos-3d/money_with_wings.png" alt="">
+    </div>
+  </div>
+
+  <!-- G4 · 7,9 s → · "Por ejemplo" (se queda como encabezado de G5) -->
+  <div class="blk" id="g4">
+    <div class="el" id="g4-head">
+      <span class="el label" id="g4-lbl"><i></i>Ejemplos</span>
+      <span class="mask" style="padding:0 30px 18px"><span class="el acc" id="g4-acc">Por ejemplo</span></span>
+    </div>
+  </div>
+
+  <!-- G5 · 8,9–12,36 s · "cuando vendes una acción con ganancia o recibes dividendos" -->
+  <div class="blk" id="g5">
+    <div class="card ex el" id="g5-c1">
+      <img class="el" id="g5-i1" src="assets/iconos-3d/chart_increasing.png" alt="">
+      <div><h3>Vendes una acción <em>con ganancia</em></h3><span class="tax el" id="g5-t1">→ Impuesto a la renta</span></div>
+    </div>
+    <span class="el" id="g5-o">o</span>
+    <div class="card ex el" id="g5-c2">
+      <img class="el" id="g5-i2" src="assets/iconos-3d/money_bag.png" alt="">
+      <div><h3>Recibes <em>dividendos</em></h3><span class="tax el" id="g5-t2">→ Impuesto a la renta</span></div>
+    </div>
+  </div>
+
+  <img id="logo" class="el" src="assets/logo-freenanzas-blanco.svg" alt="Freenanzas">
+</div>
+</div>
+
+<div id="controls">
+  <button id="play">Pausa</button>
+  <input id="scrub" type="range" min="0" max="12.36" step="0.04" value="0">
+  <span id="time">0.00s</span>
+</div>
+
+<script>
+/* Motor de keyframes de los Reels Freenanzas. render(t) es determinista.
+   Tiempos sincronizados con la voz en off (pausas detectadas en 1,52 · 4,64 · 7,72 · 8,5 s). */
+const DURATION = 12.36;
+const FPS = 25;
+const $ = (id) => document.getElementById(id);
+const E = {
+  lin: (p) => p,
+  outCubic: (p) => 1 - Math.pow(1 - p, 3),
+  inCubic: (p) => p * p * p,
+  inOutCubic: (p) => (p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2),
+  outExpo: (p) => (p === 1 ? 1 : 1 - Math.pow(2, -10 * p)),
+  outBack: (p) => { const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(p - 1, 3) + c1 * Math.pow(p - 1, 2); },
+  outBackBig: (p) => { const c1 = 2.6, c3 = c1 + 1; return 1 + c3 * Math.pow(p - 1, 3) + c1 * Math.pow(p - 1, 2); },
+};
+const clamp01 = (x) => Math.max(0, Math.min(1, x));
+const DEF = { x: 0, y: 0, s: 1, sx: 1, sy: 1, r: 0, o: 1, blur: 0 };
+const tracks = [];
+function track(id, keys) { tracks.push({ el: typeof id === 'string' ? $(id) : id, keys }); }
+function sample(keys, t) {
+  const out = { ...DEF }; const full = []; let acc = { ...DEF };
+  for (const [kt, props, ease] of keys) { acc = { ...acc, ...props }; full.push([kt, acc, ease || 'outCubic']); }
+  if (t <= full[0][0]) return { ...full[0][1] };
+  for (let i = 1; i < full.length; i++) {
+    const [t0, a] = full[i - 1], [t1, b, ease] = full[i];
+    if (t <= t1) { const p = E[ease]((t - t0) / (t1 - t0)); for (const k in b) out[k] = a[k] + (b[k] - a[k]) * p; return out; }
+  }
+  return { ...full[full.length - 1][1] };
+}
+function apply(el, v) {
+  el.style.transform = `translate(${v.x}px, ${v.y}px) rotate(${v.r}deg) scale(${v.s * v.sx}, ${v.s * v.sy})`;
+  el.style.opacity = clamp01(v.o);
+  el.style.filter = v.blur > 0.05 ? `blur(${v.blur}px)` : 'none';
+}
+function wordIn(id, t, opts = {}) {
+  const d = opts.d || 0.4;
+  track(id, [[t, { y: opts.from ?? 150, o: 0 }], [t + d, { y: 0, o: 1 }, 'outBack'], ...(opts.extra || [])]);
+}
+function accIn(id, t) { track(id, [[t, { s: 1.6, o: 0, blur: 12 }], [t + .35, { s: 1, o: 1, blur: 0 }, 'outExpo']]); }
+// Cada bloque: entra y sale como grupo (salida rápida hacia arriba)
+function block(id, tIn, tOut) {
+  const keys = [[tIn - 0.01, { o: 0 }], [tIn, { o: 1 }, 'lin']];
+  if (tOut) keys.push([tOut, { y: 0, o: 1, s: 1 }], [tOut + .2, { y: -90, o: 0, s: .96 }, 'inCubic']);
+  track(id, keys);
+}
+const floaters = [];
+function floatAfter(id, t0, amp = 8, period = 1.8, rot = 3) { floaters.push({ el: $(id), t0, amp, period, rot }); }
+
+/* ---------- G1 · 0–1,5 s ---------- */
+block('g1', 0, 1.42);
+track('g1-ico', [[0.05, { s: 0, r: -25, y: 60 }], [0.45, { s: 1, r: 0, y: 0 }, 'outBackBig']]);
+floatAfter('g1-ico', 0.45);
+wordIn('g1-l1', 0.1);
+accIn('g1-acc', 0.55);
+
+/* ---------- G2 · 1,6–4,7 s ---------- */
+block('g2', 1.6, 4.6);
+wordIn('g2-l1', 1.62);
+accIn('g2-acc', 2.0);
+track('g2-card', [[2.55, { y: 120, o: 0, s: .94 }], [3.0, { y: 0, o: 1, s: 1 }, 'outBack']]);
+track('g2-r1', [[2.75, { x: -40, o: 0 }], [3.05, { x: 0, o: 1 }, 'outCubic']]);
+track('g2-r2', [[3.1, { x: -40, o: 0 }], [3.4, { x: 0, o: 1 }, 'outCubic']]);
+track('g2-zero', [[3.3, { s: 0, r: -12 }], [3.65, { s: 1, r: 0 }, 'outBackBig']]);
+track('g2-chip', [[3.75, { y: 40, o: 0 }], [4.1, { y: 0, o: 1 }, 'outBack']]);
+
+/* ---------- G3 · 4,9–7,8 s ---------- */
+block('g3', 4.9, 7.66);
+track('g3-lbl', [[4.92, { y: 30, o: 0 }], [5.25, { y: 0, o: 1 }, 'outCubic']]);
+wordIn('g3-l1', 6.05);
+accIn('g3-acc', 6.5);
+track('g3-card', [[5.2, { y: 120, o: 0, s: .94 }], [5.65, { y: 0, o: 1, s: 1 }, 'outBack']]);
+track('g3-tag', [[6.9, { s: 0, r: -10 }], [7.2, { s: 1, r: 0 }, 'outBackBig']]);
+track('g3-money', [[6.75, { s: 0, r: -30, y: 60 }], [7.15, { s: 1, r: 0, y: 0 }, 'outBackBig']]);
+floatAfter('g3-money', 7.15, 10, 1.4, 5);
+
+/* ---------- G4 · 7,9 s → encabezado de G5 ---------- */
+block('g4', 7.85);
+track('g4-lbl', [[7.88, { y: 30, o: 0 }], [8.15, { y: 0, o: 1 }, 'outCubic']]);
+track('g4-acc', [[7.9, { s: 1.7, o: 0, blur: 14 }], [8.25, { s: 1, o: 1, blur: 0 }, 'outExpo']]);
+// "Por ejemplo" sube y se encoge para dejar sitio a los ejemplos
+track('g4-head', [[8.75, { y: 260, s: 1 }], [9.1, { y: 0, s: .62 }, 'inOutCubic']]);
+
+/* ---------- G5 · 8,9–12,36 s ---------- */
+block('g5', 8.85);
+track('g5-c1', [[8.95, { x: -900, r: -3 }], [9.4, { x: 0, r: 0 }, 'outBack']]);
+track('g5-i1', [[9.2, { s: 0, r: -25 }], [9.55, { s: 1, r: 0 }, 'outBackBig']]);
+floatAfter('g5-i1', 9.55, 6, 1.8, 3);
+track('g5-t1', [[10.0, { s: 0 }], [10.3, { s: 1 }, 'outBackBig']]);
+track('g5-o', [[10.65, { s: 0, o: 0 }], [10.9, { s: 1, o: 1 }, 'outBackBig']]);
+track('g5-c2', [[10.85, { x: 900, r: 3 }], [11.3, { x: 0, r: 0 }, 'outBack']]);
+track('g5-i2', [[11.05, { s: 0, r: 25 }], [11.4, { s: 1, r: 0 }, 'outBackBig']]);
+floatAfter('g5-i2', 11.4, 6, 2.1, 3);
+track('g5-t2', [[11.6, { s: 0 }], [11.9, { s: 1 }, 'outBackBig']]);
+
+/* ---------- Estrellas y puntos (persisten todo el video) ---------- */
+(function fx() {
+  const host = $('fx');
+  const sparks = [[130, 270, 64, 0, 0.3], [880, 330, 44, 1, 0.5], [920, 1380, 70, 0, 0.7], [110, 1440, 40, 1, 0.9], [860, 860, 34, 1, 5.0], [140, 760, 40, 0, 5.2]];
+  sparks.forEach(([x, y, size, white, t0]) => {
+    const s = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    s.setAttribute('width', size); s.setAttribute('height', size); s.setAttribute('viewBox', '0 0 40 40');
+    s.setAttribute('class', 'spark el'); s.style.left = x + 'px'; s.style.top = y + 'px';
+    s.innerHTML = `<path d="M20 0 C22 14 26 18 40 20 C26 22 22 26 20 40 C18 26 14 22 0 20 C14 18 18 14 20 0Z" fill="${white ? '#fdfdfc' : '#c6fd34'}"/>`;
+    host.appendChild(s);
+    track(s, [[t0, { s: 0, r: -90 }], [t0 + .4, { s: 1, r: 0 }, 'outBackBig'], [DURATION, { s: .9, r: 120 }, 'lin']]);
+  });
+  const dots = [[260, 450, 16], [820, 520, 12, 1], [190, 1180, 14, 1], [900, 1150, 18], [330, 1500, 12], [760, 1480, 14, 1]];
+  dots.forEach(([x, y, size, white], i) => {
+    const d = document.createElement('i'); d.className = 'dot el';
+    Object.assign(d.style, { left: x + 'px', top: y + 'px', width: size + 'px', height: size + 'px', background: white ? '#fdfdfc' : '#c6fd34' });
+    host.appendChild(d);
+    const t0 = 0.4 + i * 0.08;
+    track(d, [[t0, { s: 0 }], [t0 + .35, { s: 1 }, 'outBackBig'], [DURATION, { y: -60 - (i % 3) * 25 }, 'lin']]);
+  });
+})();
+track('logo', [[0.3, { y: 30, o: 0 }], [0.8, { y: 0, o: 1 }, 'outCubic']]);
+
+function renderCustom(t) {
+  for (const f of floaters) {
+    if (t < f.t0) continue;
+    const k = t - f.t0, ph = (2 * Math.PI * k) / f.period, ramp = clamp01(k / 0.4);
+    f.el.style.transform += ` translateY(${Math.sin(ph) * f.amp * ramp}px) rotate(${Math.sin(ph * 0.7) * f.rot * ramp}deg)`;
+  }
+  // check de "Compra de acciones"
+  const pt = clamp01((t - 3.0) / 0.3); const tk = $('g2-tick'); tk.style.strokeDasharray = '1'; tk.style.strokeDashoffset = String(1 - E.outCubic(pt));
+  // gráfico de ganancia que se dibuja
+  const pl = E.inOutCubic(clamp01((t - 5.6) / 1.3));
+  const ln = $('g3-line'); ln.style.strokeDasharray = '1'; ln.style.strokeDashoffset = String(1 - pl);
+  $('g3-area').style.opacity = pl; $('g3-pt').style.opacity = pl > 0.98 ? 1 : 0;
+  $('g3-pt').style.transform = `scale(${pl > 0.98 ? 1 + 0.25 * Math.max(0, Math.sin((t - 6.9) * 6)) * Math.exp(-(t - 6.9) * 2) : 0})`;
+  $('g3-pt').style.transformOrigin = '800px 30px';
+}
+
+function render(t) {
+  for (const tr of tracks) apply(tr.el, sample(tr.keys, t));
+  renderCustom(t);
+}
+window.__render = render;
+window.__DURATION = DURATION;
+window.__FPS = FPS;
+window.__STILLS = { 'g1': 1.3, 'g2': 4.4, 'g3': 7.5, 'g4': 8.6, 'g5': 12.3 };
+
+const RENDER = new URLSearchParams(location.search).has('render');
+if (RENDER) { document.documentElement.classList.add('render'); document.body.classList.add('render'); render(0); }
+else {
+  const stage = $('stage'), vid = $('bgvideo');
+  const fit = () => { const s = Math.min(innerWidth / 1080, (innerHeight - 52) / 1920); stage.style.transform = `scale(${s}) translateY(-26px)`; };
+  addEventListener('resize', fit); fit();
+  let playing = true, t = 0, last = null;
+  const scrub = $('scrub'), time = $('time'), btn = $('play');
+  btn.onclick = () => { playing = !playing; btn.textContent = playing ? 'Pausa' : 'Play'; last = null; if (!playing) vid.pause(); };
+  scrub.oninput = () => { t = +scrub.value; vid.currentTime = t; render(t); time.textContent = t.toFixed(2) + 's'; };
+  const loop = (now) => {
+    if (playing) {
+      if (last !== null) { t = (t + (now - last) / 1000); if (t >= DURATION) { t = 0; vid.currentTime = 0; } }
+      last = now;
+      if (vid.paused) { vid.currentTime = t; vid.play().catch(() => {}); }
+      render(t); scrub.value = t; time.textContent = t.toFixed(2) + 's';
+    }
+    requestAnimationFrame(loop);
+  };
+  document.fonts.ready.then(() => requestAnimationFrame(loop));
+}
+</script>
+</body>
+</html>
