@@ -22,3 +22,16 @@ Las pausas de la locución se detectaron en 1,52 · 4,64 · 7,72 y 8,5 s. Cada b
 | 8,9–12,36 s | "cuando vendes una acción con ganancia o recibes dividendos" | 📈 "Vendes una acción *con ganancia*" entra por la izquierda (9,0 s) · "*o*" · 💰 "Recibes *dividendos*" entra por la derecha (10,85 s). Cada tarjeta lleva la etiqueta "→ IMPUESTO A LA RENTA" |
 
 Si en la locución final cambia el ritmo, se ajustan los tiempos de cada bloque en `graficos-impuestos.html` (llamadas `block()`, `wordIn()` y `track()`).
+
+## Versión con fondo morado
+- `output/graficos-impuestos-final-morado.mp4`: los mismos gráficos, sobre el video original pasado a morado. Se conserva la cuadrícula animada y se agrega la luz suave en las esquinas, como en la pieza "Tu turno".
+- Fondo morado (sin gráficos): `assets/video/impuestos-fondo-morado.mp4`. Para generarlo:
+```
+T="clip((0.299*r(X,Y)+0.587*g(X,Y)+0.114*b(X,Y)-86)/18,0,1)"
+ffmpeg -i assets/video/impuestos-original.mp4 -i assets/video/luz-esquinas.png -filter_complex \
+  "[0:v]gblur=sigma=1.6,format=gbrp,geq=r='66+38*$T':g='22+42*$T':b='210+26*$T'[p];[p][1:v]overlay=0:0,format=yuv420p[v]" \
+  -map "[v]" -map 0:a -c:v libx264 -crf 16 -c:a copy assets/video/impuestos-fondo-morado.mp4
+ffmpeg -i assets/video/impuestos-fondo-morado.mp4 -i output/graficos-impuestos-capa.mov \
+  -filter_complex "[0:v][1:v]overlay=0:0:shortest=1[v]" -map "[v]" -map 0:a -c:v libx264 -crf 18 -c:a copy \
+  output/graficos-impuestos-final-morado.mp4
+```
