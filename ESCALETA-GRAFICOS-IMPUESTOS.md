@@ -35,3 +35,24 @@ ffmpeg -i assets/video/impuestos-fondo-morado.mp4 -i output/graficos-impuestos-c
   -filter_complex "[0:v][1:v]overlay=0:0:shortest=1[v]" -map "[v]" -map 0:a -c:v libx264 -crf 18 -c:a copy \
   output/graficos-impuestos-final-morado.mp4
 ```
+
+---
+
+# Parte 2 · "En estos casos… ¿Pero qué pasa con la bolsa extranjera?"
+
+Video original: `assets/video/impuestos-2-original.mp4` (12,84 s, 25 fps). Usa el mismo sistema visual y la misma capa de estrellas y logo que la parte 1.
+
+**Archivos**
+- `output/graficos-impuestos-2-final.mp4`: fondo verde original + gráficos
+- `output/graficos-impuestos-2-final-morado.mp4`: fondo pasado a morado + gráficos
+- `output/graficos-impuestos-2-capa.mov`: solo los gráficos con fondo transparente
+- `graficos-impuestos-2.html`: animación (`node render-overlay.mjs graficos-impuestos-2.html assets/video/impuestos-2-original.mp4`)
+
+Pausas de la voz detectadas en 1,1 · 3,1 · 5,2–5,5 · 10,3 y 10,8 s.
+
+| Tiempo | Locución | Gráfico |
+|---|---|---|
+| 0–1,1 s | "En estos casos," | "◉ VENTA CON GANANCIA · DIVIDENDOS" con 📈 y 💰 (conecta con la parte 1) y "*En estos casos*" |
+| 1,15–5,4 s | "las retenciones correspondientes pueden realizarse automáticamente," | "Las retenciones / se pueden hacer / *automáticamente*". Una tarjeta con ⚙️ "Retención automática" cuyo interruptor se enciende en lima a los 4,0 s (el engranaje acelera), más la etiqueta "✓ ACTIVADA" |
+| 5,55–10,3 s | "por lo que no tienes que estar pagando manualmente un impuesto después de cada operación." | "No tienes que pagar *manualmente*": la palabra se tacha en rojo y aparece ❌. Luego "◉ DESPUÉS DE CADA OPERACIÓN" y una lista de Operación 1, 2 y 3, cada una con "✓ RETENIDO" |
+| 10,35–12,84 s | "¿Pero qué pasa con la bolsa extranjera?" | 🌎 un globo que entra girando, 🤔 la carita pensativa, "◉ ¿PERO…", "qué pasa con la" y "*bolsa extranjera?*" (cierre en suspenso) |
