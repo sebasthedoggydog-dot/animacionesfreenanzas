@@ -77,9 +77,9 @@ Sintetizado en `audio/kit_audio.py` a 120 BPM. Incluye:
 - Destellos en "Guía de impuestos".
 
 ## Imagen CTA (sin precio)
-- Fondo morado con cuadrícula, cohete 3D, "◉ MÁS POPULAR", "Llévate el" y "*Kit Inversor*" con subrayado.
+- Fondo morado con cuadrícula. Lleva "Llévate el" y "*Kit Inversor*" con subrayado; sin cohete ni etiqueta "Más popular".
 - Dos tarjetas lima gruesas con íconos 3D: "DOS BOOTCAMPS COMPLETOS · Bolsa Local + Bolsa Extranjera" y "EXCLUSIVO · 10 PRIMEROS · Q&A en vivo con el equipo".
-- Bajo las tarjetas queda espacio para el sticker de link; el logo va en la misma posición que en el video.
+- El bloque está centrado y más arriba, para dejar libre una zona amplia (≈ 320 px) para el sticker de link entre las tarjetas y el logo.
 
 ## Copy sugerido
 > 🚀 El **Kit Inversor**: los dos bootcamps completos en un solo kit.
