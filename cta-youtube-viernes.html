@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Videos todos los viernes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;900&family=Inter:wght@400;500;600;700&display=block" rel="stylesheet">
+<style>
+  /* CTA 9:16 "Videos todos los viernes 9:00AM" — canal de YouTube Karicats Finanzas.
+     Rehecho a partir de YOUTUBE_CALL_TO_ACTION.mp4 con los textos del canal editables (suscriptores, videos, etc.). */
+  :root { --morado: #5723f4; --morado-osc: #4a06e6; --lima: #c6fd34; --blanco: #fdfdfc;
+    --pantalla: #0f0f0f; --gris: #aaaaaa; --chip: #272727; --azul-yt: #3ea6ff; }
+  html, body { margin: 0; background: #000; }
+  #stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: var(--morado); }
+
+  /* Fondo: ondas orgánicas en dos tonos de morado, como la referencia */
+  #bg { position: absolute; inset: -200px; }
+
+  /* Titular */
+  #headline { position: absolute; left: 120px; top: 150px; width: 860px; transform: rotate(-8deg); transform-origin: 30% 50%;
+    font-family: 'Poppins', sans-serif; font-weight: 900; line-height: .86; letter-spacing: -.01em; }
+  #headline .w { display: block; transform-origin: 20% 70%; }
+  #w1 { font-size: 196px; color: var(--lima); }
+  #w2 { font-size: 118px; color: var(--blanco); margin: 6px 0 0 60px; }
+  #w3 { font-size: 200px; color: var(--lima); margin-left: 30px; }
+  #w4 { font-family: 'Poppins', sans-serif; font-weight: 300; font-size: 84px; color: var(--blanco); letter-spacing: .01em;
+    text-align: right; margin: 6px 40px 0 0; }
+
+  #mega { position: absolute; left: 830px; top: 40px; width: 210px; height: 210px; transform-origin: 30% 70%; }
+  #hand { position: absolute; left: -40px; top: 450px; width: 300px; height: 300px; transform-origin: 0% 100%; }
+
+  /* Celular */
+  #phone { position: absolute; left: 160px; top: 720px; width: 760px; height: 1400px; transform-origin: 50% 0%;
+    border-radius: 92px; background: #1b1b1f; padding: 16px; box-sizing: border-box;
+    box-shadow: 0 0 0 4px #3a3a42 inset, 0 40px 90px rgba(20,0,80,.45); }
+  #phone::before, #phone::after { content: ''; position: absolute; right: -8px; width: 8px; border-radius: 0 4px 4px 0; background: #2b2b31; }
+  #phone::before { top: 300px; height: 130px; } #phone::after { top: 470px; height: 90px; }
+  #screen { position: relative; width: 100%; height: 100%; border-radius: 78px; overflow: hidden; background: var(--pantalla);
+    font-family: 'Inter', sans-serif; color: #f1f1f1; }
+  #island { position: absolute; left: 50%; top: 22px; width: 170px; height: 50px; margin-left: -85px; border-radius: 30px; background: #000; z-index: 2; }
+  #island::after { content: ''; position: absolute; right: 18px; top: 15px; width: 20px; height: 20px; border-radius: 50%; background: #10162a; box-shadow: 0 0 0 3px #0a0a10; }
+
+  #topbar { display: flex; align-items: center; height: 70px; padding: 26px 34px 0 34px; }
+  #topbar .sp { flex: 1; }
+  #topbar svg { display: block; }
+  #topbar .ic { margin-left: 34px; }
+
+  #banner { margin: 24px 30px 0; border-radius: 22px; overflow: hidden; height: 188px; }
+  #banner img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  #profile { display: flex; align-items: center; gap: 26px; margin: 30px 30px 0; }
+  #avatar { width: 150px; height: 150px; border-radius: 50%; overflow: hidden; flex: none; }
+  #avatar img { width: 100%; height: 100%; display: block; object-fit: cover; }
+  #pname { font-size: 46px; font-weight: 700; letter-spacing: -.01em; color: #fff; }
+  #handle { font-size: 25px; font-weight: 500; color: #f1f1f1; margin-top: 10px; }
+  #subs { font-size: 25px; color: var(--gris); margin-top: 8px; position: relative; white-space: nowrap; }
+  #subs b { font-weight: 400; color: var(--gris); position: relative; display: inline-block; }
+  #subs-hl { position: absolute; left: -10px; right: -10px; top: -6px; bottom: -6px; border: 3px solid var(--lima); border-radius: 14px; }
+
+  #desc { margin: 26px 30px 0; font-size: 26px; color: #f1f1f1; }
+  #desc b { font-weight: 700; }
+  #links { margin: 18px 30px 0; font-size: 26px; font-weight: 600; color: #f1f1f1; }
+
+  #btns { display: flex; gap: 18px; margin: 28px 30px 0; }
+  .btn { flex: 1; height: 72px; border-radius: 40px; background: var(--chip); display: flex; align-items: center; justify-content: center; gap: 16px;
+    font-size: 28px; font-weight: 600; color: #f1f1f1; }
+
+  #tabs { display: flex; gap: 46px; margin: 30px 0 0; padding: 0 30px; font-size: 29px; font-weight: 500; color: #aaa; white-space: nowrap;
+    border-bottom: 1px solid #2e2e2e; }
+  #tabs span { padding-bottom: 20px; }
+  #tabs .on { color: #fff; box-shadow: inset 0 -4px 0 #fff; }
+
+  #members { margin: 34px 30px 0; }
+  #members .row { display: flex; justify-content: space-between; align-items: baseline; }
+  #members h3 { margin: 0; font-size: 33px; font-weight: 700; color: #fff; }
+  #members .join { font-size: 26px; font-weight: 600; color: var(--azul-yt); }
+  #members p { margin: 18px 0 0; font-size: 24px; color: #e8e8e8; }
+  #members img { display: block; width: 640px; margin-top: 18px; }
+  #parati { margin: 44px 30px 0; font-size: 33px; font-weight: 700; color: #fff; padding-top: 30px; border-top: 1px solid #2e2e2e; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <svg id="bg" viewBox="0 0 1480 2320" preserveAspectRatio="none">
+    <rect width="1480" height="2320" fill="#5a26e6"/>
+    <g id="blobs" fill="#4a06e6">
+      <path d="M260 150 C480 40 760 180 900 300 C1040 420 1240 320 1320 160 C1400 0 1560 60 1520 260 C1480 520 1160 700 940 560 C760 440 520 360 450 520 C380 700 600 880 560 1100 C520 1320 300 1260 200 1080 C80 860 -40 820 -40 700 L-40 560 C80 640 160 600 200 520 C260 380 60 260 260 150 Z"/>
+      <path d="M760 960 C880 860 1040 920 1160 1000 C1300 1090 1440 1020 1520 940 L1520 1180 C1400 1120 1260 1160 1220 1260 C1170 1390 1320 1540 1300 1700 C1280 1880 1060 1940 900 1860 C760 1790 660 1640 720 1500 C780 1360 900 1300 860 1180 C820 1080 680 1040 760 960 Z"/>
+      <path d="M-40 1640 C120 1700 240 1820 400 1880 C560 1940 700 1900 800 2000 C900 2100 840 2240 720 2320 L-40 2320 Z"/>
+      <path d="M1100 2320 C1160 2200 1300 2160 1400 2080 C1460 2030 1500 1980 1520 1960 L1520 2320 Z"/>
+    </g>
+  </svg>
+
+  <div id="headline">
+    <span class="w" id="w1">VIDEOS</span>
+    <span class="w" id="w2">TODOS LOS</span>
+    <span class="w" id="w3">VIERNES</span>
+    <span class="w" id="w4">9:00AM</span>
+  </div>
+
+  <!-- Megáfono -->
+  <svg id="mega" viewBox="0 0 230 230">
+    <g id="mega-body" transform="rotate(-24 115 115)">
+      <path d="M40 98 L120 62 L120 168 L40 132 Z" fill="#c6fd34" stroke="#1d4a2e" stroke-width="6" stroke-linejoin="round"/>
+      <rect x="22" y="94" width="26" height="42" rx="8" fill="#c6fd34" stroke="#1d4a2e" stroke-width="6"/>
+      <ellipse cx="128" cy="115" rx="30" ry="62" fill="#1d6f4a" stroke="#1d4a2e" stroke-width="6"/>
+      <ellipse cx="132" cy="115" rx="14" ry="36" fill="#e9e3ff"/>
+      <path d="M58 130 L66 178 C67 186 80 188 82 180 L80 138" fill="#c6fd34" stroke="#1d4a2e" stroke-width="6" stroke-linejoin="round"/>
+    </g>
+    <g id="mega-lines" stroke="#c6fd34" stroke-width="9" stroke-linecap="round" fill="none">
+      <path d="M180 52 L204 32"/><path d="M192 92 L222 86"/><path d="M168 22 L176 4"/>
+    </g>
+  </svg>
+
+  <!-- Mano señalando el titular -->
+  <svg id="hand" viewBox="0 0 300 300">
+    <g fill="#c6fd34" stroke="#4a06e6" stroke-width="7" stroke-linejoin="round" stroke-linecap="round">
+      <path d="M-20 300 L-20 190 C10 170 50 160 80 170 L150 60 C160 42 186 48 182 70 L140 170 C170 168 196 180 200 200 C230 200 240 226 226 240 C246 250 244 276 222 282 C232 300 210 316 186 306 L120 300 Z"/>
+      <path d="M140 170 C150 190 150 210 140 222" fill="none"/>
+      <path d="M200 200 C206 214 200 230 186 236" fill="none"/>
+      <path d="M226 240 C224 256 214 266 196 270" fill="none"/>
+    </g>
+  </svg>
+
+  <div id="phone">
+    <div id="screen">
+      <div id="island"></div>
+      <div id="topbar">
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 4 L7 12 L15 20"/></svg>
+        <span class="sp"></span>
+        <svg class="ic" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8 V6 a2 2 0 0 1 2-2 h14 a2 2 0 0 1 2 2 v12 a2 2 0 0 1-2 2 h-6"/><path d="M3 12 a8 8 0 0 1 8 8"/><path d="M3 16 a4 4 0 0 1 4 4"/><path d="M3 20 h.01"/></svg>
+        <svg class="ic" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 L21 21"/></svg>
+        <svg class="ic" width="12" height="40" viewBox="0 0 6 24" fill="#fff"><circle cx="3" cy="5" r="2.4"/><circle cx="3" cy="12" r="2.4"/><circle cx="3" cy="19" r="2.4"/></svg>
+      </div>
+      <div id="banner"><img src="assets/yt-banner-karicats.png" alt=""></div>
+      <div id="profile">
+        <div id="avatar"><img src="assets/yt-avatar-karicats.png" alt=""></div>
+        <div>
+          <div id="pname">Karicats Finanzas</div>
+          <div id="handle">@karicatsfinanzas</div>
+          <div id="subs"><b><span id="subs-hl"></span><span id="subs-n">36.5 k</span> suscriptores</b> • 527 videos</div>
+        </div>
+      </div>
+      <div id="desc">💖 Libertad financiera joven <b>...más</b></div>
+      <div id="links">linktr.ee/karicats y 3 vínculos más</div>
+      <div id="btns">
+        <div class="btn">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round"><path d="M6 17 V11 a6 6 0 0 1 12 0 v6 l2 2 H4 Z"/><path d="M10 21 a2 2 0 0 0 4 0"/></svg>
+          Suscrito
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9 L12 16 L19 9"/></svg>
+        </div>
+        <div class="btn">
+          <svg width="36" height="36" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#fff"/><path d="M12 5.5 l1.9 4.1 4.4.5-3.3 3 .9 4.4-3.9-2.2-3.9 2.2.9-4.4-3.3-3 4.4-.5 Z" fill="#0f0f0f"/></svg>
+          Unirse
+        </div>
+      </div>
+      <div id="tabs"><span class="on">Principal</span><span>Videos</span><span>Shorts</span><span>En Vivo</span><span>Podcasts</span></div>
+      <div id="members">
+        <div class="row"><h3>Nuestros miembros</h3><span class="join">Unirse</span></div>
+        <p>¡Gracias, miembros del canal!</p>
+        <img src="assets/yt-miembros-karicats.png" alt="">
+      </div>
+      <div id="parati">Para ti</div>
+    </div>
+  </div>
+</div>
+<script>
+  // Línea de tiempo (10 s, como el original). render.mjs llama a __render(t) fotograma a fotograma.
+  const DURATION = 10;
+  const $ = (id) => document.getElementById(id);
+  const clamp = (x) => Math.min(1, Math.max(0, x));
+  const prog = (t, a, b) => clamp((t - a) / (b - a));
+  const outCubic = (x) => 1 - Math.pow(1 - x, 3);
+  const inOutCubic = (x) => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+  const outBack = (x, c = 1.8) => 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2);
+
+  function pop(el, t, a, b, from = .3) {
+    const p = prog(t, a, b);
+    el.style.opacity = clamp(p * 3);
+    el.style.transform = `scale(${from + (1 - from) * outBack(p)})`;
+  }
+
+  function render(t) {
+    // Fondo: las ondas derivan despacio todo el tiempo
+    $('blobs').setAttribute('transform', `translate(${Math.sin(t * .5) * 30} ${Math.cos(t * .4) * 26 - t * 4}) rotate(${Math.sin(t * .3) * 2} 740 1160)`);
+
+    // Titular palabra a palabra
+    pop($('w1'), t, .15, .6);
+    pop($('w2'), t, .4, .85);
+    pop($('w3'), t, .65, 1.1);
+    const h = outCubic(prog(t, 1.05, 1.5));
+    $('w4').style.opacity = h; $('w4').style.transform = `translateX(${(1 - h) * 60}px)`;
+
+    // Megáfono: entra y "suena" en pulsos
+    const m = prog(t, .8, 1.25);
+    const shake = t > 1.25 ? Math.sin(t * 22) * 5 * Math.max(0, Math.sin(t * 2.4)) : 0;
+    $('mega').style.opacity = clamp(m * 3);
+    $('mega').style.transform = `scale(${.2 + .8 * outBack(m)}) rotate(${(1 - outCubic(m)) * -40 + shake}deg)`;
+    const pulse = .4 + .6 * Math.abs(Math.sin(t * 4.8));
+    $('mega-lines').style.opacity = t > 1.2 ? pulse : 0;
+
+    // Mano: entra desde la izquierda y señala con pequeños toques
+    const hd = outBack(prog(t, 1.0, 1.6), 1.3);
+    const tap = t > 1.6 ? Math.max(0, Math.sin((t - 1.6) * 5)) * 14 : 0;
+    $('hand').style.transform = `translate(${(1 - hd) * -320 + tap}px, ${(1 - hd) * 120 - tap * .6}px)`;
+
+    // Celular: sube desde abajo y luego se acerca lentamente (push-in), como el original
+    const ph = outCubic(prog(t, 1.2, 2.3));
+    const push = inOutCubic(prog(t, 2.3, 10));
+    $('phone').style.transform = `translateY(${(1 - ph) * 1250}px) scale(${.96 + .04 * ph + .05 * push})`;
+
+    // Resalte del número de suscriptores
+    const hl = prog(t, 3.0, 3.5), hlo = 1 - prog(t, 6.5, 7.0);
+    $('subs-hl').style.opacity = clamp(hl * 2) * hlo;
+    $('subs-hl').style.transform = `scale(${1.25 - .25 * outBack(hl)})`;
+    $('subs-n').style.color = hl > 0 && hlo > 0 ? `rgba(198,253,52,${clamp(hl * 2) * hlo})` : '';
+    if (hl > 0 && hlo > 0) $('subs-n').style.color = `color-mix(in srgb, #c6fd34 ${Math.round(clamp(hl * 2) * hlo * 100)}%, #aaaaaa)`;
+  }
+  window.__render = render;
+  window.__DURATION = DURATION;
+  window.__STILLS = { '1-titular': .9, '2-celular': 2.0, '3-resalte': 4, '4-final': 9.9 };
+  if (location.search.includes('play')) { const t0 = performance.now(); const loop = () => { render(((performance.now() - t0) / 1000) % DURATION); requestAnimationFrame(loop); }; document.fonts.ready.then(loop); }
+  else if (!location.search.includes('render')) document.fonts.ready.then(() => render(9.9));
+</script>
+</body>
+</html>
