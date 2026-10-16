@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video completo en YouTube</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&family=Oswald:wght@600&display=block" rel="stylesheet">
+<style>
+  /* Tarjeta "Video completo en YouTube" para clips 9:16 — canal Karicats Finanzas.
+     Modos: sin parámetros = fondo transparente (PNG) · ?render/?chroma = pantalla verde para video · ?preview = fondo de prueba.
+     Se usa verde y no azul porque el avatar tiene fondo azul-morado y el croma azul lo borraría. */
+  :root { --lima: #c6fd34; --blanco: #fdfdfc; --tinta: #14112a; --gris: #5d6272; }
+  html, body { margin: 0; background: transparent; }
+  body.preview { background: linear-gradient(180deg, #8a8f99 0%, #4a4f5a 100%); }
+  body.chroma { background: #00ff00; }
+  body.chroma .shadow { filter: none !important; box-shadow: none !important; }
+  #stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; font-family: 'Plus Jakarta Sans', sans-serif; }
+  #wrap { position: absolute; left: 0; right: 0; top: 1060px; display: flex; flex-direction: column; align-items: center; }
+
+  /* Línea superior: "Video completo en:" + YouTube en condensada, como la referencia */
+  #head { display: flex; align-items: baseline; gap: 22px; color: var(--blanco);
+    filter: drop-shadow(0 3px 10px rgba(0,0,0,.35)); }
+  #head .txt { font-weight: 800; font-size: 60px; letter-spacing: -.01em; }
+  #head .yt { font-family: 'Oswald', sans-serif; font-weight: 600; font-size: 88px; letter-spacing: -.01em; line-height: 1; }
+  #head span { display: inline-block; }
+
+  /* Tarjeta del canal */
+  #card { margin-top: 40px; width: 860px; box-sizing: border-box; display: flex; align-items: center; gap: 34px;
+    background: #fff; border-radius: 40px; padding: 30px 40px 30px 30px;
+    box-shadow: 0 18px 50px rgba(0,0,0,.28); position: relative; overflow: hidden; }
+  #avatar { flex: none; width: 190px; height: 190px; border-radius: 50%; padding: 6px; background: var(--lima); box-sizing: border-box; }
+  #avatar img { width: 100%; height: 100%; border-radius: 50%; display: block; object-fit: cover; }
+  #info { min-width: 0; }
+  #name { font-weight: 800; font-size: 54px; color: var(--tinta); letter-spacing: -.02em; line-height: 1.05; white-space: nowrap; }
+  #handle { margin-top: 14px; display: flex; align-items: center; gap: 16px; font-weight: 500; font-size: 36px; color: var(--gris); }
+  #handle svg { flex: none; }
+  #shine { position: absolute; top: -20%; bottom: -20%; width: 140px; left: -200px; transform: skewX(-18deg);
+    background: linear-gradient(90deg, transparent, rgba(87,35,244,.13), transparent); pointer-events: none; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="wrap">
+    <div id="head" class="shadow"><span class="txt" id="h1">Video completo en:</span><span class="yt" id="h2">YouTube</span></div>
+    <div id="card" class="shadow">
+      <div id="avatar"><img src="assets/avatar-karicats.png" alt=""></div>
+      <div id="info">
+        <div id="name">Karicats Finanzas</div>
+        <div id="handle">
+          <svg width="46" height="32" viewBox="0 0 46 32"><rect width="46" height="32" rx="9" fill="#6b7080"/><path d="M18 9 L31 16 L18 23 Z" fill="#fff"/></svg>
+          <span>@karicatsfinanzas</span>
+        </div>
+      </div>
+      <div id="shine"></div>
+    </div>
+  </div>
+</div>
+<script>
+  const q = location.search;
+  if (q.includes('preview')) document.body.classList.add('preview');
+  if (q.includes('render') || q.includes('chroma')) document.body.classList.add('chroma');
+
+  // Entrada: titular sube palabra a palabra · tarjeta sube con rebote · avatar y textos entran escalonados · brillo lavanda cruza la tarjeta (lima no: se confundiría con el croma verde) · queda fija.
+  const DURATION = 5;
+  const $ = (id) => document.getElementById(id);
+  const clamp = (x) => Math.min(1, Math.max(0, x));
+  const prog = (t, a, b) => clamp((t - a) / (b - a));
+  const outCubic = (x) => 1 - Math.pow(1 - x, 3);
+  const outBack = (x) => { const c = 1.7; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+  const set = (el, o, tf) => { el.style.opacity = o; el.style.transform = tf; };
+
+  function render(t) {
+    const a = outCubic(prog(t, 0, .45));
+    set($('h1'), a, `translateY(${(1 - a) * 40}px)`);
+    const b = prog(t, .25, .7);
+    set($('h2'), clamp(b * 2), `scale(${.5 + .5 * outBack(b)})`);
+
+    const c = prog(t, .5, 1.05);
+    set($('card'), clamp(c * 2.5), `translateY(${(1 - outBack(c)) * 120}px) scale(${.92 + .08 * outBack(c)})`);
+    const d = prog(t, .8, 1.2);
+    set($('avatar'), clamp(d * 2), `scale(${.4 + .6 * outBack(d)}) rotate(${(1 - outCubic(d)) * -25}deg)`);
+    const e = outCubic(prog(t, .95, 1.35));
+    set($('name'), e, `translateX(${(1 - e) * 40}px)`);
+    const f = outCubic(prog(t, 1.1, 1.5));
+    set($('handle'), f, `translateX(${(1 - f) * 40}px)`);
+
+    $('shine').style.left = (-200 + 1300 * outCubic(prog(t, 1.7, 2.4))) + 'px';
+  }
+  window.__render = render;
+  window.__DURATION = DURATION;
+  window.__STILLS = { '1-titular': .45, '2-tarjeta': 1.0, '3-textos': 1.3, '4-final': 3 };
+  if (q.includes('play')) { const t0 = performance.now(); const loop = () => { render(((performance.now() - t0) / 1000) % DURATION); requestAnimationFrame(loop); }; document.fonts.ready.then(loop); }
+</script>
+</body>
+</html>
