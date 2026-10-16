@@ -7,7 +7,7 @@
 - `output/preventas-freenanzas-solo-efectos.mp4`: el mismo Reel solo con efectos, para usar una canción de Instagram
 - `output/separa-tu-cupo-preventa.png`: **imagen fija** del llamado a la acción (Historia 9:16, dentro de márgenes, con espacio libre para el sticker de link)
 - `preventas-freenanzas.html` / `cta-preventa.html`: fuentes · `audio/preventas_audio.py`: música y efectos
-- `assets/logo-freenanzas-blanco.png`: logo en blanco (provisional, ver nota)
+- `assets/logo-freenanzas-blanco.svg`: logo oficial en blanco (SVG en HD)
 **Render:**
 ```
 node render.mjs preventas-freenanzas.html             # video (sin audio)
@@ -24,7 +24,7 @@ node render.mjs cta-preventa.html --stills            # imagen del CTA
 - Logo Freenanzas en blanco en la parte inferior de todas las escenas y de la imagen.
 - Se agregaron música y efectos de sonido sincronizados.
 
-> **Logo:** se reconstruyó a partir de una captura de 173 px. Funciona al tamaño del video, pero para la versión final conviene reemplazar `assets/logo-freenanzas-blanco.png` por el logo original (PNG transparente o SVG) y volver a renderizar.
+> **Logo:** se usa el SVG oficial en blanco (HD), ya aplicado al video y a la imagen.
 
 ## Fuente del contenido
 El contenido sale de la sección "Nuevos lanzamientos · Preventas" de freenanzas.app (captura compartida por el equipo). No se pudo abrir la web desde el entorno de producción, así que **no hay precios, cupos ni descuentos de preventa en el video**: solo aparece lo que muestra la web.

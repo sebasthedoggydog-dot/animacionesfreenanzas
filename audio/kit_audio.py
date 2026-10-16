@@ -12,8 +12,8 @@ from pathlib import Path
 import numpy as np
 
 SR = 44100
-DUR = 19.0
-MUSIC_END = 18.0   # el último compás resuelve aquí
+DUR = 17.0
+MUSIC_END = 16.0   # el último compás resuelve aquí
 BPM = 120
 BEAT = 60 / BPM
 N = int(SR * DUR)
@@ -74,7 +74,7 @@ music = buf()
 # Progresión (raíz MIDI, triada) — C, G, Am, F; el último compás resuelve en C
 CHORDS = [(48, [60, 64, 67]), (43, [59, 62, 67]), (45, [60, 64, 69]), (41, [60, 65, 69])]
 GROOVE_START = 0.5      # el beat completo entra junto al golpe de "Preventas"
-END_FADE = (18.2, 19.0)
+END_FADE = (16.2, 17.0)
 
 
 def chord_at(t):
@@ -83,7 +83,7 @@ def chord_at(t):
 
 
 # Pad (sierras desafinadas + filtro suave), entra desde 0 con filtro abriéndose
-for bar in range(10):
+for bar in range(9):
     t0 = bar * 2.0
     root, triad = chord_at(t0 + 0.01)
     tt = t_axis(2.0)
@@ -236,58 +236,50 @@ def swipe(dur=0.3):
 
 
 # --- 1 · Hook
-add(sfx, riser(0.5), 0.0, 0.35)
-add(sfx, pop(1300, 600, 0.09), 0.1, 0.25)                     # píldora MÁS POPULAR
-add(sfx, whoosh(0.3), 0.22, 0.25, -0.3)                       # "El Kit"
-add(sfx, impact(), 0.55, 0.6)                                 # "Inversor"
-add(sfx, swipe(0.3), 0.95, 0.25)                              # subrayado
-add(sfx, sparkle(6, 88), 0.85, 0.12, 0.2)
+add(sfx, riser(0.6), 0.0, 0.4)                                # despegue del cohete
+add(sfx, whoosh(0.5), 0.1, 0.45, -0.5)
+add(sfx, pop(1200, 500, 0.08), 0.4, 0.22)                     # etiqueta MÁS POPULAR
+add(sfx, whoosh(0.3), 0.45, 0.25)                             # "El Kit"
+add(sfx, impact(), 0.75, 0.6)                                 # "Inversor"
+add(sfx, swipe(0.3), 1.1, 0.25)                               # subrayado
+add(sfx, sparkle(6, 88), 0.9, 0.12, 0.2)                      # estrellas y puntos
 add(sfx, pop(700, 350, 0.1), 1.5, 0.2)
-add(sfx, sparkle(3, 79), 0.95, 0.08, -0.2)                    # logo
+add(sfx, sparkle(3, 79), 1.0, 0.08, -0.2)                     # logo
 
-# --- 2 · Los dos bootcamps
+# --- 2 · Dos bootcamps
 add(sfx, whoosh(0.5), 2.15, 0.5)
 for t0, f0 in ((2.55, 800), (2.85, 900)):
     add(sfx, pop(f0, f0 * 0.4, 0.1), t0 + 0.05, 0.22)
-add(sfx, pop(1050, 420, 0.1), 3.3, 0.24)
-add(sfx, swipe(0.35), 3.55, 0.35)                             # marcador "en un solo kit."
+add(sfx, impact(), 3.2, 0.3)                                  # "en un solo kit."
+add(sfx, swipe(0.3), 3.5, 0.25)
 add(sfx, whoosh(0.35), 4.0, 0.3, -0.6)                        # Nivel 1 entra por la izquierda
 add(sfx, whoosh(0.35), 4.25, 0.3, 0.6)                        # Nivel 2 entra por la derecha
-add(sfx, pop(260, 90, 0.25), 4.8, 0.4)                        # el kit "cierra"
-add(sfx, pop(1300, 600, 0.09), 5.05, 0.25)                    # etiqueta KIT INVERSOR
+add(sfx, pop(1100, 450, 0.09), 4.35, 0.2, -0.3)               # íconos 3D
+add(sfx, pop(1200, 500, 0.09), 4.6, 0.2, 0.3)
+add(sfx, pop(260, 90, 0.25), 4.85, 0.4)                       # el kit "cierra"
+add(sfx, pop(1300, 600, 0.09), 5.1, 0.25)                     # etiqueta KIT INVERSOR
 add(sfx, sparkle(4, 86), 5.1, 0.1)
 
 # --- 3 · Qué incluye
 add(sfx, whoosh(0.5), 6.15, 0.5)
 add(sfx, whoosh(0.3), 6.55, 0.2)
-for i, t0 in enumerate((7.25, 8.0, 8.75)):
+for i, t0 in enumerate((7.25, 8.0, 9.6)):
     add(sfx, pop(260, 100, 0.2), t0 + 0.1, 0.3)               # tarjeta aterriza
-    add(sfx, pop(1100, 450, 0.09), t0 + 0.25, 0.22)           # icono
-    add(sfx, tick(2400 + i * 300), t0 + 0.5, 0.3)             # check
-for i in range(3):
-    add(sfx, pop(900 + i * 150, 500, 0.06), 10.5 + i * 0.25, 0.12)   # "respiración" de iconos
+    add(sfx, pop(1100 + i * 100, 450, 0.09), t0 + 0.2, 0.22)  # ícono 3D
+for i in range(4):                                            # chips de Guías y herramientas
+    add(sfx, tick(2200 + i * 250), 8.5 + i * 0.25, 0.25)
+add(sfx, sparkle(4, 91), 9.4, 0.13, 0.2)                      # "Guía de impuestos" destaca
 
-# --- 4 · Exclusivo
-add(sfx, whoosh(0.5), 11.65, 0.5)
-add(sfx, sparkle(5, 91), 12.15, 0.14)                         # estrella
-add(sfx, whoosh(0.3), 12.5, 0.2)
-add(sfx, impact(), 12.85, 0.45)                               # "10"
+# --- 4 · Exclusivo (cierre)
+add(sfx, whoosh(0.5), 12.15, 0.5)
+add(sfx, pop(500, 200, 0.18), 12.6, 0.3)                      # micrófono
 add(sfx, whoosh(0.3), 13.0, 0.2)
+add(sfx, impact(), 13.3, 0.5)                                 # "10"
+add(sfx, whoosh(0.3), 13.5, 0.2)
 for i in range(10):                                           # 10 cupos que se encienden
-    add(sfx, tick(1800 + i * 120), 13.3 + i * 0.05, 0.14)
-add(sfx, pop(700, 300, 0.12), 13.8, 0.25)                     # caja "en vivo"
-
-# --- 5 · Precio
-add(sfx, whoosh(0.5), 14.65, 0.5)
-add(sfx, pop(260, 90, 0.25), 15.1, 0.4)                       # tarjeta aterriza
-add(sfx, riser(1.0), 15.5, 0.15)                              # contador "Mi inversión"
-for i in range(16):                                           # cuenta regresiva $559 → $399
-    add(sfx, key_click(), 16.3 + i * 0.047, 0.18)
-add(sfx, impact(), 17.05, 0.5)                                # llega a $399
-add(sfx, swipe(0.25), 17.35, 0.25)                            # tachado "Antes $559"
-add(sfx, pop(1300, 600, 0.09), 17.55, 0.3)                    # AHORRAS $160
-add(sfx, sparkle(6, 91), 17.6, 0.14, 0.2)
-add(sfx, pop(1500, 700, 0.07), 18.35, 0.18)
+    add(sfx, tick(1800 + i * 120), 13.9 + i * 0.05, 0.14)
+add(sfx, pop(700, 300, 0.12), 14.45, 0.25)                    # caja "en vivo"
+add(sfx, sparkle(6, 91), 14.6, 0.12, -0.2)
 
 # =========================== MEZCLA ===========================
 def norm(x, peak):
