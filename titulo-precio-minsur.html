@@ -29,6 +29,8 @@
   /* Nivel 3: la palabra emocional en script lima, grande, recta y centrada bajo el serif */
   #script { font-family: 'Alex Brush', cursive; color: var(--lima); font-size: 310px; line-height: .8;
     margin-top: -6px; }
+  /* Logo de Minsur en blanco: firma bajo la palabra en script */
+  #logo { display: block; width: 380px; margin: 36px auto 0; }
 </style>
 </head>
 <body>
@@ -37,6 +39,7 @@
     <div id="kicker">¿A qué <b>precio</b></div>
     <div id="keyword">COMPRAR</div>
     <div id="script">Minsur?</div>
+    <img id="logo" src="assets/logo-minsur-blanco.png" alt="Minsur">
   </div>
 </div>
 <script>
@@ -45,7 +48,7 @@
   if (q.includes('render') || q.includes('chroma')) document.body.classList.add('chroma');
 
   // Animación de entrada (render.mjs llama a __render(t) fotograma a fotograma).
-  // 0.0 línea superior sube · 0.3 COMPRAR se revela de abajo arriba · 0.8 "Minsur?" se escribe de izquierda a derecha · luego se queda fijo.
+  // 0.0 línea superior sube · 0.3 COMPRAR se revela de abajo arriba · 0.8 "Minsur?" se escribe de izquierda a derecha · 1.9 aparece el logo de Minsur · luego se queda fijo.
   const DURATION = 5;
   const $ = (id) => document.getElementById(id);
   const clamp = (x) => Math.min(1, Math.max(0, x));
@@ -68,6 +71,11 @@
     $('script').style.clipPath = `inset(-20% ${(1 - s) * 100}% -20% -10%)`;
     $('script').style.transform = `scale(${1.04 - .04 * outCubic(prog(t, .8, 2.2))})`;
 
+
+    // Logo: aparece cuando termina de escribirse "Minsur?"
+    const l = prog(t, 1.9, 2.4);
+    $('logo').style.opacity = outCubic(l);
+    $('logo').style.transform = `translateY(${(1 - outCubic(l)) * 30}px)`;
   }
   // Ajusta el tamaño si una línea no cabe en el ancho seguro de Reels (≈ 860px)
   document.fonts.ready.then(() => {
