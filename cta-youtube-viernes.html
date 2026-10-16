@@ -57,7 +57,6 @@
   #handle { font-size: 25px; font-weight: 500; color: #f1f1f1; margin-top: 10px; }
   #subs { font-size: 25px; color: var(--gris); margin-top: 8px; position: relative; white-space: nowrap; }
   #subs b { font-weight: 400; color: var(--gris); position: relative; display: inline-block; }
-  #subs-hl { position: absolute; left: -10px; right: -10px; top: -6px; bottom: -6px; border: 3px solid var(--lima); border-radius: 14px; }
 
   #desc { margin: 26px 30px 0; font-size: 26px; color: #f1f1f1; }
   #desc b { font-weight: 700; }
@@ -140,7 +139,7 @@
         <div>
           <div id="pname">Karicats Finanzas</div>
           <div id="handle">@karicatsfinanzas</div>
-          <div id="subs"><b><span id="subs-hl"></span><span id="subs-n">36.5 k</span> suscriptores</b> • 527 videos</div>
+          <div id="subs"><b>36.5 k suscriptores</b> • 527 videos</div>
         </div>
       </div>
       <div id="desc">💖 Libertad financiera joven <b>...más</b></div>
@@ -210,17 +209,10 @@
     const ph = outCubic(prog(t, 1.2, 2.3));
     const push = inOutCubic(prog(t, 2.3, 10));
     $('phone').style.transform = `translateY(${(1 - ph) * 1250}px) scale(${.96 + .04 * ph + .05 * push})`;
-
-    // Resalte del número de suscriptores
-    const hl = prog(t, 3.0, 3.5), hlo = 1 - prog(t, 6.5, 7.0);
-    $('subs-hl').style.opacity = clamp(hl * 2) * hlo;
-    $('subs-hl').style.transform = `scale(${1.25 - .25 * outBack(hl)})`;
-    $('subs-n').style.color = hl > 0 && hlo > 0 ? `rgba(198,253,52,${clamp(hl * 2) * hlo})` : '';
-    if (hl > 0 && hlo > 0) $('subs-n').style.color = `color-mix(in srgb, #c6fd34 ${Math.round(clamp(hl * 2) * hlo * 100)}%, #aaaaaa)`;
   }
   window.__render = render;
   window.__DURATION = DURATION;
-  window.__STILLS = { '1-titular': .9, '2-celular': 2.0, '3-resalte': 4, '4-final': 9.9 };
+  window.__STILLS = { '1-titular': .9, '2-celular': 2.0, '3-celular-fijo': 4, '4-final': 9.9 };
   if (location.search.includes('play')) { const t0 = performance.now(); const loop = () => { render(((performance.now() - t0) / 1000) % DURATION); requestAnimationFrame(loop); }; document.fonts.ready.then(loop); }
   else if (!location.search.includes('render')) document.fonts.ready.then(() => render(9.9));
 </script>
