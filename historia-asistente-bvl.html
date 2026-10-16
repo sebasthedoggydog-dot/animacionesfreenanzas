@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Asistente BVL</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Playfair+Display:ital,wght@1,700;1,800&family=Oswald:wght@500;600&display=block" rel="stylesheet">
+<link rel="stylesheet" href="lib/estilo.css">
+<style>
+  /* Historia 1 · Asistente BVL (video 15 s) */
+  #s1-robot { width: 270px; height: 270px; margin-bottom: 20px; }
+  #s1-l1 { font-size: 130px; font-weight: 800; line-height: 1; }
+  #s1-acc { font-size: 280px; line-height: 1; }
+  #s1-uline { width: 380px; height: 12px; border-radius: 6px; background: var(--lima); transform-origin: left center; }
+
+  #s2-acc { font-size: 104px; text-wrap: balance; }
+  #s2-card { margin-top: 56px; padding: 30px 34px 30px; position: relative; }
+  #s2-card small { font-family: var(--cond); font-weight: 600; font-size: 30px; letter-spacing: .08em; color: var(--morado); text-transform: uppercase; }
+  #s2-tag { position: absolute; right: 30px; top: 22px; }
+  .bars { display: flex; align-items: flex-end; gap: 26px; height: 280px; margin-top: 26px; padding: 0 10px; border-bottom: 3px solid #ece9f6; }
+  .bar { flex: 1; border-radius: 18px 18px 6px 6px; background: var(--lavanda); transform-origin: bottom center; }
+  .bar.last { background: var(--lima); }
+
+  #s3-title { font-size: 104px; font-weight: 800; line-height: 1.05; margin-bottom: 44px; }
+  #s3-title .acc { font-size: 116px; }
+
+  #s4-gift { width: 320px; height: 320px; }
+  #s4-pop { position: absolute; width: 170px; height: 170px; }
+  #s4-acc { font-size: 108px; white-space: nowrap; }
+</style>
+</head>
+<body>
+<div id="wrap">
+<div id="stage">
+
+  <section class="scene bg-morado" id="s1">
+    <div class="lines"></div><div id="s1-fx"></div>
+    <div class="center">
+      <img class="el ico3d" id="s1-robot" src="assets/iconos-3d/robot.png" alt="">
+      <span class="el label" id="s1-lbl"><i></i>Herramienta Freenanzas</span>
+      <span class="mask" style="margin-top:18px"><span class="el" id="s1-l1">Tu Asistente</span></span>
+      <span class="mask" style="padding:0 40px 10px"><span class="el acc" id="s1-acc">BVL</span></span>
+      <span class="el" id="s1-uline"></span>
+    </div>
+  </section>
+
+  <section class="scene bg-verde" id="s2">
+    <div class="lines"></div><div id="s2-fx"></div>
+    <div class="center">
+      <span class="mask"><span class="el h" id="s2-l1">Proyecta tus ganancias</span></span>
+      <span class="mask" style="padding:0 30px 14px"><span class="el acc" id="s2-acc">antes de invertir un sol</span></span>
+      <div class="card el" id="s2-card">
+        <small>Tu proyección</small>
+        <span class="el pill" id="s2-tag">Simulación</span>
+        <div class="bars">
+          <i class="bar el" id="s2-b1" style="height:28%"></i><i class="bar el" id="s2-b2" style="height:42%"></i>
+          <i class="bar el" id="s2-b3" style="height:55%"></i><i class="bar el" id="s2-b4" style="height:72%"></i>
+          <i class="bar last el" id="s2-b5" style="height:96%"></i>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="scene bg-morado" id="s3">
+    <div class="lines"></div><div id="s3-fx"></div>
+    <div class="center">
+      <span class="mask" style="padding:0 30px 14px"><span class="el" id="s3-title">¿Qué puedes <span class="acc">hacer?</span></span></span>
+      <div class="card item el" id="s3-c1"><img class="el" id="s3-k1" src="assets/iconos-3d/magnifying_glass_tilted_right.png" alt="">
+        <div><h3>Analiza acciones de la BVL</h3><p>Con datos reales de la Bolsa de Lima.</p></div></div>
+      <div class="card item el" id="s3-c2"><img class="el" id="s3-k2" src="assets/iconos-3d/bar_chart.png" alt="">
+        <div><h3>Proyecta tus ganancias</h3><p>Simula escenarios antes de comprar.</p></div></div>
+      <div class="card item el" id="s3-c3"><img class="el" id="s3-k3" src="assets/iconos-3d/mobile_phone.png" alt="">
+        <div><h3>Sigue tu inversión</h3><p>Mira cuánto vas ganando.</p></div></div>
+    </div>
+  </section>
+
+  <section class="scene bg-verde" id="s4">
+    <div class="lines"></div><div id="s4-fx"></div>
+    <div class="center">
+      <div style="position:relative">
+        <img class="el ico3d" id="s4-gift" src="assets/iconos-3d/wrapped_gift.png" alt="">
+        <img class="el" id="s4-pop" src="assets/iconos-3d/party_popper.png" alt="" style="right:-110px; top:-30px">
+      </div>
+      <span class="el label" id="s4-lbl" style="margin-top:20px"><i></i>Solo por registrarte</span>
+      <span class="mask" style="margin-top:20px"><span class="el h" id="s4-l1">Regístrate y</span></span>
+      <span class="mask" style="padding:0 30px 14px"><span class="el acc" id="s4-acc">llévate un regalo</span></span>
+    </div>
+  </section>
+
+  <img id="logo" class="el" src="assets/logo-freenanzas-blanco.svg" alt="Freenanzas">
+</div>
+</div>
+<div id="controls"><button id="play">Pausa</button><input id="scrub" type="range" min="0" step="0.0333" value="0"><span id="time">0.00s</span></div>
+
+<script src="lib/motor.js"></script>
+<script>
+const { track, wordIn, accIn, popIn, floatAfter, makeFx } = Motor;
+Motor.config({
+  duration: 15,
+  scenes: [
+    { id: 's1', in: 0,    out: 2.5 },
+    { id: 's2', in: 2.2,  out: 6.5,  wipe: { type: 'circle', t0: 2.2,  t1: 2.6 } },
+    { id: 's3', in: 6.2,  out: 11.5, wipe: { type: 'up',     t0: 6.2,  t1: 6.6 } },
+    { id: 's4', in: 11.2, out: 15,   wipe: { type: 'left',   t0: 11.2, t1: 11.6 } },
+  ],
+  stills: { '1-hook': 2.15, '2-proyecta': 6.1, '3-que-hace': 11.1, '4-regalo': 14.9 },
+});
+
+/* 1 · Hook (0–2,5 s) */
+track('s1-robot', [[0, { s: 0, r: -30, y: 120 }], [0.5, { s: 1, r: 0, y: 0 }, 'outBackBig']]);
+floatAfter('s1-robot', 0.5, 12, 1.6, 4);
+track('s1-lbl', [[0.3, { y: 30, o: 0 }], [0.6, { y: 0, o: 1 }, 'outCubic']]);
+wordIn('s1-l1', 0.45);
+accIn('s1-acc', 0.75);
+track('s1-uline', [[1.1, { sx: 0 }], [1.45, { sx: 1 }, 'outExpo']]);
+makeFx('s1-fx', 0.9, 2.5, [[130, 300, 70], [880, 360, 46, 1], [900, 1240, 76], [120, 1330, 44, 1]],
+  [[250, 520, 18], [820, 600, 12, 1], [180, 980, 14, 1], [900, 980, 20], [300, 1450, 12], [760, 1400, 16, 1]]);
+track('logo', [[1.0, { y: 30, o: 0 }], [1.5, { y: 0, o: 1 }, 'outCubic']]);
+
+/* 2 · Proyecta (2,5–6,5 s) */
+wordIn('s2-l1', 2.55);
+accIn('s2-acc', 2.95);
+track('s2-card', [[3.4, { y: 120, o: 0, s: .94 }], [3.85, { y: 0, o: 1, s: 1 }, 'outBack']]);
+[1, 2, 3, 4, 5].forEach((n, i) => track(`s2-b${n}`, [[3.9 + i * .18, { sy: 0 }], [4.3 + i * .18, { sy: 1 }, 'outBack']]));
+popIn('s2-tag', 4.9, -10);
+makeFx('s2-fx', 4.9, 6.5, [[110, 330, 56], [900, 300, 40, 1], [920, 1450, 60]], [[200, 470, 14, 1], [860, 520, 18], [130, 1480, 16]]);
+
+/* 3 · Qué puedes hacer (6,5–11,5 s) */
+track('s3-title', [[6.55, { y: 160, o: 0 }], [7.0, { y: 0, o: 1 }, 'outBack']]);
+[7.25, 8.25, 9.25].forEach((t, i) => {
+  track(`s3-c${i + 1}`, [[t, { y: -110, o: 0, s: .94 }], [t + .5, { y: 0, o: 1, s: 1 }, 'outBack']]);
+  popIn(`s3-k${i + 1}`, t + .15, -25);
+  floatAfter(`s3-k${i + 1}`, t + .55, 6, 1.8 + i * .3, 3);
+});
+makeFx('s3-fx', 7.0, 11.5, [[110, 250, 50], [920, 270, 38, 1], [930, 1470, 56], [110, 1500, 36, 1]], [[260, 330, 14], [800, 360, 12, 1], [880, 1520, 16, 1]]);
+
+/* 4 · Regístrate y llévate un regalo (11,5–15 s) */
+track('s4-gift', [[11.55, { s: 0, r: -30, y: 80 }], [12.0, { s: 1, r: 0, y: 0 }, 'outBackBig'],
+                  [12.6, { s: 1, r: 0 }], [12.72, { s: 1.08, r: -6 }], [12.84, { s: 1.04, r: 6 }], [12.96, { s: 1, r: 0 }, 'outBack']]);
+floatAfter('s4-gift', 13.0, 10, 1.6, 4);
+track('s4-pop', [[12.2, { s: 0, r: 40 }], [12.55, { s: 1, r: 0 }, 'outBackBig']]);
+track('s4-lbl', [[11.9, { y: 30, o: 0 }], [12.2, { y: 0, o: 1 }, 'outCubic']]);
+wordIn('s4-l1', 12.2);
+accIn('s4-acc', 12.6);
+makeFx('s4-fx', 12.4, 15, [[120, 300, 64], [890, 340, 44, 1], [910, 1400, 68], [120, 1440, 40, 1], [800, 820, 36], [180, 860, 30, 1]],
+  [[240, 520, 16], [830, 560, 12, 1], [170, 1100, 14, 1], [900, 1150, 18], [320, 1480, 12], [760, 1500, 14, 1]]);
+
+Motor.start();
+</script>
+</body>
+</html>

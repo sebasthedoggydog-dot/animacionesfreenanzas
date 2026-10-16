@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bolsa de Lima CTA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Playfair+Display:ital,wght@1,700;1,800&family=Oswald:wght@500;600&display=block" rel="stylesheet">
+<link rel="stylesheet" href="lib/estilo.css">
+</head>
+<body class="story">
+<!-- Historia 2 · Imagen CTA: Bolsa de Lima (Nivel 1). El hueco bajo las tarjetas es para el sticker de link. -->
+<div id="stage" style="margin:0 auto">
+  <div class="bg-morado" style="position:absolute;inset:0"></div>
+  <div class="lines"></div>
+  <div id="fx"></div>
+  <div class="col">
+    <h1>Empieza en la</h1>
+    <h2>Bolsa de Lima</h2>
+    <div class="uline"></div>
+    <div class="cards">
+      <div class="cta-card"><img src="assets/iconos-3d/flag_in_hole.png" alt=""><div><small>Nivel 1 · Ruta paso a paso</small><b>Hasta tu primera acción</b></div></div>
+      <div class="cta-card"><img src="assets/iconos-3d/clapper_board.png" alt=""><div><small>Incluye</small><b>5 clases + 30 días de acompañamiento</b></div></div>
+    </div>
+    <div class="sticker-space"></div>
+  </div>
+  <img id="logo" src="assets/logo-freenanzas-blanco.svg" alt="Freenanzas">
+</div>
+<script>
+  // Estrellas y puntos fijos (misma decoración que los videos)
+  const fx = document.getElementById('fx');
+  [[150,300,54,0],[880,340,38,1],[880,1440,50,0],[150,1480,34,1]].forEach(([x,y,s,w]) => fx.insertAdjacentHTML('beforeend',
+    `<svg class="spark" style="left:${x}px;top:${y}px" width="${s}" height="${s}" viewBox="0 0 40 40"><path d="M20 0 C22 14 26 18 40 20 C26 22 22 26 20 40 C18 26 14 22 0 20 C14 18 18 14 20 0Z" fill="${w ? '#fdfdfc' : '#c6fd34'}"/></svg>`));
+  [[260,470,16,0],[820,520,12,1],[860,1330,14,1],[230,1380,18,0]].forEach(([x,y,s,w]) => fx.insertAdjacentHTML('beforeend',
+    `<i class="dot" style="left:${x}px;top:${y}px;width:${s}px;height:${s}px;background:${w ? '#fdfdfc' : '#c6fd34'}"></i>`));
+  window.__render = () => {}; window.__DURATION = 0; window.__STILLS = { 'imagen': 0 };
+</script>
+</body>
+</html>
