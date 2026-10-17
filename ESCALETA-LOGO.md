@@ -31,16 +31,20 @@ estrella granate · óvalo azul · cruz naranja (trazo diagonal y barra horizont
 - Cada trazo lleva un **mapa de tiempo**, que indica por dónde avanza la pincelada. La S y la Q se recorren siguiendo su curva y la cruz va de punta a punta.
   Así cada trazo **se pinta en vivo**, con el borde húmedo más brillante y un borde de avance irregular, como las cerdas de un pincel.
 
+## Cambios de la v2
+- Sin estrellitas decorativas (ni el estallido del golpe, ni el polvo brillante, ni los destellos al terminar cada letra).
+- La estrella granate gira sin parar hasta el golpe y ahí frena.
+
 ## Escaleta
 
 | # | Momento | Tiempo | Qué pasa | Sonido |
 |---|---|---|---|---|
 | 1 | Cae el óvalo | 0,10–0,70 s | Cae desde arriba, se aplasta al tocar (squash & stretch), onda expansiva y temblor de cámara | Whoosh + golpe grave + salpicón |
-| 2 | Estrella shuriken | 0,38–1,45 s | Sale girando desde detrás del óvalo (−540°), con estela de movimiento y rebote de escala | Remolino + brillo metálico |
+| 2 | Estrella shuriken | 0,38–4,80 s | Sale girando desde detrás del óvalo, con estela de movimiento, y **no para de girar**: acelera hacia el final y frena en seco en el golpe, quedando en su posición original | Remolino continuo que acelera + "clac" metálico al frenar |
 | 3 | Cruz naranja | 1,55–2,62 s | Dos pinceladas: la diagonal de arriba abajo y la horizontal de izquierda a derecha, con salpicaduras de pintura | Pinceladas rasposas + gotitas; pulso de bombo |
-| 4 | Letras | 2,78–4,70 s | ≡ (3 barras), S, T y Q se escriben una a una, con una luz en la punta y un destello al terminar cada trazo | Una nota ascendente por trazo + raspado de tiza |
-| 5 | Golpe | 4,80 s | Flash, el logo late (encoge y rebota), la estrella se balancea, onda dorada y estallido de estrellitas de 4 puntas | Subida + sub grave + crash + destellos |
+| 4 | Letras | 2,78–4,70 s | ≡ (3 barras), S, T y Q se escriben una a una, con una luz en la punta | Una nota ascendente por trazo + raspado de tiza |
+| 5 | Golpe | 4,80 s | La estrella frena (se pasa un poco y vuelve), flash, el logo late (encoge y rebota) y onda dorada | Subida + sub grave + crash |
 | 6 | Brillo | 5,05–5,80 s | Un reflejo barre el logo, solo sobre la pintura | — |
-| 7 | Reposo | 5,6–8 s | El logo flota, la estrella oscila suave, el resplandor cálido respira y sube polvo brillante | Acorde cálido que se desvanece |
+| 7 | Reposo | 5,6–8 s | El logo flota, la estrella oscila suave y el resplandor cálido respira | Acorde cálido que se desvanece |
 
 **Fondo:** azul tinta con viñeta, resplandor naranja-granate detrás del logo y grano de papel animado, que acompaña la textura de la pintura.

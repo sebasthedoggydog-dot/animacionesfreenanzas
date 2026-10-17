@@ -20,7 +20,7 @@ OUT = Path(__file__).resolve().parent
 
 # Línea de tiempo (igual que T en logo-animado.html)
 OVAL, IMPACT = 0.10, 0.28
-STAR = (0.38, 1.45)
+STAR = (0.38, 4.8)      # la estrella gira sin parar hasta el golpe
 DIAG, HORIZ = (1.55, 2.12), (2.08, 2.62)
 WHITES = [(2.78, 2.98), (2.93, 3.13), (3.08, 3.28), (3.36, 3.78), (3.86, 4.02), (4.0, 4.2), (4.26, 4.7)]
 BOOM = 4.8
@@ -142,13 +142,18 @@ add(sfx, whoosh(0.2, up=False), OVAL, gain=0.25)
 add(sfx, thump(150, 48, 0.6), IMPACT, gain=0.75)
 add(sfx, splat(0.22), IMPACT, gain=0.35)
 
-# Estrella: remolino que gira (trémolo) y "shing" al asentarse
+# Estrella: remolino continuo (trémolo al ritmo de las vueltas) que acelera y corta en seco en el golpe
 dur = STAR[1] - STAR[0]
 tt = t_axis(dur)
-spin = whoosh(dur, up=False) * (0.55 + 0.45 * np.sin(2 * np.pi * (14 - 10 * tt / dur) * tt))
-for i, pan in enumerate((-0.5, 0.5)):
-    add(sfx, spin, STAR[0] + i * 0.012, gain=0.22, pan=pan)
-add(sfx, reverb(shing()), STAR[0] + 0.5, gain=0.12, pan=0.2)
+speed = 260 + 900 * np.clip((tt + STAR[0] - 3.2) / (STAR[1] - 3.2), 0, 1) ** 3      # °/s, como en el HTML
+phase = 2 * np.pi * np.cumsum(speed / 90) / SR                                      # 4 puntas → 4 pasadas por vuelta
+n = rng.standard_normal(len(tt))
+air = box(n, 30) * 0.7 + (n - box(n, 4)) * 0.25 * (speed / 1160)
+spin = air * (0.45 + 0.55 * np.abs(np.sin(phase / 2))) * np.clip(tt / 0.15, 0, 1) * np.clip((dur - tt) / 0.02, 0, 1)
+spin *= 0.55 + 0.45 * (speed / 1160)
+for i, pan in enumerate((-0.4, 0.4)):
+    add(sfx, spin, STAR[0] + i * 0.012, gain=0.2, pan=pan)
+add(sfx, reverb(shing()), STAR[1], gain=0.14, pan=0.2)          # "clac" metálico al frenar
 
 # Pinceladas naranjas + gotitas
 for (a, b), pan in ((DIAG, -0.15), (HORIZ, 0.25)):
@@ -169,15 +174,12 @@ f = hz(48) * 2 ** (2 * tt / rise)
 riser = np.sin(2 * np.pi * np.cumsum(f) / SR) * 0.4 + whoosh(rise, up=True, bright=1.4) * 0.6
 add(sfx, riser * (tt / rise) ** 2, BOOM - rise, gain=0.25)
 
-# Golpe: sub que cae + crash + destellos
+# Golpe: sub que cae + crash
 add(sfx, thump(180, 38, 1.4), BOOM, gain=0.95)
 tt = t_axis(1.6)
 crash = rng.standard_normal(len(tt))
 crash = (crash - box(crash, 6)) * np.exp(-tt * 3.2)
 add(sfx, reverb(crash), BOOM, gain=0.16)
-for k in range(14):
-    m = 84 + int(rng.choice([0, 2, 4, 7, 9, 12, 14]))
-    add(sfx, pluck(m, 0.35) * 0.6, BOOM + 0.1 + k * 0.07 + rng.uniform(0, 0.04), gain=0.06, pan=rng.uniform(-0.8, 0.8))
 
 # =========================== MEZCLA ===========================
 

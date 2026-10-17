@@ -54,7 +54,7 @@ const DURATION = 8;
 /* ---------- Línea de tiempo (s) ---------- */
 const T = {
   oval: [0.1, 0.7],
-  star: [0.38, 1.45],
+  star: [0.38, 4.8],      // gira hasta el golpe
   diag: [1.55, 2.12], horiz: [2.08, 2.62],
   whites: { barra1: [2.78, 2.98], barra2: [2.93, 3.13], barra3: [3.08, 3.28], s: [3.36, 3.78],
             't-barra': [3.86, 4.02], 't-palo': [4.0, 4.2], q: [4.26, 4.7] },
@@ -74,14 +74,6 @@ function kf(keys, t) {
     if (t <= t1) return lerp(a, b, E[e || 'outCubic']((t - t0) / (t1 - t0)));
   }
   return keys[keys.length - 1][1];
-}
-function starPath(c, x, y, r) {      // estrella de 4 puntas, como la del logo
-  c.beginPath(); c.moveTo(x, y - r);
-  c.bezierCurveTo(x + r * .1, y - r * .3, x + r * .3, y - r * .1, x + r, y);
-  c.bezierCurveTo(x + r * .3, y + r * .1, x + r * .1, y + r * .3, x, y + r);
-  c.bezierCurveTo(x - r * .1, y + r * .3, x - r * .3, y + r * .1, x - r, y);
-  c.bezierCurveTo(x - r * .3, y - r * .1, x - r * .1, y - r * .3, x, y - r);
-  c.closePath();
 }
 
 /* ---------- carga de capas (data URI: el canvas no queda "tainted") ---------- */
@@ -127,6 +119,21 @@ function tip(l, p) {
 }
 
 /* ---------- partículas precalculadas (deterministas) ---------- */
+// Giro de la estrella: sale girando y no para hasta el golpe final, cada vez más rápido (gira en sentido horario).
+// Velocidad en °/s integrada fotograma a fotograma; se escala para que acabe justo en vueltas completas.
+const SPIN = (() => {
+  const t0 = T.star[0], t1 = T.boom, dt = 1 / 600;
+  const v = (t) => 260 + 900 * E.inCubic(clamp01((t - 3.2) / (t1 - 3.2)));
+  const acc = [0];
+  for (let t = t0; t < t1; t += dt) acc.push(acc[acc.length - 1] + v(t) * dt);
+  const total = acc[acc.length - 1], k = Math.round(total / 360) * 360 / total;
+  return (t) => {
+    if (t <= t0) return -k * total;
+    if (t >= t1) return 0;
+    return (acc[Math.min(acc.length - 1, Math.round((t - t0) / dt))] - total) * k;
+  };
+})();
+
 const splats = [];   // salpicaduras de pintura naranja
 [['cruz-diagonal', T.diag, 11], ['cruz-horizontal', T.horiz, 23]].forEach(([name, span, seed]) => {
   const r = rng(seed);
@@ -138,19 +145,6 @@ const splats = [];   // salpicaduras de pintura naranja
       col: r() < 0.75 ? '#f6a52a' : '#ffd36b' });
   }
 });
-const burst = [];    // estallido final de estrellitas
-{
-  const r = rng(77), cols = ['#fdf6ea', '#f6a52a', '#c46a72', '#ffd36b'];
-  for (let i = 0; i < 46; i++) {
-    const ang = (i / 46) * Math.PI * 2 + r() * 0.3, sp = 520 + r() * 900;
-    burst.push({ ang, sp, size: 10 + r() * 26, life: 0.9 + r() * 0.9, col: cols[i % 4], spin: (r() - .5) * 8, d: r() * 0.08 });
-  }
-}
-const motes = [];    // polvo brillante que flota al final
-{
-  const r = rng(5);
-  for (let i = 0; i < 28; i++) motes.push({ x: r() * W, y: r() * H, s: 4 + r() * 12, ph: r() * 6.28, sp: 20 + r() * 50, t0: T.boom + 0.3 + r() * 1.2, white: r() < .6 });
-}
 
 /* ---------- render(t) ---------- */
 function render(t) {
@@ -171,16 +165,16 @@ function render(t) {
   ctx.scale(BASE * pulse * zoom, BASE * pulse * zoom);
   ctx.translate(-CX, -CY);
 
-  // 1 · Estrella: sale girando como shuriken desde detrás del óvalo (con estela) y se balancea con el golpe final
-  const sp = prog(t, T.star);
-  if (sp > 0) {
-    const rot = (p) => -540 * (1 - E.outExpo(p)) + kf([[T.boom, 0], [T.boom + 0.12, -11, 'outCubic'], [T.boom + 0.45, 7, 'inOutCubic'], [T.boom + 0.8, -3, 'inOutCubic'], [T.boom + 1.1, 0, 'inOutCubic']], t) + Math.sin(t * 1.4) * 2.2 * fl;
-    const sc = (p) => E.outBackBig(p);
-    const ghosts = sp < 1 ? 5 : 0;
+  // 1 · Estrella: sale de detrás del óvalo girando como shuriken (con estela) y no para hasta el golpe final
+  if (t >= T.star[0]) {
+    const sc = E.outBackBig(prog(t, [T.star[0], T.star[0] + 0.6]));
+    // al frenar en seco se pasa un poco y vuelve
+    const brake = kf([[T.boom, 0], [T.boom + 0.14, 16, 'outCubic'], [T.boom + 0.45, -6, 'inOutCubic'], [T.boom + 0.75, 2, 'inOutCubic'], [T.boom + 1.0, 0, 'inOutCubic']], t);
+    const rot = (tt) => SPIN(tt) + brake + Math.sin(t * 1.4) * 2.2 * fl;
+    const ghosts = t < T.boom ? 5 : 0;
     for (let g = ghosts; g >= 0; g--) {
-      const p = clamp01(sp - g * 0.035);
-      ctx.save(); ctx.globalAlpha = g ? 0.22 * (1 - g / (ghosts + 1)) : 1;
-      ctx.translate(CX, CY); ctx.rotate(rot(p) * Math.PI / 180); ctx.scale(sc(p), sc(p)); ctx.translate(-CX, -CY);
+      ctx.save(); ctx.globalAlpha = g ? 0.2 * (1 - g / (ghosts + 1)) : 1;
+      ctx.translate(CX, CY); ctx.rotate(rot(t - g * 0.014) * Math.PI / 180); ctx.scale(sc, sc); ctx.translate(-CX, -CY);
       ctx.drawImage(L.estrella.im, L.estrella.x, L.estrella.y);
       ctx.restore();
     }
@@ -221,12 +215,6 @@ function render(t) {
       g.addColorStop(0, 'rgba(255,255,255,.95)'); g.addColorStop(.3, 'rgba(255,240,200,.45)'); g.addColorStop(1, 'rgba(255,240,200,0)');
       ctx.fillStyle = g; ctx.fillRect(x - 46, y - 46, 92, 92);
     }
-    const k = (t - span[1]) / 0.32;       // destello al terminar cada trazo
-    if (k > 0 && k < 1) {
-      const P = L[name].path, [x, y] = P[P.length - 1];
-      ctx.save(); ctx.translate(x, y); ctx.rotate(k * 1.2); ctx.globalAlpha = 1 - k;
-      ctx.fillStyle = '#fffaf0'; starPath(ctx, 0, 0, 30 * E.outBackBig(Math.min(1, k * 2.4))); ctx.fill(); ctx.restore();
-    }
   }
 
   // 5 · Brillo que barre el logo (solo sobre lo pintado)
@@ -251,22 +239,6 @@ function render(t) {
   }
   ctx.restore();
 
-  // estallido de estrellitas (en coordenadas de pantalla)
-  for (const b of burst) {
-    const k = t - T.boom - b.d; if (k < 0 || k > b.life) continue;
-    const d = b.sp * (1 - Math.exp(-k * 3.2)) / 3.2 * 1.6;
-    const x = POS.x + Math.cos(b.ang) * (230 + d), y = POS.y + floatY + Math.sin(b.ang) * (230 + d);
-    const a = 1 - E.inCubic(k / b.life);
-    ctx.save(); ctx.globalAlpha = a; ctx.translate(x, y); ctx.rotate(k * b.spin); ctx.fillStyle = b.col;
-    starPath(ctx, 0, 0, b.size * E.outBackBig(Math.min(1, k * 4)) * (0.6 + 0.4 * a)); ctx.fill(); ctx.restore();
-  }
-  // polvo brillante flotando
-  for (const m of motes) {
-    const k = t - m.t0; if (k < 0) continue;
-    const a = clamp01(k / 0.5) * (0.35 + 0.35 * Math.sin(t * 3 + m.ph));
-    ctx.save(); ctx.globalAlpha = a; ctx.fillStyle = m.white ? '#fff3dc' : '#f6a52a';
-    starPath(ctx, m.x + Math.sin(t + m.ph) * 14, m.y - k * m.sp, m.s); ctx.fill(); ctx.restore();
-  }
 
   // capas DOM: resplandor cálido, destello, grano
   document.getElementById('glow').style.opacity =
