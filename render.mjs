@@ -1,6 +1,7 @@
 // Renderiza una animación HTML a MP4 vertical 1080x1920 @30fps, fotograma a fotograma.
 // Uso:  node render.mjs [archivo.html]            → output/<nombre>.mp4
 //       node render.mjs [archivo.html] --stills   → output/stills/<nombre>/*.png
+//       node render.mjs [archivo.html] --cuadrado → versión 1080x1080 (output/<nombre>-cuadrado.mp4)
 // Sin archivo usa index.html (Reel del sorteo → output/sorteo-freenanzas.mp4).
 import { chromium } from 'playwright';
 import { execFileSync } from 'node:child_process';
@@ -12,7 +13,8 @@ const here = dirname(fileURLToPath(import.meta.url));
 const FPS = 30;
 const stillsOnly = process.argv.includes('--stills');
 const input = process.argv.slice(2).find((a) => a.endsWith('.html')) || 'index.html';
-const name = input === 'index.html' ? 'sorteo-freenanzas' : input.replace(/\.html$/, '');
+const square = process.argv.includes('--cuadrado');
+const name = (input === 'index.html' ? 'sorteo-freenanzas' : input.replace(/\.html$/, '')) + (square ? '-cuadrado' : '');
 const outDir = resolve(here, 'output');
 const framesDir = resolve(outDir, stillsOnly ? (name === 'sorteo-freenanzas' ? 'stills' : `stills/${name}`) : '.frames');
 rmSync(framesDir, { recursive: true, force: true });
@@ -20,8 +22,9 @@ mkdirSync(framesDir, { recursive: true });
 
 const browser = await chromium.launch();
 const page = await browser.newPage({ viewport: { width: 1080, height: 1920 }, deviceScaleFactor: 1 });
-await page.goto(pathToFileURL(resolve(here, input)).href + '?render');
+await page.goto(pathToFileURL(resolve(here, input)).href + '?render' + (square ? '&cuadrado' : ''));
 await page.evaluate(() => document.fonts.ready);
+await page.waitForFunction(() => typeof window.__render === 'function');
 await page.waitForTimeout(300);
 const duration = await page.evaluate(() => window.__DURATION);
 const stage = page.locator('#stage');
