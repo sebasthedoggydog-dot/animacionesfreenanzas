@@ -12,8 +12,8 @@ from pathlib import Path
 import numpy as np
 
 SR = 44100
-DUR = 16.0
-MUSIC_END = 15.0   # el último compás resuelve aquí
+DUR = 20.0
+MUSIC_END = 19.0   # el último compás resuelve aquí
 BPM = 120
 BEAT = 60 / BPM
 N = int(SR * DUR)
@@ -74,7 +74,7 @@ music = buf()
 # Progresión (raíz MIDI, triada) — C, G, Am, F; el último compás resuelve en C
 CHORDS = [(48, [60, 64, 67]), (43, [59, 62, 67]), (45, [60, 64, 69]), (41, [60, 65, 69])]
 GROOVE_START = 0.5      # el beat completo entra junto al golpe de "Preventas"
-END_FADE = (15.2, 16.0)
+END_FADE = (19.2, 20.0)
 
 
 def chord_at(t):
@@ -83,7 +83,7 @@ def chord_at(t):
 
 
 # Pad (sierras desafinadas + filtro suave), entra desde 0 con filtro abriéndose
-for bar in range(8):
+for bar in range(10):
     t0 = bar * 2.0
     root, triad = chord_at(t0 + 0.01)
     tt = t_axis(2.0)
@@ -245,6 +245,21 @@ add(sfx, swipe(0.3), 1.1, 0.25)                               # subrayado
 add(sfx, sparkle(6, 88), 0.9, 0.12, 0.2)
 add(sfx, pop(700, 350, 0.1), 1.5, 0.2)
 add(sfx, sparkle(3, 79), 1.0, 0.08, -0.2)                     # logo
+
+# --- 1b · ETFs globales: Apple, Microsoft, Amazon, Nvidia
+add(sfx, whoosh(0.5), 2.15, 0.5)
+add(sfx, pop(1200, 500, 0.08), 2.6, 0.2)                      # etiqueta
+add(sfx, whoosh(0.3), 2.65, 0.2)
+add(sfx, impact(), 3.0, 0.45)                                 # "que usas a diario"
+for i in range(4):                                            # tarjetas de marcas
+    add(sfx, pop(900 + i * 150, 380, 0.11), 3.55 + i * 0.22, 0.28, -0.4 if i % 2 == 0 else 0.4)
+add(sfx, pop(1300, 600, 0.09), 4.8, 0.25)                     # "+ cientos de empresas"
+add(sfx, sparkle(6, 91), 4.85, 0.14, 0.2)
+
+# A partir de aquí todo va 4 s más tarde (se insertó la escena 1b)
+_add = add
+def add(dst, sig, at, gain=1.0, pan=0.0):
+    _add(dst, sig, at + (4.0 if dst is sfx else 0.0), gain, pan)
 
 # --- 2 · Ruta paso a paso
 add(sfx, whoosh(0.5), 2.15, 0.5)
